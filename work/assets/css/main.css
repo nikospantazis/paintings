@@ -110,7 +110,10 @@ input, select, textarea {
 		-webkit-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 		-ms-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 		transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        /* change for lightbox
 		border-bottom: solid 1px #e4e4e4;
+        */
+        border-bottom: none;
 		color: inherit;
 		text-decoration: none;
 	}
