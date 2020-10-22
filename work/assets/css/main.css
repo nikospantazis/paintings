@@ -2186,78 +2186,64 @@ input, select, textarea {
 				display: block;
 				width: 100%;
 			}
-			
-		.image.fit.hundred {
+
+					.image.fit.hundred {
 			display: block;
-                margin-left: auto;
-                margin-right: auto;
+			margin: 0 0 2.25em 0;
 			width: 100%;
 		}
 
 			.image.fit.hundred img {
 				display: block;
-                margin-left: auto;
-                margin-right: auto;
 				width: 100%;
 			}
 
 			
 		.image.fit.ninety {
 			display: block;
-                margin-left: auto;
-                margin-right: auto;
+			margin: 0 0 2.25em 0;
 			width: 97%;
 		}
 
 			.image.fit.ninety img {
 				display: block;
-                margin-left: auto;
-                margin-right: auto;
 				width: 97%;
 			}
 
 		.image.fit.sixty {
 			display: block;
-                margin-left: auto;
-                margin-right: auto;
+			margin: 0 0 2.25em 0;
 			width: 87%;
 		}
 
 			.image.fit.sixty img {
 				display: block;
-                margin-left: auto;
-                margin-right: auto;
 				width: 87%;
 			}
 
 			
 		.image.fit.fifty {
 			display: block;
-                margin-left: auto;
-                margin-right: auto;
+			margin: 0 0 2.25em 0;
 			width: 85%;
 		}
 
 			.image.fit.fifty img {
 				display: block;
-                margin-left: auto;
-                margin-right: auto;
 				width: 85%;
 			}
 
 					.image.fit.forty {
 			display: block;
-                margin-left: auto;
-                margin-right: auto;
+			margin: 0 0 2.25em 0;
 			width: 76%;
 		}
 
 			.image.fit.forty img {
 				display: block;
-                margin-left: auto;
-                margin-right: auto;
 				width: 76%;
 			}
+
 			
 		.image.avatar {
 			border-radius: 100%;
@@ -3386,43 +3372,3 @@ input, select, textarea {
 			}
 
 	}
-	
-.thumbnail {
-  max-width: 40%;
-}
-	
-/** LIGHTBOX MARKUP **/
-
-.lightbox {
-	/** Default lightbox to hidden */
-	display: block;
-    opacity: 0;
-    visibility: hidden;
-	/** Position and style */
-	position: fixed;
-	z-index: 999;
-	width: 100%;
-	height: 100%;
-	text-align: center;
-	top: 0;
-	left: 0;
-	background: rgba(0,0,0,0.9);
-}
-
-.lightbox img {
-	/** Pad the lightbox image */
-	max-width: 90%;
-	max-height: 80%;
-	margin-top: 5%;
-}
-
-.lightbox:target {
-	/** Remove default browser outline */
-	outline: none;
-
-	/** Unhide lightbox **/
-	display: block;
-    visibility: visible;
-    opacity: 1;
-    transition: opacity 400ms;
-}
