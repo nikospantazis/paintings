@@ -150,7 +150,7 @@ input, select, textarea {
 		}
 
 	h2 {
-		font-size: 2em;
+		font-size: 2.5em;
 		line-height: 1.5em;
 	}
 
@@ -160,12 +160,12 @@ input, select, textarea {
 	}
 
 	h4 {
-		font-size: 1.25em;
+		font-size: 1.5em;
 		line-height: 1.5em;
 	}
 
 	h5 {
-		font-size: 0.9em;
+		font-size: 1em;
 		line-height: 1.5em;
 	}
 
@@ -1798,7 +1798,13 @@ input, select, textarea {
 			font-weight: 700;
 			margin-top: -0.75em;
 		}
-
+/*added this for more line spacing on categories*/
+	header.categories h3 {
+		color: #4acaa8;
+        line-height:2.5em;
+		font-size: 1.75em;
+	}
+	
 /* Form */
 
 	form {
@@ -2190,7 +2196,7 @@ input, select, textarea {
 				width: 100%;
 			}
 
-					.image.fit.hundred {
+        .image.fit.hundred {
 			display: block;
 			margin: 0 0 2.25em 0;
 			width: 100%;
@@ -3190,9 +3196,12 @@ input, select, textarea {
 			}
 
 			h4 {
-				font-size: 1em;
+				font-size: 1.1em;
 			}
 
+			h5 {
+				font-size: 0.9em;
+			}
 		/* Image */
 
 			.image.left {
@@ -3220,7 +3229,12 @@ input, select, textarea {
 				header.major h2 + p {
 					font-size: 1.5em;
 				}
-
+        /*added this for more line spacing on categories*/
+            header.categories h3 {
+                color: #4acaa8;
+                line-height:2.5em;
+                font-size: 1.3em;
+            }
 		/* Features */
 
 			.features article .image {
@@ -3375,3 +3389,35 @@ input, select, textarea {
 			}
 
 	}
+
+
+/*slideshow*/
+
+#slideshow {
+    margin-top: 2.25em;
+    margin-bottom: 2.25em;
+    position: relative;
+    width: 70%;
+    padding-bottom: 50%;
+/*  padding: 10px; */
+/*    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4); */
+}
+
+#slideshow > div {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+
+#slideshow > div > img {
+    border-radius: 5px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto auto;
+}
