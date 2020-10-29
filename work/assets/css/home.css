@@ -99,7 +99,7 @@ input, select, textarea {
 
 	body, input, select, textarea {
 		color: #888;
-		font-family: "Source Code Pro", monospace;
+		font-family: mono;
 		font-size: 16pt;
 		font-weight: 400;
 		line-height: 1.75em;
@@ -120,7 +120,7 @@ input, select, textarea {
 
 		a:hover {
 			border-bottom-color: transparent;
-			color: #4acaa8 !important;
+			color: lightgray !important;
 		}
 
 	strong, b {
@@ -140,9 +140,8 @@ input, select, textarea {
 		color: white;
         opacity: 0.9;
         text-shadow:    -1px 0px 1px rgba(255, 255, 255, 1),
-                        2px 0px 1px rgba(000, 000, 000, 1);  
-                    
-		font-weight: 700;
+                        3px 0px 1px rgba(000, 000, 000, 1);  
+		font-weight: 500;
 		line-height: 1em;
 		margin: 0 0 0.5625em 0;
 	}
@@ -1808,7 +1807,7 @@ input, select, textarea {
 		color: whtie;
         opacity: 1;
         line-height:2.5em;
-		font-size: 1.75em;
+		font-size: 2em;
 	}
 /* Form */
 
@@ -3165,7 +3164,7 @@ input, select, textarea {
 			}
 
 			h5 {
-				font-size: 0.9em;
+				font-size: 1em;
 			}
 		/* Image */
 
@@ -3199,7 +3198,7 @@ input, select, textarea {
                 color: white;
                 opacity: 1;
                 line-height:2.5em;
-                font-size: 1.3em;
+                font-size: 1.5em;
             }
 		/* Features */
 
