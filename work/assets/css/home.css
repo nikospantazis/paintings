@@ -56,7 +56,7 @@ body {
 }
 
 mark {
-	background-color: white;
+	background-color: transparent;
 	color: inherit;
 }
 
@@ -83,11 +83,11 @@ input, select, textarea {
 	}
 
 	body {
-		background: #fff;
+		background: lightgray;
 	}
 
 		body.is-preload *, body.is-preload *:before, body.is-preload *:after {
-			-moz-animation: none !important;
+            -moz-animation: none !important;
 			-webkit-animation: none !important;
 			-ms-animation: none !important;
 			animation: none !important;
@@ -1805,10 +1805,6 @@ input, select, textarea {
         line-height:2.5em;
 		font-size: 1.75em;
 	}
-        header.categories.background {
-        position: absolute;
-        background-color: red;
-    }
 /* Form */
 
 	form {

@@ -52,7 +52,7 @@
     line-height: 200px; 
 }
 .cb-slideshow li:nth-child(1) span { 
-    background-image: url(../../images/group1/DSC_1079b.jpg) 
+    background-image: url(../../images/group1/DSC_1079b.jpg);
 }
 .cb-slideshow li:nth-child(2) span { 
     background-image: url(../../images/group1/DSC_1067b.jpg);
