@@ -2787,7 +2787,7 @@ input, select, textarea {
 		}
 
 			#header h1 a, #header h2 a, #header h3 a, #header h4 a, #header h5 a, #header h6 a {
-				color: #ffffff;
+				color: #333333;
 			}
 
 		#header header p {
@@ -2799,7 +2799,7 @@ input, select, textarea {
 		}
 
 			#header a:hover {
-				color: #ffffff !important;
+				color: gray !important;
 			}
 
 		#header > header {
@@ -2822,7 +2822,7 @@ input, select, textarea {
 			}
 
 			#header > header p {
-				color: gray;
+				color: #333333;
 /*          font-style: italic; */
 				margin: 1em 0 0 0;
 			}
@@ -2871,15 +2871,15 @@ input, select, textarea {
 						-ms-transition: none;
 						transition: none;
 						border: 0;
-						color: #ffffff !important;
+						color: #333333 !important;
 						display: block;
 						padding: 0.85em 0;
 						text-decoration: none;
 					}
 
 						#header > nav ul li a.active {
-							background: #fff;
-							color: lightgray !important;
+							background: white;
+							color: black !important;
 						}
 
 					#header > nav ul li:first-child {
