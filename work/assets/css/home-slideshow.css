@@ -83,11 +83,11 @@ input, select, textarea {
 	}
 
 	body {
-		background: #fff;
+		background: lightgray;
 	}
 
 		body.is-preload *, body.is-preload *:before, body.is-preload *:after {
-			-moz-animation: none !important;
+            -moz-animation: none !important;
 			-webkit-animation: none !important;
 			-ms-animation: none !important;
 			animation: none !important;
@@ -137,8 +137,11 @@ input, select, textarea {
 	}
 
 	h1, h2, h3, h4, h5, h6 {
-		color: #777;
-		font-weight: 700;
+		color: white;
+        opacity: 0.9;
+        text-shadow:    -1px 0px 1px rgba(255, 255, 255, 1),
+                        3px 0px 1px rgba(000, 000, 000, 1);  
+		font-weight: 500;
 		line-height: 1em;
 		margin: 0 0 0.5625em 0;
 	}
@@ -150,22 +153,22 @@ input, select, textarea {
 		}
 
 	h2 {
-		font-size: 2.5em;
+		font-size: 3em;
 		line-height: 1.5em;
 	}
 
 	h3 {
-		font-size: 1.75em;
+		font-size: 2.5em;
 		line-height: 1.5em;
 	}
 
 	h4 {
-		font-size: 1.5em;
+		font-size: 2em;
 		line-height: 1.5em;
 	}
 
 	h5 {
-		font-size: 1em;
+		font-size: 1.2em;
 		line-height: 1.5em;
 	}
 
@@ -207,14 +210,14 @@ input, select, textarea {
 		background: #555;
 		border-radius: 5px;
 		color: #fff;
-		font-family: mono;
+		font-family: "Source Code Pro", monospace;
 		font-size: 0.9em;
 		margin: 0 0.25em;
 		padding: 0.25em 0.65em;
 	}
 
 	pre {
-		font-family: mono;
+		font-family: "Source Code Pro", monospace;
 		font-size: 0.9em;
 		margin: 0 0 2.25em 0;
 	}
@@ -1710,9 +1713,10 @@ input, select, textarea {
 /* Container */
 
 	.container {
+/*added from demo.css*/ position: relative;
 		margin: 0 auto;
 		max-width: calc(100% - 4.5em);
-		width: 45em;
+		width: 85%;
 	}
 
 		.container.xsmall {
@@ -1788,7 +1792,7 @@ input, select, textarea {
 	}
 
 	header.major h2 {
-		color: lightgray;
+		color: #4acaa8;
 		font-size: 3.5em;
 	}
 
@@ -1798,7 +1802,13 @@ input, select, textarea {
 			font-weight: 700;
 			margin-top: -0.75em;
 		}
-
+/*added this for more line spacing on categories*/
+	header.categories h3 {
+		color: whtie;
+        opacity: 1;
+        line-height:2.25em;
+		font-size: 2em;
+	}
 /* Form */
 
 	form {
@@ -1851,7 +1861,7 @@ input, select, textarea {
 		input[type="email"]:focus,
 		select:focus,
 		textarea:focus {
-			border-color: lightgray;
+			border-color: #4acaa8;
 		}
 
 	select {
@@ -1956,7 +1966,7 @@ input, select, textarea {
 
 		input[type="checkbox"]:focus + label:before,
 		input[type="radio"]:focus + label:before {
-			border-color: lightgray;
+			border-color: #4acaa8;
 		}
 
 	input[type="checkbox"] + label:before {
@@ -2205,59 +2215,49 @@ input, select, textarea {
 		.image.fit.ninety {
 			display: block;
 			margin: 0 0 2.25em 0;
-			width: 100%;
+			width: 97%;
 		}
 
 			.image.fit.ninety img {
 				display: block;
-				width: 95%;
+				width: 97%;
 			}
 
 		.image.fit.sixty {
 			display: block;
 			margin: 0 0 2.25em 0;
-			width: 100%;
+			width: 87%;
 		}
 
 			.image.fit.sixty img {
 				display: block;
-				width: 80%;
+				width: 87%;
 			}
 
 			
 		.image.fit.fifty {
 			display: block;
 			margin: 0 0 2.25em 0;
-			width: 100%;
+			width: 85%;
 		}
 
 			.image.fit.fifty img {
 				display: block;
-				width: 70%;
+				width: 85%;
 			}
 
-        .image.fit.forty {
+					.image.fit.forty {
 			display: block;
 			margin: 0 0 2.25em 0;
-			width: 100%;
+			width: 76%;
 		}
 
 			.image.fit.forty img {
 				display: block;
-				width: 60%;
+				width: 76%;
 			}
 
-        .image.fit.twentyfour {
-			display: block;
-			margin: 0 0 2.25em 0;
-			width: 100%;
-		}
-
-			.image.fit.twentyfour img {
-				display: block;
-				width: 40%;
-			}
-
+			
 		.image.avatar {
 			border-radius: 100%;
 			overflow: hidden;
@@ -2279,46 +2279,6 @@ input, select, textarea {
 				border-radius: 0;
 			}
 
-/* List */
-
-	ol {
-		list-style: decimal;
-		margin: 0 0 2.25em 0;
-		padding-left: 1.25em;
-	}
-
-		ol li {
-			padding-left: 0.25em;
-		}
-
-	ul {
-		list-style: disc;
-		margin: 0 0 2.25em 0;
-		padding-left: 1em;
-	}
-
-		ul li {
-			padding-left: 0.5em;
-		}
-
-		ul.alt {
-			list-style: none;
-			padding-left: 0;
-		}
-
-			ul.alt li {
-				border-top: solid 2px #f4f4f4;
-				padding: 0.5em 0;
-			}
-
-				ul.alt li:first-child {
-					border-top: 0;
-					padding-top: 0;
-				}
-
-	dl {
-		margin: 0 0 2.25em 0;
-	}
 
 /* Actions */
 
@@ -2473,7 +2433,7 @@ input, select, textarea {
 			}
 
 			ul.feature-icons li:before {
-				background: lightgray;
+				background: #4acaa8;
 				border-radius: 100%;
 				color: #ffffff;
 				display: block;
@@ -2689,7 +2649,7 @@ input, select, textarea {
 		input[type="reset"].primary,
 		input[type="button"].primary,
 		.button.primary {
-			background-color: lightgray;
+			background-color: #4acaa8;
 			color: #ffffff !important;
 		}
 
@@ -2697,14 +2657,14 @@ input, select, textarea {
 			input[type="reset"].primary:hover,
 			input[type="button"].primary:hover,
 			.button.primary:hover {
-				background-color: lightgray;
+				background-color: #5ed0b1;
 			}
 
 			input[type="submit"].primary:active,
 			input[type="reset"].primary:active,
 			input[type="button"].primary:active,
 			.button.primary:active {
-				background-color: lightgray;
+				background-color: #39c29d;
 			}
 
 		input[type="submit"].disabled, input[type="submit"]:disabled,
@@ -2771,8 +2731,8 @@ input, select, textarea {
 		-webkit-justify-content: space-between;
 		-ms-justify-content: space-between;
 		justify-content: space-between;
-		background: lightgray;
-		color: gray;
+		background: #4acaa8;
+		color: #d2f2e9;
 		height: 100%;
 		overflow-y: auto;
 		position: fixed;
@@ -2791,11 +2751,11 @@ input, select, textarea {
 			}
 
 		#header header p {
-			color: gray;
+			color: #b7eadc;
 		}
 
 		#header a {
-			color: gray;
+			color: #d2f2e9;
 		}
 
 			#header a:hover {
@@ -2822,8 +2782,8 @@ input, select, textarea {
 			}
 
 			#header > header p {
-				color: gray;
-/*          font-style: italic; */
+				color: #d2f2e9;
+				font-style: italic;
 				margin: 1em 0 0 0;
 			}
 
@@ -2843,7 +2803,7 @@ input, select, textarea {
 			}
 
 				#header > footer .icons li a {
-					color: gray;
+					color: #b7eadc;
 				}
 
 		#header > nav {
@@ -2860,7 +2820,7 @@ input, select, textarea {
 			}
 
 				#header > nav ul li {
-					border-top: solid 2px lightgray;
+					border-top: solid 2px #5ccfb1;
 					display: block;
 					padding: 0;
 				}
@@ -2879,7 +2839,7 @@ input, select, textarea {
 
 						#header > nav ul li a.active {
 							background: #fff;
-							color: lightgray !important;
+							color: #4acaa8 !important;
 						}
 
 					#header > nav ul li:first-child {
@@ -3147,7 +3107,7 @@ input, select, textarea {
 					}
 
 					#titleBar .toggle:before {
-						background: lightgray;
+						background: #4acaa8;
 						color: #ffffff;
 						content: '\f0c9';
 						display: block;
@@ -3192,19 +3152,19 @@ input, select, textarea {
 			}
 
 			h2 {
-				font-size: 1.75em;
+				font-size: 2em;
 			}
 
 			h3 {
-				font-size: 1.5em;
+				font-size: 1.75em;
 			}
 
 			h4 {
-				font-size: 1.1em;
+				font-size: 1.5em;
 			}
 
 			h5 {
-				font-size: 0.9em;
+				font-size: 1em;
 			}
 		/* Image */
 
@@ -3233,7 +3193,13 @@ input, select, textarea {
 				header.major h2 + p {
 					font-size: 1.5em;
 				}
-
+        /*added this for more line spacing on categories*/
+            header.categories h3 {
+                color: white;
+                opacity: 1;
+                line-height:2.25em;
+                font-size: 1.5em;
+            }
 		/* Features */
 
 			.features article .image {
@@ -3388,3 +3354,35 @@ input, select, textarea {
 			}
 
 	}
+
+
+/*slideshow*/
+
+#slideshow {
+    margin-top: 2.25em;
+    margin-bottom: 2.25em;
+    position: relative;
+    width: 70%;
+    padding-bottom: 50%;
+/*  padding: 10px; */
+/*    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4); */
+}
+
+#slideshow > div {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+
+#slideshow > div > img {
+    border-radius: 5px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto auto;
+}
