@@ -1806,7 +1806,7 @@ input, select, textarea {
 	}
 
 	label {
-		color: #777;
+/* 		color: #777; */
 		display: block;
 		font-size: 0.9em;
 		font-weight: 700;
@@ -3148,7 +3148,7 @@ input, select, textarea {
 
 					#titleBar .toggle:before {
 						background: lightgray;
-						color: #ffffff;
+						color: #333333;
 						content: '\f0c9';
 						display: block;
 						font-size: 18px;
