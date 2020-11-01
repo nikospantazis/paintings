@@ -160,7 +160,7 @@ input, select, textarea {
 	}
 
 	h4 {
-		font-size: 1.5em;
+		font-size: 1.4em;
 		line-height: 1.5em;
 	}
 
@@ -2986,7 +2986,7 @@ input, select, textarea {
 		/* Basic */
 
 			body, input, select, textarea {
-				font-size: 11pt;
+				font-size: 12pt;
 			}
 
 		/* Header */
@@ -3336,7 +3336,7 @@ input, select, textarea {
 			}
 
 			body, input, select, textarea {
-				font-size: 12pt;
+				font-size: 11pt;
 			}
 
 		/* List */
