@@ -2198,7 +2198,7 @@ input, select, textarea {
 
 			.image.fit.hundred img {
 				display: block;
-				width: 100%;
+				width: 96%;
 			}
 
 			
@@ -2210,7 +2210,7 @@ input, select, textarea {
 
 			.image.fit.ninety img {
 				display: block;
-				width: 95%;
+				width: 92%;
 			}
 
 		.image.fit.sixty {
