@@ -98,7 +98,7 @@ input, select, textarea {
 		}
 
 	body, input, select, textarea {
-		color: #888;
+		color: #333333;
 		font-family: mono;
 		font-size: 16pt;
 		font-weight: 400;
@@ -120,11 +120,11 @@ input, select, textarea {
 
 		a:hover {
 			border-bottom-color: transparent;
-			color: lightgray !important;
+			color: #9c9c9c !important;
 		}
 
 	strong, b {
-		color: #777;
+		color: #737373;
 		font-weight: 700;
 	}
 
@@ -137,7 +137,7 @@ input, select, textarea {
 	}
 
 	h1, h2, h3, h4, h5, h6 {
-		color: #777;
+		color: #737373;
 		font-weight: 700;
 		line-height: 1em;
 		margin: 0 0 0.5625em 0;
@@ -188,7 +188,7 @@ input, select, textarea {
 
 	hr {
 		border: 0;
-		border-bottom: solid 2px #f4f4f4;
+		border-bottom: solid 2px #cccccc;
 		margin: 2.25em 0;
 	}
 
@@ -1788,12 +1788,12 @@ input, select, textarea {
 	}
 
 	header.major h2 {
-		color: lightgray;
+		color: #cccccc;
 		font-size: 3.5em;
 	}
 
 		header.major h2 + p {
-			color: #777;
+			color: #737373;
 			font-size: 1.75em;
 			font-weight: 700;
 			margin-top: -0.75em;
@@ -1806,7 +1806,7 @@ input, select, textarea {
 	}
 
 	label {
-/* 		color: #777; */
+/* 		color: #737373; */
 		display: block;
 		font-size: 0.9em;
 		font-weight: 700;
@@ -1851,7 +1851,7 @@ input, select, textarea {
 		input[type="email"]:focus,
 		select:focus,
 		textarea:focus {
-			border-color: lightgray;
+			border-color: #cccccc;
 		}
 
 	select {
@@ -1865,7 +1865,7 @@ input, select, textarea {
 	}
 
 		select option {
-			color: #777;
+			color: #737373;
 			background: #fff;
 		}
 
@@ -1956,7 +1956,7 @@ input, select, textarea {
 
 		input[type="checkbox"]:focus + label:before,
 		input[type="radio"]:focus + label:before {
-			border-color: lightgray;
+			border-color: #cccccc;
 		}
 
 	input[type="checkbox"] + label:before {
@@ -2307,7 +2307,7 @@ input, select, textarea {
 		}
 
 			ul.alt li {
-				border-top: solid 2px #f4f4f4;
+				border-top: solid 2px #cccccc;
 				padding: 0.5em 0;
 			}
 
@@ -2473,7 +2473,7 @@ input, select, textarea {
 			}
 
 			ul.feature-icons li:before {
-				background: lightgray;
+				background: #cccccc;
 				border-radius: 100%;
 				color: #ffffff;
 				display: block;
@@ -2520,7 +2520,7 @@ input, select, textarea {
 	}
 
 		table tbody tr {
-			border: solid 2px #f4f4f4;
+			border: solid 2px #cccccc;
 			border-left: 0;
 			border-right: 0;
 		}
@@ -2534,7 +2534,7 @@ input, select, textarea {
 		}
 
 		table th {
-			color: #777;
+			color: #737373;
 			font-size: 0.9em;
 			font-weight: 700;
 			padding: 0 0.75em 0.75em 0.75em;
@@ -2660,15 +2660,15 @@ input, select, textarea {
 		.button.alt {
 			background-color: transparent;
 			box-shadow: inset 0 0 0 2px #e4e4e4;
-			color: #777 !important;
+			color: #737373 !important;
 		}
 
 			input[type="submit"].alt:hover,
 			input[type="reset"].alt:hover,
 			input[type="button"].alt:hover,
 			.button.alt:hover {
-				background-color: #f4f4f4;
-				color: #777 !important;
+				background-color: #cccccc;
+				color: #737373 !important;
 			}
 
 			input[type="submit"].alt:active,
@@ -2689,7 +2689,7 @@ input, select, textarea {
 		input[type="reset"].primary,
 		input[type="button"].primary,
 		.button.primary {
-			background-color: lightgray;
+			background-color: #cccccc;
 			color: #ffffff !important;
 		}
 
@@ -2697,14 +2697,14 @@ input, select, textarea {
 			input[type="reset"].primary:hover,
 			input[type="button"].primary:hover,
 			.button.primary:hover {
-				background-color: lightgray;
+				background-color: #cccccc;
 			}
 
 			input[type="submit"].primary:active,
 			input[type="reset"].primary:active,
 			input[type="button"].primary:active,
 			.button.primary:active {
-				background-color: lightgray;
+				background-color: #cccccc;
 			}
 
 		input[type="submit"].disabled, input[type="submit"]:disabled,
@@ -2724,7 +2724,7 @@ input, select, textarea {
 /* Features */
 
 	.features article {
-		border-top: solid 3px #f4f4f4;
+		border-top: solid 3px #cccccc;
 		margin-bottom: 2.25em;
 		padding-top: 2.25em;
 	}
@@ -2771,8 +2771,8 @@ input, select, textarea {
 		-webkit-justify-content: space-between;
 		-ms-justify-content: space-between;
 		justify-content: space-between;
-		background: lightgray;
-		color: gray;
+		background: #cccccc;
+		color: #737373;
 		height: 100%;
 		overflow-y: auto;
 		position: fixed;
@@ -2791,15 +2791,15 @@ input, select, textarea {
 			}
 
 		#header header p {
-			color: gray;
+			color: #737373;
 		}
 
 		#header a {
-			color: gray;
+			color: #737373;
 		}
 
 			#header a:hover {
-				color: gray !important;
+				color: #9c9c9c !important;
 			}
 
 		#header > header {
@@ -2843,7 +2843,7 @@ input, select, textarea {
 			}
 
 				#header > footer .icons li a {
-					color: gray;
+					color: #737373;
 				}
 
 		#header > nav {
@@ -2860,7 +2860,7 @@ input, select, textarea {
 			}
 
 				#header > nav ul li {
-					border-top: solid 2px lightgray;
+					border-top: solid 2px #cccccc;
 					display: block;
 					padding: 0;
 				}
@@ -2878,8 +2878,8 @@ input, select, textarea {
 					}
 
 						#header > nav ul li a.active {
-							background: white;
-							color: black !important;
+							background: #ededed;
+							color: #141414 !important;
 						}
 
 					#header > nav ul li:first-child {
@@ -2889,14 +2889,14 @@ input, select, textarea {
 /* Wrapper */
 
 	#wrapper {
-		background: #fff;
+		background: #ededed;
 		padding-right: 23em;
 	}
 
 /* Main */
 
 	#main > section {
-		border-top: solid 6px #f4f4f4;
+		border-top: solid 6px #cccccc;
 	}
 
 		#main > section > .container {
@@ -3101,13 +3101,13 @@ input, select, textarea {
 				top: 0;
 				width: 100%;
 				z-index: 10001;
-				background: #222;
-				color: #fff;
+				background: #333333;
+				color: #ededed;
 				min-width: 320px;
 			}
 
 				#titleBar .title {
-					color: #fff;
+					color: #cccccc;
 					display: block;
 					font-weight: 700;
 					height: 44px;
@@ -3147,7 +3147,7 @@ input, select, textarea {
 					}
 
 					#titleBar .toggle:before {
-						background: lightgray;
+						background: #cccccc;
 						color: #333333;
 						content: '\f0c9';
 						display: block;

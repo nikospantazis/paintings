@@ -83,7 +83,7 @@ input, select, textarea {
 	}
 
 	body {
-		background: white;
+		background: #ededed;
 	}
 
 		body.is-preload *, body.is-preload *:before, body.is-preload *:after {
@@ -120,7 +120,7 @@ input, select, textarea {
 
 		a:hover {
 			border-bottom-color: transparent;
-			color: lightgray !important;
+			color: #737373 !important;
 		}
 
 	strong, b {
