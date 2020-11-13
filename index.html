@@ -6,10 +6,76 @@
 -->
 <html>
 	<head>
-		<title>Υπό κατασκευή</title>
+		<title>Νίκος Πανταζής - Ζωγραφική</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="assets/css/home.css" />
 	</head>
-	
+	<body class="is-preload">
+				<!-- Main -->
+					<div id="main">
+
+						<!-- One -->
+							<section id="one">
+                                <div class="container">
+                                <h2>Νίκος Πανταζής</h2>
+                                <h4>Ζωγραφική</h4>
+                                <h5></h5>
+                                </div>
+                                    <div id="slideshow">
+                                        <div>
+                                            <img src="images/group1/DSC_1079b.jpg" alt="" />
+                                        </div>
+                                        <div>
+                                            <img src="images/group5/DSC1094b.jpg" alt="" />
+                                        </div>
+                                        <div>
+                                            <img src="images/group3/DSC1044b.jpg" alt="" />
+                                        </div>
+                                        <div>
+                                            <img src="images/group2/DSC_1043b.jpg" alt="" />
+                                        </div>
+                                        <div>
+                                            <img src="images/group1/DSC_1064b.jpg" alt="" />
+                                        </div>
+                                    </div>
+								<div class="container">
+                                    <header class="categories">
+                                        <h3><i>
+                                        <a href="group1.html">Ανθισμένη&nbsp;φύση</a>&nbsp;· 
+                                        <a href="group2.html">Κτήρια&nbsp;σε&nbsp;τοπία</a>&nbsp;· 
+                                        <a href="group3.html">Θάλασσα</a>&nbsp;· 
+                                        <a href="group4.html">Ποτάμι<a/>&nbsp;· 
+                                        <a href="group5.html">Βουνό<a/>&nbsp;
+                                        <!-- <a href="group6.html">Άνθρωποι</a>&nbsp; -->
+                                        </i></h3>
+                                    </header>
+
+                        <ul class="icons">
+                        <h5><a href="mailto:pantazisnikolaos@gmail.com" class="icon solid fa-envelope">&nbsp;e-mail</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.instagram.com/nikospantazis55/" class="icon brands fa-instagram">&nbsp;instagram</a></h5>
+                        </ul>
+                                </div>
+                            </section>
+                       </div>
+<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+<!--        <script src="assets/js/browser.min.js"></script>    -->
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+            <script>
+                $("#slideshow > div:gt(0)").hide();
+
+                setInterval(function() {
+                    $('#slideshow > div:first')
+                        .fadeOut(1000)
+                        .next()
+                        .fadeIn(1000)
+                        .end()
+                        .appendTo('#slideshow');
+                }, 3000);
+            </script>
+	</body>
 </html>
