@@ -83,7 +83,7 @@ input, select, textarea {
 	}
 
 	body {
-		background: #fff;
+		background: #ededed;
 	}
 
 		body.is-preload *, body.is-preload *:before, body.is-preload *:after {
@@ -1788,7 +1788,7 @@ input, select, textarea {
 	}
 
 	header.major h2 {
-		color: #cccccc;
+		color: #737373;
 		font-size: 3.5em;
 	}
 
