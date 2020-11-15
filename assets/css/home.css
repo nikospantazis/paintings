@@ -1708,6 +1708,20 @@ input, select, textarea {
 
 		}
 
+		
+		
+		
+/* topright */
+
+    .topright {
+        position: absolute;
+        color: #737373;
+        top: 8px;
+        right: 18px;
+        font-size: 22px;
+    }
+
+
 /* Container */
 
 	.container {
@@ -3165,6 +3179,14 @@ input, select, textarea {
 			h5 {
 				font-size: 1em;
 			}
+			
+            .topright {
+                position: absolute;
+                top: 6px;
+                right: 16px;
+                font-size: 20px;
+            }
+            
 		/* Image */
 
 			.image.left {
@@ -3303,7 +3325,14 @@ input, select, textarea {
 			body, input, select, textarea {
 				font-size: 12pt;
 			}
-
+			
+            .topright {
+                position: absolute;
+                top: 2px;
+                right: 12px;
+                font-size: 18px;
+            }
+            
 		/* List */
 
 			ul.actions {
