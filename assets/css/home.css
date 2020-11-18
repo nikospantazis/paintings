@@ -1816,7 +1816,9 @@ input, select, textarea {
 		}
 /*added this for more line spacing on categories*/
 	header.categories h3 {
-		color: black;
+		color: #333333;
+        text-shadow: 2px 3px 2px rgba(255,255,255,1),
+                     2px 4px 2px rgba(0,0,0,0.6);
         opacity: 1;
         line-height:2.25em;
 		font-size: 2em;
@@ -3216,7 +3218,9 @@ input, select, textarea {
 				}
         /*added this for more line spacing on categories*/
             header.categories h3 {
-                color: black;
+                color: #333333;
+                text-shadow: 2px 3px 2px rgba(255,255,255,1),
+                             2px 4px 2px rgba(0,0,0,0.6);
                 opacity: 1;
                 line-height:2.25em;
                 font-size: 1.5em;
