@@ -124,7 +124,7 @@ input, select, textarea {
 		}
 
 	strong, b {
-		color: #777;
+		color: #333333;
 		font-weight: 700;
 	}
 
@@ -137,7 +137,7 @@ input, select, textarea {
 	}
 
 	h1, h2, h3, h4, h5, h6 {
-		color: black;
+		color: #333333;
         opacity: 0.9;
 		font-weight: 500;
 		line-height: 1em;
