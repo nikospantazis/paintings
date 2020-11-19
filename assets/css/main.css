@@ -2187,6 +2187,7 @@ input, select, textarea {
 
 			.image.fit img {
 				display: block;
+                box-shadow: 0px 0px 4px 1px #737373;
 				width: 100%;
 			}
 
@@ -2198,6 +2199,7 @@ input, select, textarea {
 
 			.image.fit.hundred img {
 				display: block;
+                box-shadow: 0px 0px 4px 1px #737373;
 				width: 96%;
 			}
 
@@ -2210,6 +2212,7 @@ input, select, textarea {
 
 			.image.fit.ninety img {
 				display: block;
+                box-shadow: 0px 0px 4px 1px #737373;
 				width: 92%;
 			}
 
@@ -2221,6 +2224,7 @@ input, select, textarea {
 
 			.image.fit.sixty img {
 				display: block;
+                box-shadow: 0px 0px 4px 1px #737373;
 				width: 80%;
 			}
 
@@ -2233,6 +2237,7 @@ input, select, textarea {
 
 			.image.fit.fifty img {
 				display: block;
+                box-shadow: 0px 0px 4px 1px #737373;
 				width: 70%;
 			}
 
@@ -2244,6 +2249,7 @@ input, select, textarea {
 
 			.image.fit.forty img {
 				display: block;
+                box-shadow: 0px 0px 4px 1px #737373;
 				width: 60%;
 			}
 
@@ -2255,6 +2261,7 @@ input, select, textarea {
 
 			.image.fit.twentyfour img {
 				display: block;
+                box-shadow: 0px 0px 4px 1px #737373;
 				width: 40%;
 			}
 

@@ -33,6 +33,7 @@ body.lb-disable-scrolling {
 
   /* Image border */
   border: none;
+  box-shadow: 0px 0px 12px 0px black;
 }
 
 .lightbox a img {
@@ -49,7 +50,7 @@ body.lb-disable-scrolling {
 
   /* Background color behind image.
      This is visible during transitions. */
-  background-color: white;
+  background-color: #ededed;
 }
 
 .lb-outerContainer:after {
