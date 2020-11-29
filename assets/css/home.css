@@ -3402,7 +3402,7 @@ input, select, textarea {
 
 #slideshow > div {
     position: absolute;
-    top: 4px;
+    top: 0px;
     left: 0px;
     right: 0px;
     bottom: 0px;
