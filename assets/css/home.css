@@ -3163,10 +3163,10 @@ input, select, textarea {
 				font-size: 12pt;
 			}
 
-			h1 br, h2 br, h3 br, h4 br, h5 br, h6 br {
+/*			h1 br, h2 br, h3 br, h4 br, h5 br, h6 br {
 				display: none;
 			}
-
+*/
 			h2 {
 				font-size: 2em;
 			}
@@ -3205,11 +3205,11 @@ input, select, textarea {
 			}
 
 		/* Section/Article */
-
+/*
 			header br {
 				display: none;
 			}
-
+*/
 			header.major h2 {
 				font-size: 2.5em;
 			}
