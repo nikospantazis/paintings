@@ -3418,3 +3418,22 @@ input, select, textarea {
     max-height: 100%;
     margin: auto auto;
 }
+
+#slideshow > div > picture {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+
+#slideshow > div > picture > img {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    object-fit: cover;
+    max-height: 100%;
+    margin: auto auto;
+}
