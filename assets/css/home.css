@@ -1819,7 +1819,7 @@ input, select, textarea {
 		color: #333333;
         text-shadow: 2px 3px 2px rgba(237,237,237,1),
                      3px 0px 4px rgba(237,237,237,1),
-                     2px 3px 2px rgba(0,0,0,0.8);
+                     2px 3px 2px rgba(50,50,50,1);
         opacity: 1;
         line-height:2.25em;
 		font-size: 2em;
@@ -3222,7 +3222,7 @@ input, select, textarea {
                 color: #333333;
                 text-shadow: 2px 3px 2px rgba(237,237,237,1),
                              3px 0px 4px rgba(237,237,237,1),
-                             2px 3px 2px rgba(0,0,0,0.8);
+                             2px 3px 2px rgba(50,50,50,1);
                 opacity: 1;
                 line-height:2.25em;
                 font-size: 1.5em;
