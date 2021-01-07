@@ -1,6 +1,35 @@
 @import url("fontawesome-all.min.css");
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
+@font-face {
+  font-family: Open Sans;
+  src: url(https://nikospantazis.com/assets/Open_Sans/OpenSans-ExtraBold.ttf);
+  font-weight: 800;
+  font-display: block;
+}
+@font-face {
+  font-family: Open Sans;
+  src: url(https://nikospantazis.com/assets/Open_Sans/OpenSans-Bold.ttf);
+  font-weight: 700;
+  font-display: block;
+}
+@font-face {
+  font-family: Open Sans;
+  src: url(https://nikospantazis.com/assets/Open_Sans/OpenSans-SemiBold.ttf);
+  font-weight: 600;
+  font-display: block;
+}
+@font-face {
+  font-family: Open Sans;
+  src: url(https://nikospantazis.com/assets/Open_Sans/OpenSans-Regular.ttf);
+  font-weight: 400;
+  font-display: block;
 
+}
+/*@font-face {
+  font-family: Open Sans;
+  src: url(https://nikospantazis.com/assets/Open_Sans/OpenSans-Light.ttf);
+  font-weight: 300;
+  font-display: block;
+}*/
 /*
 	Read Only by HTML5 UP
 	html5up.net | @ajlkn
