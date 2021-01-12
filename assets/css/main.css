@@ -2212,89 +2212,130 @@ input, select, textarea {
 
 		.image.fit {
 			display: block;
-			margin: 0 0 2.25em 0;
+            margin-left: auto;
+            margin-right: auto;
+			margin: 0 0 1.25em 0;
 			width: 100%;
 		}
-
 			.image.fit img {
 				display: block;
                 box-shadow: 0px 0px 4px 1px #737373;
 				width: 100%;
 			}
+                .image.fit p {
+                    display: block;
+                    margin: auto auto 4.25em auto;
+                    width: 100%;
+                }
 
         .image.fit.hundred {
 			display: block;
-			margin: 0 0 2.25em 0;
+			margin: 0 0 1.25em 0;
 			width: 100%;
 		}
-
 			.image.fit.hundred img {
 				display: block;
+                margin-left: auto;
+                margin-right: auto;
                 box-shadow: 0px 0px 4px 1px #737373;
 				width: 96%;
 			}
-
+                .image.fit.hundred p {
+                    display: block;
+                    margin: auto auto 4.25em auto;
+                    width: 96%;
+                }
 			
 		.image.fit.ninety {
 			display: block;
-			margin: 0 0 2.25em 0;
+			margin: 0 0 1.25em 0;
 			width: 100%;
 		}
-
 			.image.fit.ninety img {
 				display: block;
+                margin-left: auto;
+                margin-right: auto;
                 box-shadow: 0px 0px 4px 1px #737373;
 				width: 92%;
 			}
+                .image.fit.ninety p {
+                    display: block;
+                    margin: auto auto 4.25em auto;
+                    width: 92%;
+                }
 
 		.image.fit.sixty {
 			display: block;
-			margin: 0 0 2.25em 0;
+			margin: 0 0 1.25em 0;
 			width: 100%;
 		}
-
 			.image.fit.sixty img {
 				display: block;
+                margin-left: auto;
+                margin-right: auto;
                 box-shadow: 0px 0px 4px 1px #737373;
 				width: 80%;
 			}
+                .image.fit.sixty p {
+                    display: block;
+                    margin: auto auto 4.25em auto;
+                    width: 80%;
+                }
 
 			
 		.image.fit.fifty {
 			display: block;
-			margin: 0 0 2.25em 0;
+			margin: 0 0 1.25em 0;
 			width: 100%;
 		}
-
 			.image.fit.fifty img {
 				display: block;
+                margin-left: auto;
+                margin-right: auto;
                 box-shadow: 0px 0px 4px 1px #737373;
 				width: 70%;
 			}
+                .image.fit.fifty p {
+                    display: block;
+                    margin: auto auto 4.25em auto;
+                    width: 70%;
+                }
 
         .image.fit.forty {
 			display: block;
-			margin: 0 0 2.25em 0;
+			margin: 0 0 1.25em 0;
 			width: 100%;
 		}
-
 			.image.fit.forty img {
 				display: block;
+                margin-left: auto;
+                margin-right: auto;
                 box-shadow: 0px 0px 4px 1px #737373;
 				width: 60%;
 			}
+                .image.fit.forty p {
+                    display: block;
+                    margin: auto auto 4.25em auto;
+                    width: 60%;
+                }
 
         .image.fit.twentyfour {
 			display: block;
-			margin: 0 0 2.25em 0;
+			margin: 0 0 1.25em 0;
 			width: 100%;
 		}
-
 			.image.fit.twentyfour img {
 				display: block;
+                margin-left: auto;
+                margin-right: auto;
                 box-shadow: 0px 0px 4px 1px #737373;
 				width: 40%;
 			}
+                .image.fit.twentyfour p {
+                    display: block;
+                    margin: auto auto 4.25em auto;
+                    width: 40%;
+                }
 
 		.image.avatar {
 			border-radius: 100%;
@@ -3257,6 +3298,56 @@ input, select, textarea {
 			.image.main {
 				height: 12em;
 			}
+
+            .image.fit {
+                margin: 0 0 1em 0;
+            }
+                .image.fit p {
+                    margin: auto auto 3.25em auto;
+                }
+
+            .image.fit.hundred {
+                margin: 0 0 1em 0;
+            }
+                .image.fit.hundred p {
+                    margin: auto auto 3.25em auto;
+                }
+                
+            .image.fit.ninety {
+                margin: 0 0 1em 0;
+            }
+                .image.fit.ninety p {
+                    margin: auto auto 3.25em auto;
+                }
+                
+            .image.fit.sixty {
+                margin: 0 0 1em 0;
+            }
+                .image.fit.sixty p {
+                    margin: auto auto 3.25em auto;
+                }
+                
+            .image.fit.fifty {
+                margin: 0 0 1em 0;
+            }
+                .image.fit.fifty p {
+                    margin: auto auto 3.25em auto;
+                }
+
+        .image.fit.forty {
+			margin: 0 0 1em 0;
+		}
+                .image.fit.forty p {
+                    margin: auto auto 3.25em auto;
+                }
+
+        .image.fit.twentyfour {
+			margin: 0 0 1em 0;
+		}
+                .image.fit.twentyfour p {
+                    margin: auto auto 3.25em auto;
+                }
+
 
 		/* Section/Article */
 
