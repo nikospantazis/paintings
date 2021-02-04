@@ -1783,6 +1783,10 @@ input, select, textarea {
 			.container {
 				max-width: calc(100% - 1.125em);
 			}
+			
+            .container.contact {
+				max-width: calc(100% - 3.375em);
+			}
 
 		}
 
