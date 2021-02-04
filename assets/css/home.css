@@ -170,7 +170,7 @@ input, select, textarea {
 	h1, h2, h3, h4, h5, h6 {
 		color: #ededed;
         opacity: 0.9;
-		font-weight: 600;
+		font-weight: 700;
 		line-height: 1em;
 		margin: 0 0 0.5625em 0;
 	}
@@ -194,6 +194,7 @@ input, select, textarea {
 	h4 {
 		font-size: 2em;
 		line-height: 1.5em;
+        font-weight: 700;
 	}
 
 	h5 {
@@ -280,6 +281,7 @@ input, select, textarea {
         top: 8px;
         right: 18px;
         font-size: 22px;
+        font-weight: 600;
     }
 
 
@@ -378,7 +380,7 @@ input, select, textarea {
 /*added this for more line spacing on categories*/
 	header.categories h3 {
 		color: #ededed;
-        font-weight: 600;
+        font-weight: 700;
         text-shadow: 2px 3px 2px rgba(40,40,40,1),
                      3px 0px 4px rgba(40,40,40,1),
                      2px 2px 2px rgba(50,50,50,1);
@@ -1402,6 +1404,7 @@ input, select, textarea {
 
 			h4 {
 				font-size: 1.5em;
+                font-weight: 700;
 			}
 
 			h5 {
@@ -1445,6 +1448,7 @@ input, select, textarea {
         /*added this for more line spacing on categories*/
             header.categories h3 {
                 color: #ededed;
+                font-weight: 700;
                 text-shadow: 2px 3px 2px rgba(40,40,40,1),
                              3px 0px 4px rgba(40,40,40,1),
                              2px 2px 2px rgba(50,50,50,1);
