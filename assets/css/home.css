@@ -114,7 +114,7 @@ input, select, textarea {
 	}
 
 	body {
-		background: #ededed;
+		background: #404040;
 	}
 
 		body.is-preload *, body.is-preload *:before, body.is-preload *:after {
@@ -151,11 +151,11 @@ input, select, textarea {
 
 		a:hover {
 			border-bottom-color: transparent;
-			color: #737373 !important;
+			color: #ffffff !important;
 		}
 
 	strong, b {
-		color: #333333;
+		color: #ededed;
 		font-weight: 800;
 	}
 
@@ -168,7 +168,7 @@ input, select, textarea {
 	}
 
 	h1, h2, h3, h4, h5, h6 {
-		color: #333333;
+		color: #ededed;
         opacity: 0.9;
 		font-weight: 600;
 		line-height: 1em;
@@ -276,7 +276,7 @@ input, select, textarea {
 
     .topright {
         position: absolute;
-        color: #737373;
+        color: #ffffff;
         top: 8px;
         right: 18px;
         font-size: 22px;
@@ -377,10 +377,10 @@ input, select, textarea {
 		}
 /*added this for more line spacing on categories*/
 	header.categories h3 {
-		color: #333333;
+		color: #ededed;
         font-weight: 600;
-        text-shadow: 2px 3px 2px rgba(237,237,237,1),
-                     3px 0px 4px rgba(237,237,237,1),
+        text-shadow: 2px 3px 2px rgba(40,40,40,1),
+                     3px 0px 4px rgba(40,40,40,1),
                      2px 2px 2px rgba(50,50,50,1);
         opacity: 1;
         line-height:2.25em;
@@ -1444,9 +1444,9 @@ input, select, textarea {
 				}
         /*added this for more line spacing on categories*/
             header.categories h3 {
-                color: #333333;
-                text-shadow: 2px 3px 2px rgba(237,237,237,1),
-                             3px 0px 4px rgba(237,237,237,1),
+                color: #ededed;
+                text-shadow: 2px 3px 2px rgba(40,40,40,1),
+                             3px 0px 4px rgba(40,40,40,1),
                              2px 2px 2px rgba(50,50,50,1);
                 opacity: 1;
                 line-height:2.25em;
