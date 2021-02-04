@@ -1778,10 +1778,10 @@ input, select, textarea {
 
 		}
 
-		@media screen and (max-width: 480px) {
+		@media screen and (max-width: 736px) {
 
 			.container {
-				max-width: calc(100% - 3.375em);
+				max-width: calc(100% - 1em);
 			}
 
 		}
