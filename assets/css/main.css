@@ -2225,6 +2225,7 @@ input, select, textarea {
 				display: block;
                 box-shadow: 0px 0px 6px 1px #212121;
 				width: 100%;
+                min-height: 6em;
 			}
                 .image.fit p {
                     display: block;
@@ -2243,6 +2244,7 @@ input, select, textarea {
                 margin-right: auto;
                 box-shadow: 0px 0px 6px 1px #212121;
 				width: 96%;
+                min-height: 6em;
 			}
                 .image.fit.hundred p {
                     display: block;
@@ -2261,6 +2263,7 @@ input, select, textarea {
                 margin-right: auto;
                 box-shadow: 0px 0px 6px 1px #212121;
 				width: 92%;
+                min-height: 6em;
 			}
                 .image.fit.ninety p {
                     display: block;
@@ -2279,6 +2282,7 @@ input, select, textarea {
                 margin-right: auto;
                 box-shadow: 0px 0px 6px 1px #212121;
 				width: 80%;
+                min-height: 6em;
 			}
                 .image.fit.sixty p {
                     display: block;
@@ -2298,6 +2302,7 @@ input, select, textarea {
                 margin-right: auto;
                 box-shadow: 0px 0px 6px 1px #212121;
 				width: 70%;
+                min-height: 6em;
 			}
                 .image.fit.fifty p {
                     display: block;
@@ -2316,6 +2321,7 @@ input, select, textarea {
                 margin-right: auto;
                 box-shadow: 0px 0px 6px 1px #212121;
 				width: 60%;
+                min-height: 6em;
 			}
                 .image.fit.forty p {
                     display: block;
@@ -2332,8 +2338,9 @@ input, select, textarea {
 				display: block;
                 margin-left: auto;
                 margin-right: auto;
-                box-shadow: 0px 0px 4px 5px #333333;
+                box-shadow: 0px 0px 6px 1px #212121;
 				width: 40%;
+                min-height: 6em;
 			}
                 .image.fit.twentyfour p {
                     display: block;
