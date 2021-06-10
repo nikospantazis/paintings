@@ -2310,6 +2310,25 @@ input, select, textarea {
                     width: 70%;
                 }
 
+        .image.fit.fortyfive {
+			display: block;
+			margin: 0 0 1.25em 0;
+			width: 100%;
+		}
+			.image.fit.fortyfive img {
+				display: block;
+                margin-left: auto;
+                margin-right: auto;
+                box-shadow: 0px 0px 6px 1px #212121;
+				width: 65%;
+                min-height: 6em;
+			}
+                .image.fit.fortyfive p {
+                    display: block;
+                    margin: auto auto 4.25em auto;
+                    width: 65%;
+                }
+                
         .image.fit.forty {
 			display: block;
 			margin: 0 0 1.25em 0;
@@ -3345,6 +3364,13 @@ input, select, textarea {
                     margin: auto auto 3.25em auto;
                 }
 
+        .image.fit.fortyfive {
+			margin: 0 0 1em 0;
+		}
+                .image.fit.fortyfive p {
+                    margin: auto auto 3.25em auto;
+                }
+                
         .image.fit.forty {
 			margin: 0 0 1em 0;
 		}
