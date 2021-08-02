@@ -32,6 +32,14 @@
   font-display: block;
 
 }
+@font-face {
+  font-family: Recursive;
+  src: @import url('https://fonts.googleapis.com/css2?family=Recursive:wght@700&display=swap');
+  font-weight: 700;
+  font-display: block;
+
+}
+
 /*
 	Read Only by HTML5 UP
 	html5up.net | @ajlkn
@@ -130,7 +138,7 @@ input, select, textarea {
 
 	body, input, select, textarea {
 		color: #888;
-		font-family: 'Open Sans', Monospace;
+		font-family: 'Open Sans', 'Recursive', mono;
 		font-size: 16pt;
 		font-weight: 400;
 		line-height: 1.75em;
@@ -240,14 +248,14 @@ input, select, textarea {
 		background: #555;
 		border-radius: 5px;
 		color: #fff;
-		font-family: 'Open Sans', Monospace;
+		font-family: 'Open Sans', 'Recursive', mono;
 		font-size: 0.9em;
 		margin: 0 0.25em;
 		padding: 0.25em 0.65em;
 	}
 
 	pre {
-		font-family: 'Open Sans', Monospace;
+		font-family: 'Open Sans', 'Recursive', mono;
 		font-size: 0.9em;
 		margin: 0 0 2.25em 0;
 	}
