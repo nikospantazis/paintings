@@ -175,7 +175,7 @@ input, select, textarea {
 		margin: 0 0 0.5625em 0;
 	}
 
-		h1 a, h2 a, h3 a, h4 a, h5 a, h6 a, h7 a {
+		h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 			border: 0;
 			color: inherit;
 			text-decoration: none;
@@ -205,11 +205,6 @@ input, select, textarea {
 	h6 {
 		font-size: 0.7em;
 		line-height: 1.5em;
-	}
-	
-	h7 {
-		font-size: 1em;
-		line-height: 0;
 	}
 
 	sub {
@@ -387,7 +382,7 @@ input, select, textarea {
 		color: #ededed;
         font-weight: 700;
         opacity: 0.9;
-        line-height:2.25em;
+        line-height:2.15em;
 		font-size: 2em;
 	}
 
@@ -1413,11 +1408,6 @@ input, select, textarea {
 				font-size: 1em;
 			}
 
-			h7 {
-				font-size: 1em;
-                line-height: 1.25em;
-			}
-
             .topright {
                 position: absolute;
                 top: 6px;
@@ -1457,7 +1447,7 @@ input, select, textarea {
                 color: #ededed;
                 font-weight: 700;
                 opacity: 0.9;
-                line-height:2.25em;
+                line-height:2.15em;
                 font-size: 1.5em;
             }
 		/* Features */
