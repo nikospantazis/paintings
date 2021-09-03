@@ -664,7 +664,13 @@ input, select, textarea {
 				border-radius: 0;
 			}
 
-
+			/*added thiw for riseart*/
+    .riseart img {
+        position: relative;
+        top: 0.6em;
+		height: 2em;
+	}
+    
 /* Actions */
 
 	ul.actions {
@@ -837,7 +843,7 @@ input, select, textarea {
 		cursor: default;
 		list-style: none;
 		padding-left: 0;
-        padding-top: 2em;
+        padding-top: 1.5em;
 	}
 
 		ul.icons li {
