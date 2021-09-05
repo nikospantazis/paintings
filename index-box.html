@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<!--
+	Read Only by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Νίκος Πανταζής - Ζωγραφική</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/home-box.css" />
+	</head>
+	<body class="is-preload">
+            <div class=topright>
+            <a href="index-en.html">En</a>
+            </div>
+				<!-- Main -->
+					<div id="main">
+
+						<!-- One -->
+							<section id="one">
+                                <div class="container">
+                                <h2><b>Νίκος Πανταζής</b></h2>
+                                <h4><b>Ζωγραφική</b></h4>
+                                <h6><br></h6>
+                                </div>
+                                    <div id="slideshow">
+                                        <div>
+                                            <picture>
+                                                <source srcset="images/group3/DSC1267b-big.jpg" media="(min-width: 800px)">
+                                                <img src="images/group3/DSC1267b.jpg" alt="" />
+                                            </picture>
+                                        </div>
+                                        <div>
+                                            <picture>
+                                                <source srcset="images/group5/DSC1094b-big.jpg" media="(min-width: 800px)">
+                                                <img src="images/group5/DSC1094b.jpg" alt="" />
+                                            </picture>
+                                        </div>
+                                        <div>
+                                            <picture>
+                                                <source srcset="images/group1/DSC_1079b-big.jpg" media="(min-width: 800px)">
+                                                <img src="images/group1/DSC_1079b.jpg" alt="">
+                                            </picture>
+                                        </div>
+                                        <div>
+                                            <picture>
+                                                <source srcset="images/group3/DSC1044b-big.jpg" media="(min-width: 800px)">
+                                                <img src="images/group3/DSC1044b.jpg" alt="" />
+                                            </picture>
+                                        </div>
+                                        <div>
+                                            <picture>
+                                                <source srcset="images/group2/DSC_1043b-big.jpg" media="(min-width: 800px)">
+                                                <img src="images/group2/DSC_1043b.jpg" alt="" />
+                                            </picture>
+                                        </div>
+                                    </div>
+								<div class="container">
+                                    <header class="categories">
+                                        <h3><a href="group1.html">&nbsp;&nbsp;Ανθισμένη&nbsp;φύση&nbsp;&nbsp;</a></h3>
+                                        <h3><a href="group2.html">&nbsp;&nbsp;Κτήρια&nbsp;σε&nbsp;τοπία&nbsp;&nbsp;</a></h3>
+                                        <h3><a href="group3.html">&nbsp;&nbsp;Θάλασσα&nbsp;&nbsp;</a></h3>
+                                        <h3><a href="group4.html">&nbsp;&nbsp;Ποτάμι&nbsp;&nbsp;<a/></h3>
+                                        <h3><a href="group5.html">&nbsp;&nbsp;Βουνό&nbsp;&nbsp;<a/></h3>
+                                        <!-- <a href="group6.html">Άνθρωποι</a>&nbsp; -->
+                                    </header>
+                        <ul class="icons">
+                        <h5><a href="mailto:pantazisnikolaos@gmail.com" class="icon solid fa-envelope">&nbsp;e-mail</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.instagram.com/nikospantazis55/" class="icon brands fa-instagram">&nbsp;instagram</a></h5>
+                        </ul>
+                                </div>
+                            </section>
+                       </div>
+<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+<!--        <script src="assets/js/browser.min.js"></script>    -->
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+            <script>
+                $("#slideshow > div:gt(0)").hide();
+
+                setInterval(function() {
+                    $('#slideshow > div:first')
+                        .fadeOut(1000)
+                        .next()
+                        .fadeIn(1000)
+                        .end()
+                        .appendTo('#slideshow');
+                }, 3000);
+            </script>
+	</body>
+</html>

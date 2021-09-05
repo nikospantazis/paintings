@@ -289,7 +289,6 @@ input, select, textarea {
 
 	.container {
 /*added from demo.css*/ position: relative;
-        text-align: center;
 		margin: 0 auto;
 		max-width: calc(100% - 4.5em);
 		width: 85%;
@@ -330,7 +329,7 @@ input, select, textarea {
 		@media screen and (max-width: 480px) {
 
 			.container {
-				max-width: calc(100% - 5vw);
+				max-width: calc(100% - 3.375em);
 			}
 
 		}
@@ -1151,7 +1150,7 @@ input, select, textarea {
 
 /* XLarge */
 
-	@media screen and (max-width: 10680px) {
+	@media screen and (max-width: 1680px) {
 
 		/* Basic */
 
@@ -1507,7 +1506,7 @@ input, select, textarea {
 		/* Main */
 
 			#main > section > .container {
-				padding: 1em 0 1em 0;
+				padding: 1em 0 0 0;
 			}
 
 		/* Footer */
@@ -1621,60 +1620,50 @@ input, select, textarea {
 	}
 
 
-/* Photos */
+/*slideshow*/
 
-#photos {
-
-    line-height:         5vw;
-    margin:              2vw;
-   -webkit-column-count: 3;
-   -webkit-column-gap:   0px;
-   -moz-column-count:    3;
-   -moz-column-gap:      0px;
-   column-count:         3;
-   column-gap:           2vw;
-
+#slideshow {
+    position: relative;
+    width: 100%;
+    height: 15em;
+/*  padding: 10px; */
+/*    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4); */
 }
 
-#photos img {
-  /* Just in case there are inline attributes */
-  width: 100% !important;
-  height: auto !important;
-  box-shadow: 0px 0px 6px 1px #212121;
+#slideshow > div {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
 }
 
-@media (max-width: 1200px) {
-  #photos {
-  -moz-column-count:    3;
-  -webkit-column-count: 3;
-  column-count:         3;
-  }
-}
-@media (max-width: 1000px) {
-  #photos {
-  -moz-column-count:    3;
-  -webkit-column-count: 3;
-  column-count:         3;
-  }
-}
-@media (max-width: 800px) {
-  #photos {
-  -moz-column-count:    2;
-  -webkit-column-count: 2;
-  column-count:         2;
-  }
-}
-@media (max-width: 600px) {
-  #photos {
-  -moz-column-count:    2;
-  -webkit-column-count: 2;
-  column-count:         2;
-  line-height:         7vw;
-  }
+#slideshow > div > img {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    object-fit: cover;
+    max-height: 100%;
+    margin: auto auto;
 }
 
-body {
-  margin: 0;
-  padding: 0;
+#slideshow > div > picture {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
 }
 
+#slideshow > div > picture > img {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    object-fit: cover;
+    max-height: 100%;
+    margin: auto auto;
+}
