@@ -116,7 +116,7 @@ body.lb-disable-scrolling {
 
 .lb-nav a.lb-prev:hover {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
-  opacity: 1;
+  opacity: 0;
 }
 
 .lb-nav a.lb-next {
@@ -134,7 +134,7 @@ body.lb-disable-scrolling {
 
 .lb-nav a.lb-next:hover {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
-  opacity: 1;
+  opacity: 0;
 }
 
 .lb-dataContainer {
