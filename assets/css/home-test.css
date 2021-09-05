@@ -1640,7 +1640,7 @@ input, select, textarea {
   /* Just in case there are inline attributes */
   width: 100% !important;
   height: auto !important;
-  box-shadow: 0px 0px 6px 2px #212121;
+  box-shadow: 0px 0px 6px 1px #212121;
 }
 
 @media (max-width: 1200px) {
