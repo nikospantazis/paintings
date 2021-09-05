@@ -121,7 +121,11 @@
             <script type="text/javascript" src="assets/js/jquery.lazy.min.js"></script>
             <script>
             $(function() {
-                $('.lazy').Lazy();
+                $('.lazy').lazy({
+                effect: "fadeIn",
+                effectTime: 400,
+                threshold: 0
+        });
             });
             </script>
             <script>
