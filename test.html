@@ -63,18 +63,18 @@
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
 			<script src="assets/js/lightbox.js"></script>
-			<script src="assets/js/jquery.event.move.js"></script>
-			<script src="assets/js/jquery.event.swipe.js"></script>
             <script type="text/javascript" src="assets/js/jquery.lazy.min.js"></script>
             <script>
             $(function() {
                 $('.lazy').Lazy();
             });
-            
             </script>
             <script>
                 lightbox.option({
-                'enableSwipeOnTouchDevices': true
+                'disableScrolling': true,
+                'showImageNumberLabel' : false,
+                'wrapAround': true,
+                'positionFromTop': 10,
                 })
             </script>
 

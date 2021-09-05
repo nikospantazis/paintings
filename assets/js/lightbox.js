@@ -36,8 +36,6 @@
     // options
     this.options = $.extend({}, this.constructor.defaults);
     this.option(options);
-    this.enableSwipeOnTouchDevices = true; 
-
   }
 
   // Descriptions of all options available on the demo site:
@@ -175,27 +173,6 @@
       return false;
     });
 
-    this.$lightbox.find('.lb-image').on("swiperight",function() {
-        $('.lb-image').effect("slide", { "direction" : "right",  "mode" : "hide"} ,function(){
-            if (self.currentImageIndex === 0) {
-            self.changeImage(self.album.length - 1);
-            } else {
-            self.changeImage(self.currentImageIndex - 1);
-            }
-        })
-    });
-
-
-this.$lightbox.find('.lb-image').on("swipeleft",function() {  
-    $('.lb-image').effect("slide", { "direction" : "left",  "mode" : "hide"} ,function(){
-        if (self.currentImageIndex === self.album.length - 1) {
-          self.changeImage(0);
-        } else {
-          self.changeImage(self.currentImageIndex + 1);
-        }
-    })
-});
-
     /*
       Show context menu for image on right-click
 
@@ -280,7 +257,7 @@ this.$lightbox.find('.lb-image').on("swipeleft",function() {
     var top  = $window.scrollTop() + this.options.positionFromTop;
     var left = $window.scrollLeft();
     this.$lightbox.css({
-      top: top + 'px',
+      // top: top + 'px', // for center alignment
       left: left + 'px'
     }).fadeIn(this.options.fadeDuration);
 
@@ -378,7 +355,16 @@ this.$lightbox.find('.lb-image').on("swipeleft",function() {
         }
       }
       self.sizeContainer($image.width(), $image.height());
-    };
+      //added for centering lightbox
+        var window_height = windowHeight;
+        var img_height = $image.height();
+        var scroll_offset  = $(window).scrollTop();
+        var view_offset = window_height/2 - img_height/2;
+        var top_distance = scroll_offset + view_offset;
+    //end - added for centering lightbox
+        
+        self.$lightbox.css('top', top_distance+'px');
+        };
 
     // Preload image before showing
     preloader.src = this.album[imageNumber].link;
@@ -449,45 +435,39 @@ this.$lightbox.find('.lb-image').on("swipeleft",function() {
 
   // Display previous and next navigation if appropriate.
   Lightbox.prototype.updateNav = function() {
-  // Check to see if the browser supports touch events. If so, we take the conservative approach
-  // and assume that mouse hover events are not supported and always show prev/next navigation
-  // arrows in image sets.
-  var alwaysShowNav = false;
-  var enableSwipe = false;
-  try {
-    document.createEvent("TouchEvent");
-    alwaysShowNav = (this.options.alwaysShowNavOnTouchDevices)? true: false;
-    enableSwipe =  (this.options.enableSwipeOnTouchDevices)? true: false;
-  } catch (e) {}
+    // Check to see if the browser supports touch events. If so, we take the conservative approach
+    // and assume that mouse hover events are not supported and always show prev/next navigation
+    // arrows in image sets.
+    var alwaysShowNav = false;
+    try {
+      document.createEvent('TouchEvent');
+      alwaysShowNav = (this.options.alwaysShowNavOnTouchDevices) ? true : false;
+    } catch (e) {}
 
+    this.$lightbox.find('.lb-nav').show();
 
-    //if swiping is enable, hide the two navigation buttons
-    if (! enableSwipe) {
-      this.$lightbox.find('.lb-nav').show();
-
-      if (this.album.length > 1) {
-        if (this.options.wrapAround) {
+    if (this.album.length > 1) {
+      if (this.options.wrapAround) {
+        if (alwaysShowNav) {
+          this.$lightbox.find('.lb-prev, .lb-next').css('opacity', '1');
+        }
+        this.$lightbox.find('.lb-prev, .lb-next').show();
+      } else {
+        if (this.currentImageIndex > 0) {
+          this.$lightbox.find('.lb-prev').show();
           if (alwaysShowNav) {
-            this.$lightbox.find('.lb-prev, .lb-next').css('opacity', '1');
+            this.$lightbox.find('.lb-prev').css('opacity', '1');
           }
-          this.$lightbox.find('.lb-prev, .lb-next').show();
-        } else {
-          if (this.currentImageIndex > 0) {
-            this.$lightbox.find('.lb-prev').show();
-            if (alwaysShowNav) {
-              this.$lightbox.find('.lb-prev').css('opacity', '1');
-            }
-          }
-          if (this.currentImageIndex < this.album.length - 1) {
-            this.$lightbox.find('.lb-next').show();
-            if (alwaysShowNav) {
-              this.$lightbox.find('.lb-next').css('opacity', '1');
-            }
+        }
+        if (this.currentImageIndex < this.album.length - 1) {
+          this.$lightbox.find('.lb-next').show();
+          if (alwaysShowNav) {
+            this.$lightbox.find('.lb-next').css('opacity', '1');
           }
         }
       }
-  }
-};
+    }
+  };
 
   // Display caption, image number, and closing button.
   Lightbox.prototype.updateDetails = function() {
