@@ -277,6 +277,7 @@ input, select, textarea {
 
     .topright {
         position: absolute;
+        z-index: 9;
         color: #ffffff;
         top: 8px;
         right: 18px;
