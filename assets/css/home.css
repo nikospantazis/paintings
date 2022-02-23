@@ -671,6 +671,15 @@ input, select, textarea {
         position: relative;
         top: 0.65em;
 		height: 2em;
+        opacity: 0.9;
+	}
+	
+			/*added for saatchiart*/
+    .saatchiart img {
+        position: relative;
+        top: 0.35em;
+		height: 1.35em;
+        opacity: 0.9;
 	}
     
 /* Actions */
@@ -846,7 +855,7 @@ input, select, textarea {
 		list-style: none;
 		padding-left: 0;
         padding-top: 0;
-        white-space: nowrap;
+        white-space: normal;
 	}
 
 		ul.icons li {
