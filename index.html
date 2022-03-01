@@ -132,13 +132,13 @@
             <script>
             $(function() {
                 $('.lazy').lazy({
+                    enableThrottle: true,
+                    throttle: 150
+                });
+                $('.lazy').lazy({
                     effect: "fadeIn",
                     effectTime: 400,
                     threshold: 0
-                });
-                $('.lazy').lazy({
-                    enableThrottle: true,
-                    throttle: 150
                 });
             });
             
