@@ -131,10 +131,12 @@
             <script>
             $(function() {
                 $('.lazy').lazy({
-                effect: "fadeIn",
-                effectTime: 400,
-                threshold: 0
-        });
+                    enableThrottle: true,
+                    throttle: 100,
+                    effect: "fadeIn",
+                    effectTime: 400,
+                    threshold: 0
+                });
             });
             </script>
             <script>
