@@ -1,6 +1,5 @@
 body.lb-disable-scrolling {
-  overflow: hidden;
-  position: relative;
+  position: fixed;
 }
 
 .lightboxOverlay {
