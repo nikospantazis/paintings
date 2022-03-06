@@ -13,6 +13,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/home.css" />
 		<link rel="stylesheet" href="assets/css/lightbox.css" />
+		<link rel="stylesheet" href="assets/css/jquery.mobile-1.4.5.min.css" />
 	</head>
 	<body class="is-preload">
             <div class=topright>
@@ -129,8 +130,9 @@
                     </section>        
 <!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/lightbox.js"></script>
+			<script src="assets/js/lightbox.min.js"></script>
             <script type="text/javascript" src="assets/js/jquery.lazy.min.js"></script>
+            <script src="assets/js/jquery.mobile-1.4.5.min.js"></script>
             <script>
             $(function() {
                 $('.lazy').lazy({
@@ -151,7 +153,35 @@
                 'fadeDuration': 300
                 })
             </script>
+            <script>
+            function leftTrigger(){
+                    setTimeout(function(){
+                        $('.lightbox').on('swipeleft', leftHandler);
 
+                        function leftHandler(){
+                        $('.lb-next').click();
+                        }
+                    }, 1000);
+                }
+
+                
+
+                function rightTrigger(){
+                    setTimeout(function(){
+                        $('.lightbox').on('swiperight', leftHandler);
+
+                        function leftHandler(){
+                        $('.lb-prev').click();
+                        }
+                    }, 1000);
+                }
+            
+                $('[data-lightbox]').on('click', function(){
+                    leftTrigger();
+                    rightTrigger();
+                });
+            </script>
+            
 
 	</body>
 </html>
