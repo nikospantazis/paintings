@@ -161,7 +161,7 @@
             <script>
             function leftTrigger(){
                     setTimeout(function(){
-                        $('.lightbox').one('swipeleft', leftHandler);
+                        $('.lightbox').on('swipeleft', leftHandler);
 
                         function leftHandler(){
                         $('.lb-next').click();
@@ -173,7 +173,7 @@
 
                 function rightTrigger(){
                     setTimeout(function(){
-                        $('.lightbox').one('swiperight', leftHandler);
+                        $('.lightbox').on('swiperight', leftHandler);
 
                         function leftHandler(){
                         $('.lb-prev').click();
@@ -181,9 +181,10 @@
                     }, 0);
                 }
             
-                $('[data-lightbox]').one('click', function(){
+                $('[data-lightbox]').on('click', function(){
                     leftTrigger();
                     rightTrigger();
+                    $('[data-lightbox]').off('click')
                 });
             </script>
             
