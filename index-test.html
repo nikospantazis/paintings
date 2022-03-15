@@ -170,10 +170,20 @@
                 }
 
                 
+
+                function rightTrigger(){
+                    setTimeout(function(){
+                        $('.lightbox').on('swiperight', leftHandler);
+
+                        function leftHandler(){
+                        $('.lb-prev').click();
+                        }
+                    }, 0);
                 }
             
-                $('[data-lightbox]').on('swipeleft', function(){
+                $('[data-lightbox]').on('click', function(){
                     leftTrigger();
+                    rightTrigger();
                 });
             </script>
             
