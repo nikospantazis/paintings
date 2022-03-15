@@ -158,7 +158,6 @@
                 'disableScrolling': true
                 })
             </script>
-            <!--
             <script>
             function leftTrigger(){
                     setTimeout(function(){
@@ -186,33 +185,7 @@
                     leftTrigger();
                     rightTrigger();
                 });
-            </script>
-            -->
-            <script>
-            function leftTrigger(){
-                    setTimeout(function(){
-                        $('[data-lightbox]').on('swipeleft', leftHandler);
-
-                        function leftHandler(){
-                        $('.lb-next').click();
-                        }
-                    }, 0);
-                }
-
-                
-
-                function rightTrigger(){
-                    setTimeout(function(){
-                        $('[data-lightbox]').on('swiperight', leftHandler);
-
-                        function leftHandler(){
-                        $('.lb-prev').click();
-                        }
-                    }, 0);
-                }
-            
-
-            </script>
+            </script>z
             
 
 	</body>
