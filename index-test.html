@@ -161,7 +161,7 @@
             <script>
             function leftTrigger(){
                     setTimeout(function(){
-                        $('.lightbox').on('swipeleft', leftHandler);
+                        $('.lightbox').one('swipeleft', leftHandler);
 
                         function leftHandler(){
                         $('.lb-next').click();
@@ -173,7 +173,7 @@
 
                 function rightTrigger(){
                     setTimeout(function(){
-                        $('.lightbox').on('swiperight', leftHandler);
+                        $('.lightbox').one('swiperight', leftHandler);
 
                         function leftHandler(){
                         $('.lb-prev').click();
