@@ -1,9 +1,11 @@
 <!DOCTYPE HTML>
 <!--
+    https://github.com/nikospantazis/paintings
+    
 	Read Only by HTML5 UP
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-
+	
 	Lightbox2 by Lokesh Dhakar https://lokeshdhakar.com/ (https://raw.githubusercontent.com/lokesh/lightbox2/master/LICENSE)
 -->
 <html>
@@ -127,9 +129,13 @@
                         </a>
                     </section>        
 <!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/lightbox.js"></script>
+            <script src='assets/js/jquery-1.11.3.js'></script>
+            <script src='assets/js/jquery.mobile-1.4.5.min.js'></script>
+            <script src="assets/js/lightbox-locked.js"></script> <!-- this is an edited file -->
             <script type="text/javascript" src="assets/js/jquery.lazy.min.js"></script>
+            <script>
+            $.mobile.loading().hide();
+            </script>
             <script>
             $(function() {
                 $('.lazy').lazy({
@@ -147,8 +153,38 @@
                 'positionFromTop': 10,
                 'resizeDuration': 0,
                 'imageFadeDuration': 300,
-                'fadeDuration': 300
+                'fadeDuration': 300,
+                'disableScrolling': true
                 })
+            </script>
+            <script>
+            function leftTrigger(){
+                    setTimeout(function(){
+                        $('.lightbox').on('swipeleft', leftHandler);
+
+                        function leftHandler(){
+                        $('.lb-next').click();
+                        }
+                    }, 0);
+                }
+
+                
+
+                function rightTrigger(){
+                    setTimeout(function(){
+                        $('.lightbox').on('swiperight', leftHandler);
+
+                        function leftHandler(){
+                        $('.lb-prev').click();
+                        }
+                    }, 0);
+                }
+            
+                $('[data-lightbox]').on('click', function(){
+                    leftTrigger();
+                    rightTrigger();
+                    $('[data-lightbox]').off('click')
+                });
             </script>
 
 
