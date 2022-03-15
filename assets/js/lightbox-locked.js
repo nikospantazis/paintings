@@ -255,7 +255,11 @@
 
     // Position Lightbox
     
-
+    //Added for scroll lock
+    const scrollY = document.documentElement.style.getPropertyValue('--scroll-y');
+    const body = document.body;
+    body.style.position = 'fixed';
+    body.style.top = `-${scrollY}`;
     
     var top  = $window.scrollTop() + this.options.positionFromTop;
     var left = $window.scrollLeft();
@@ -560,7 +564,12 @@
     if (this.options.disableScrolling) {
       $('body').removeClass('lb-disable-scrolling');
       
-
+    //Added for scroll lock
+  const body = document.body;
+  const scrollY = body.style.top;
+  body.style.position = '';
+  body.style.top = '';
+  window.scrollTo(0, parseInt(scrollY || '0') * -1);
       
     }
   };
@@ -568,4 +577,7 @@
   return new Lightbox();
 }));
 
+//Added for scroll lock
+window.addEventListener('scroll', () => {
+  document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`);
 });
