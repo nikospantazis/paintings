@@ -681,6 +681,14 @@ input, select, textarea {
 		height: 1.35em;
         opacity: 0.9;
 	}
+	
+            /*added for artfinder*/
+    .artfinder img {
+        position: relative;
+        top: 0.08em;
+		height: 1em;
+        opacity: 0.9;
+	}
     
 /* Actions */
 
