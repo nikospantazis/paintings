@@ -1274,6 +1274,9 @@ input, select, textarea {
 				padding: 4em 0 2em 0;
 			}
 
+                #main > section > .container.avatar-text {
+                    padding: 2em 0 1em 0;
+                }
 	}
 
 /* Large */
