@@ -129,9 +129,9 @@ input, select, textarea {
 		}
 
 	body, input, select, textarea {
-		color: #888;
+		color: #ededed;
 		font-family: 'Open Sans', mono;
-		font-size: 16pt;
+		font-size: 20pt;
 		font-weight: 400;
 		/*line-height: 1.75em;*/
 	}
@@ -149,11 +149,6 @@ input, select, textarea {
 		text-decoration: none;
 	}
 
-		a:hover {
-			border-bottom-color: transparent;
-			color: #ffffff !important;
-		}
-
 	strong, b {
 		color: #ededed;
 		font-weight: 800;
@@ -170,7 +165,6 @@ input, select, textarea {
 	h1, h2, h3, h4, h5, h6 {
 		color: #ededed;
         opacity: 0.9;
-		font-weight: 700;
 		line-height: 1em;
 		margin: 0 0 0.5625em 0;
 	}
@@ -200,11 +194,13 @@ input, select, textarea {
 	h5 {
 		font-size: 1.2em;
 		line-height: 1.5em;
+        font-weight: 600;
 	}
 
 	h6 {
-		font-size: 0.7em;
+		font-size: 1.2em;
 		line-height: 1.5em;
+        font-weight: 400;
 	}
 
 	sub {
@@ -275,15 +271,40 @@ input, select, textarea {
 
 /* topright */
 
-    .topright {
-        position: absolute;
-        z-index: 9;
-        color: #ffffff;
-        top: 8px;
-        right: 18px;
-        font-size: 22px;
-        font-weight: 600;
-    }
+.topright {
+    position: absolute;
+    z-index: 9;
+    top: 8px;
+    right: 18px;
+    font-size: 22px;
+    font-weight: 600;
+    
+    background-color: #474747;
+    border-radius: 24px;
+    border-style: none;
+    -webkit-box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
+            box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    color: #e6e6e6;
+    font-weight: 700;
+    padding: 10px 10px;
+    -webkit-transition: background box-shadow 280ms ease;
+    transition: background box-shadow 280ms ease;
+}
+
+.topright:hover {
+ background: #404040;
+ color: #a6a6a6;
+}
+
+.topright:active {
+ -webkit-box-shadow: 0 1px 1px 0 rgb(0 0 0 / 30%), 0 1px 1px 1px rgb(0 0 0 / 15%);
+         box-shadow: 0 1px 1px 0 rgb(0 0 0 / 30%), 0 1px 1px 1px rgb(0 0 0 / 15%);
+ outline: none;
+ 
+}
+
 
 
 /* Container */
@@ -295,7 +316,10 @@ input, select, textarea {
 		max-width: calc(100% - 4.5em);
 		width: 85%;
 	}
-
+        .container.avatar-text {
+            text-align: left;
+        }
+        
 		.container.xsmall {
 			width: 11.25em;
 		}
@@ -324,6 +348,9 @@ input, select, textarea {
 
 			.container {
 				width: 100% !important;
+			}
+			.container.avatar-text {
+				width: 90% !important;
 			}
 
 		}
@@ -646,14 +673,13 @@ input, select, textarea {
 
 			
 		.image.avatar {
-			border-radius: 100%;
 			overflow: hidden;
+            width: 100%;
 		}
 
 			.image.avatar img {
-				border-radius: 100%;
+                margin: auto;
 				display: block;
-				width: 100%;
 			}
 
 		.image.main {
@@ -796,19 +822,11 @@ input, select, textarea {
 
 					ul.actions:not(.fixed) li input[type="submit"],
 					ul.actions:not(.fixed) li input[type="reset"],
-					ul.actions:not(.fixed) li input[type="button"],
-					ul.actions:not(.fixed) li button,
-					ul.actions:not(.fixed) li .button {
-						width: 100%;
-					}
+					
 
 						ul.actions:not(.fixed) li input[type="submit"].icon:before,
 						ul.actions:not(.fixed) li input[type="reset"].icon:before,
-						ul.actions:not(.fixed) li input[type="button"].icon:before,
-						ul.actions:not(.fixed) li button.icon:before,
-						ul.actions:not(.fixed) li .button.icon:before {
-							margin-left: -0.5rem;
-						}
+						
 
 		}
 
@@ -855,6 +873,36 @@ input, select, textarea {
 				top: 0;
 				width: 2.5em;
 			}
+
+
+
+
+.button {
+    width: fit-content;
+    background-color: #474747;
+    border-radius: 24px;
+    border-style: none;
+    -webkit-box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
+            box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    color: #e6e6e6;
+    font-weight: 700;
+    padding: 6px 15px;
+    -webkit-transition: background box-shadow 280ms ease;
+    transition: background box-shadow 280ms ease;
+}
+
+.button:hover {
+    background: #404040;
+    color: #a6a6a6;
+}
+
+.button:active {
+    -webkit-box-shadow: 0 1px 1px 0 rgb(0 0 0 / 30%), 0 1px 1px 1px rgb(0 0 0 / 15%);
+            box-shadow: 0 1px 1px 0 rgb(0 0 0 / 30%), 0 1px 1px 1px rgb(0 0 0 / 15%);
+    outline: none;
+}
 
 /* Icons */
 
@@ -1176,6 +1224,29 @@ input, select, textarea {
 			body, input, select, textarea {
 				font-size: 13pt;
 			}
+            
+			.image.avatar img {
+				width: 25%;
+			}
+			
+            .button {
+                font-size: 1em;
+            }
+            
+		/* Image */
+
+			.image.left, .image.right {
+				max-width: 40%;
+			}
+
+				.image.left img, .image.right img {
+					width: 100%;
+				}
+
+			.image.main {
+				height: 20em;
+			}
+
 
 		/* Header */
 
@@ -1212,9 +1283,13 @@ input, select, textarea {
 		/* Basic */
 
 			body, input, select, textarea {
-				font-size: 11pt;
+				font-size: 12pt;
 			}
-
+			
+			.image.avatar img {
+				width: 20%;
+			}
+			
 		/* Header */
 
 			#header {
@@ -1246,11 +1321,17 @@ input, select, textarea {
 			body, input, select, textarea {
 				font-size: 12pt;
 			}
-
+			
+            .button {
+                font-size: 1em;
+            }
 		/* Image */
-
+            .image.avatar img {
+				width: 30%;
+			}
+			
 			.image.left, .image.right {
-				max-width: 40%;
+				max-width: 45%;
 			}
 
 				.image.left img, .image.right img {
@@ -1260,7 +1341,6 @@ input, select, textarea {
 			.image.main {
 				height: 20em;
 			}
-
 		/* Header */
 
 			#header {
@@ -1434,15 +1514,24 @@ input, select, textarea {
 				font-size: 1em;
 			}
 
+			h6 {
+				font-size: 1em;
+			}
+
             .topright {
                 position: absolute;
                 top: 6px;
                 right: 16px;
                 font-size: 20px;
             }
+            .button {
+                font-size: 1em;
+            }
             
 		/* Image */
-
+            .image.avatar img {
+				width: 33%;
+			}
 			.image.left {
 				margin: 0 1.5em 1em 0;
 			}
@@ -1581,12 +1670,19 @@ input, select, textarea {
 				font-size: 12pt;
 			}
 			
+			.image.avatar img {
+				width: 45%;
+			}
             .topright {
                 position: absolute;
-                top: 2px;
-                right: 12px;
+                top: 4px;
+                right: 4px;
                 font-size: 18px;
             }
+            .button {
+                font-size: 1em;
+            }
+            
             
 		/* List */
 
@@ -1626,16 +1722,6 @@ input, select, textarea {
 				display: block;
 				width: 100%;
 			}
-
-		/* Button */
-
-			input[type="submit"],
-			input[type="reset"],
-			input[type="button"],
-			.button {
-				padding: 0;
-			}
-
 	}
 
 
