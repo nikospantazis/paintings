@@ -317,7 +317,7 @@ input, select, textarea {
 		width: 85%;
 	}
         .container.avatar-text {
-            text-align: left;
+            text-align: justify;
         }
         
 		.container.xsmall {
