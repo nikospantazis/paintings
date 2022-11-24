@@ -129,7 +129,7 @@ input, select, textarea {
 		}
 
 	body, input, select, textarea {
-		color: #ededed;
+		color: #d8d8d8;
 		font-family: 'Open Sans', mono;
 		font-size: 20pt;
 		font-weight: 400;
@@ -150,7 +150,7 @@ input, select, textarea {
 	}
 
 	strong, b {
-		color: #ededed;
+		color: #d8d8d8;
 		font-weight: 800;
 	}
 
@@ -163,8 +163,8 @@ input, select, textarea {
 	}
 
 	h1, h2, h3, h4, h5, h6 {
-		color: #ededed;
-        opacity: 0.9;
+		color: #d8d8d8;
+        opacity: 1;
 		line-height: 1em;
 		margin: 0 0 0.5625em 0;
 	}
@@ -305,6 +305,25 @@ input, select, textarea {
  
 }
 
+/*sticky */
+.sticky {
+    position: sticky;
+    top: 0px;
+    text-align: center;
+    margin: 0 auto;
+    background-color: #404040;
+    -webkit-box-shadow: rgba(64, 64, 64, 1) 0 2px 7px 4px;
+            box-shadow: rgba(64, 64, 64, 1) 0 2px 7px 4px;
+            
+    
+}
+    .sticky img {
+        position: relative;
+        top: 0.3em;
+		height: 1.3em;
+        width: auto;
+        opacity: 0.8;
+	}
 
 
 /* Container */
@@ -408,9 +427,9 @@ input, select, textarea {
 		}
 /*added this for more line spacing on categories*/
 	header.categories h3 {
-		color: #ededed;
+		color: #d8d8d8;
         font-weight: 700;
-        opacity: 0.9;
+        opacity: 1;
         line-height:2.15em;
 		font-size: 2em;
 	}
@@ -1317,10 +1336,11 @@ input, select, textarea {
 
 		/* Basic */
 
+/*removed for sticky to work
 			html, body {
 				overflow-x: hidden;
 			}
-
+*/
 			body, input, select, textarea {
 				font-size: 12pt;
 			}
@@ -1562,9 +1582,9 @@ input, select, textarea {
 				}
         /*added this for more line spacing on categories*/
             header.categories h3 {
-                color: #ededed;
+                color: #d8d8d8;
                 font-weight: 700;
-                opacity: 0.9;
+                opacity: 1;
                 line-height:2.15em;
                 font-size: 1.5em;
             }
