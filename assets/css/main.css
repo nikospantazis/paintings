@@ -1,30 +1,37 @@
 @import url("fontawesome-all.min.css");
 @font-face {
   font-family: Open Sans;
-  src: url(https://nikospantazis.com/assets/OpenSans-ExtraBold.woff) format('woff');
+  src: url(https://nikospantazis.com/assets/Open_Sans/OpenSans-ExtraBold.woff2) format('woff2'),
+       url(https://nikospantazis.com/assets/Open_Sans/OpenSans-ExtraBold.woff) format('woff'),
+       url(https://nikospantazis.com/assets/Open_Sans/OpenSans-ExtraBold.ttf) format('truetype');
   font-weight: 800;
   font-display: block;
 }
 @font-face {
   font-family: Open Sans;
-  src: url(https://nikospantazis.com/assets/Open_Sans/OpenSans-Bold.woff) format('woff');
+  src: url(https://nikospantazis.com/assets/Open_Sans/OpenSans-Bold.woff2) format('woff2'),
+       url(https://nikospantazis.com/assets/Open_Sans/OpenSans-Bold.woff) format('woff'),
+       url(https://nikospantazis.com/assets/Open_Sans/OpenSans-Bold.ttf) format('truetype');
   font-weight: 700;
   font-display: block;
 }
-/*@font-face {
+@font-face {
   font-family: Open Sans;
   src: url(https://nikospantazis.com/assets/Open_Sans/OpenSans-SemiBold.woff2) format('woff2'),
        url(https://nikospantazis.com/assets/Open_Sans/OpenSans-SemiBold.woff) format('woff'),
        url(https://nikospantazis.com/assets/Open_Sans/OpenSans-SemiBold.ttf) format('truetype');
   font-weight: 600;
   font-display: block;
-}*/
+}
 @font-face {
   font-family: Open Sans;
-  src: url(https://nikospantazis.com/assets/Open_Sans/OpenSans-Regular.woff) format('woff');
+  src: url(https://nikospantazis.com/assets/Open_Sans/OpenSans-Regular.woff2) format('woff2'),
+       url(https://nikospantazis.com/assets/Open_Sans/OpenSans-Regular.woff) format('woff'),
+       url(https://nikospantazis.com/assets/Open_Sans/OpenSans-Regular.ttf) format('truetype');
   font-weight: 400;
   font-display: block;
 }
+
 /*
 	Read Only by HTML5 UP
 	html5up.net | @ajlkn
