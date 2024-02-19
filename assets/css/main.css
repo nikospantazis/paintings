@@ -1,13 +1,13 @@
 @import url("fontawesome-all.min.css");
 @font-face {
   font-family: Open Sans;
-  src: url("../OpenSans-ExtraBold.woff") format('woff');
+  src: url(https://nikospantazis.com/assets/OpenSans-ExtraBold.woff) format('woff');
   font-weight: 800;
   font-display: block;
 }
 @font-face {
   font-family: Open Sans;
-  src: url("../Open_Sans/OpenSans-Bold.woff") format('woff');
+  src: url(https://nikospantazis.com/assets/Open_Sans/OpenSans-Bold.woff) format('woff');
   font-weight: 700;
   font-display: block;
 }
@@ -21,7 +21,7 @@
 }*/
 @font-face {
   font-family: Open Sans;
-  src: url("../Open_Sans/OpenSans-Regular.woff") format('woff');
+  src: url(https://nikospantazis.com/assets/Open_Sans/OpenSans-Regular.woff) format('woff');
   font-weight: 400;
   font-display: block;
 }
