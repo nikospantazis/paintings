@@ -133,7 +133,7 @@ label {
 		background: #ededed;
 	}
 	
-/* Removed for vanilla-js-wheel-zoom to have smooth animation*/
+/* Removed for vanilla-js-wheel-zoom to have smooth animation
 
 		body.is-preload *, body.is-preload *:before, body.is-preload *:after {
             -moz-animation: none !important;
@@ -145,7 +145,7 @@ label {
 			-ms-transition: none !important;
 			transition: none !important;
 		}
-
+*/
 
 	body, input, select, textarea {
 		color: #353535;
