@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<!--
+    https://github.com/nikospantazis/paintings
+    
+	Read Only by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+	
+	Lightbox2 by Lokesh Dhakar https://lokeshdhakar.com/ (https://raw.githubusercontent.com/lokesh/lightbox2/master/LICENSE)
+-->
+<html>
+	<head>
+		<title>Νίκος Πανταζής - Ζωγραφική</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<!--<meta name="google-site-verification" content="D0-1J7kqygZ1LMUTVCdwGhUP5wwKsnFnhg8f_2l-5fI" />-->
+		<link rel="stylesheet" href="../assets/css/home-shop.css" />
+		<!--<link rel="stylesheet" href="../assets/css/lightbox-locked.css" />-->
+		<link rel="stylesheet" href="../assets/css/simple-lightbox.css" />
+        <!--<link rel="alternate" hreflang="el" href="https://nikospantazis.com/index.html" />
+        <link rel="alternate" hreflang="en" href="https://nikospantazis.com/index-en.html" />-->
+        <style>
+            #myViewport {
+                cursor: grab;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            #myImage {
+                width: auto;
+                height: auto;
+                margin: 0;
+            }
+        </style>
+	</head>
+	<body class="is-preload">
+        <div class=topright>
+            <a href="index-en.html" rel="external" />En</a>
+        </div>
+            <h6><br></h6>
+                <h3 class="align-left">&nbsp;&nbsp;&nbsp;Νίκος Πανταζής</h3>
+                <div class="container">
+                    <section id="photos-shop">
+                            <div id="myViewport" style="width:auto;height:75vh; overflow:hidden;">
+                                <div id="myContent">
+                                    <img id="myImage" src="../images/group1/big/DSC_1034b.jpg" alt="image" />
+                                </div>
+                            </div>
+                        <div>
+                            <h2 class="align-left">Μωβ λουλούδια στο δάσος</h2>
+                            <h2 class="align-left">160€</h2>
+                            <h3 class="align-left">Άνοιξη 2020</h3>
+                            <h3 class="align-left">Μωβ λουλούδια την άνοιξη μέσα στο δάσος της Καισαριανής. Εφαρμόζεται τεχνική Impasto.</h3>
+                            <h4 class="align-left"><br><p>Χρόνος παράδοσης: 
+                            <br>Συνήθως 5-7 εργάσιμες ημέρες για αποστολές εσωτερικού, 10-14 εργάσιμες ημέρες για αποστολές εξωτερικού.
+                            <p>Συσκευασία: 
+                            <br>Με προσοχή και ασφάλεια σε κουτί.
+                            <p>Επιστροφές: 
+                            <br>Πολιτική επιστροφών 14 ημερών.
+                            </h4>  
+                        </div>
+                    </section>
+
+            </div>
+                <div class="sticky">
+                    <h6>
+                        <a href='about-me.html' rel="external" class="button">
+                        Όροι παραγγελιών και παροχής υπηρεσιών</a>
+                    </h6>
+                </div>
+<!-- Scripts -->
+            <!--<script src='../assets/js/jquery-1.11.3.js'></script>
+            <script src='../assets/js/jquery.mobile-1.4.5.min.js'></script>-->
+            <script src="../assets/js/wheel-zoom.min.js"></script>
+            <script type="text/javascript">
+                WZoom.create('#myContent', {
+                    disableWheelZoom: true,
+                    type: 'img',
+                });
+                const wzoom = WZoom.create('img');
+                    window.addEventListener('resize', () => {
+                    wzoom.prepare();
+                });
+                WZoom.create('img', {
+                    maxScale: 1,
+                    minScale: 1,
+                });
+            </script>
+            <!--<script src="../assets/js/jquery.lazy.min.js"></script>
+            <!--<script src="../assets/js/lightbox-locked.js"></script> <!-- this is an edited file -->
+            <!--<script src="../assets/js/simple-lightbox.min.js"></script>
+            <script>
+                (function() {
+                    var $gallery = new SimpleLightbox('.gallery a', {
+                    maxZoom: 3,
+                    });
+                })();
+            </script>-->
+            <script>
+            $.mobile.loading().hide();
+            </script>
+            <!--<script>
+            $(function() {
+                $('.lazy').lazy({
+                    threshold: 500,
+                    effect: "fadeIn",
+                    effectTime: 400,
+                    enableThrottle: true,
+                    throttle: 50,
+                });
+            });
+            </script>
+            <script>
+                lightbox.option({
+                'showImageNumberLabel' : false,
+                'wrapAround': true,
+                'positionFromTop': 10,
+                'resizeDuration': 0,
+                'imageFadeDuration': 300,
+                'fadeDuration': 300,
+                'disableScrolling': true,
+                })
+            </script>
+            <script>
+            function leftTrigger(){
+                    setTimeout(function(){
+                        $('.lightbox').on('swipeleft', leftHandler);
+
+                        function leftHandler(){
+                        $('.lb-next').click();
+                        }
+                    }, 0);
+                }
+
+                
+
+                function rightTrigger(){
+                    setTimeout(function(){
+                        $('.lightbox').on('swiperight', leftHandler);
+
+                        function leftHandler(){
+                        $('.lb-prev').click();
+                        }
+                    }, 0);
+                }
+            
+                $('[data-lightbox]').on('click', function(){
+                    leftTrigger();
+                    rightTrigger();
+                    $('[data-lightbox]').off('click')
+                });
+            </script>
+            -->
+
+	</body>
+</html>
