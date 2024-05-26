@@ -114,11 +114,13 @@ input, select, textarea {
 	-ms-appearance: none;
 	appearance: none;
 }
+
 label {
     background: #A5D6A7;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
 }
+
 /* Basic */
 
 	html {
@@ -132,20 +134,10 @@ label {
 	body {
 		background: #ededed;
 	}
-	
-/* Removed for vanilla-js-wheel-zoom to have smooth animation*/
 
 		body.is-preload *, body.is-preload *:before, body.is-preload *:after {
-            -moz-animation: none !important;
-			-webkit-animation: none !important;
-			-ms-animation: none !important;
-			animation: none !important;
-			-moz-transition: none !important;
-			-webkit-transition: none !important;
-			-ms-transition: none !important;
-			transition: none !important;
-		}
 
+		}
 
 	body, input, select, textarea {
 		color: #353535;
@@ -527,7 +519,7 @@ label {
 		display: inline-block;
 		position: relative;
 	}
-
+	
 		.image[data-position] img {
 			-moz-object-fit: cover;
 			-webkit-object-fit: cover;
@@ -1849,8 +1841,9 @@ label {
 
 #photos-shop img {
   /* Just in case there are inline attributes */
+  width: 100%;
   height: auto;
-  width: auto;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 6px 1px, rgba(0, 0, 0, 0.2) 0px 20px 30px;
 
 }
 
@@ -1882,37 +1875,45 @@ label {
 /* Photos-shop-big */
 
 #photos-shop-big {
-margin-top: 1em;
+  line-height:          5vw;
+  margin:               2vw;
+  column-count:         1;
+  column-gap:           5vw;
 }
 
 #photos-shop-big img {
   /* Just in case there are inline attributes */
-  
+  width: 100%;
+  height: auto;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 6px 1px, rgba(0, 0, 0, 0.2) 0px 20px 30px;
 
 }
 
 @media (max-width: 1200px) {
   #photos-shop-big {
-
+  column-count:         1;
   }
 }
 @media (max-width: 1000px) {
   #photos-shop-big {
-
+  column-count:         1;
+  column-gap:           5vw;
   }
 }
 @media (max-width: 800px) {
   #photos-shop-big {
-
-
+  column-count:         1;
+  column-gap:           6vw;
   }
 }
 @media (max-width: 600px) {
   #photos-shop-big {
-
+  column-count:         1;
+  line-height:          7vw;
+  column-gap:           7vw;
   }
 }
+
 body {
   margin: 0;
   padding: 0;
