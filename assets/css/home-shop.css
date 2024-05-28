@@ -1812,24 +1812,24 @@ label {
 
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1280px) {
   #photos {
   column-count:         3;
   }
 }
-@media (max-width: 1000px) {
+@media (max-width: 1024px) {
   #photos {
   column-count:         3;
   column-gap:           5vw;
   }
 }
-@media (max-width: 800px) {
+@media (max-width: 736px) {
   #photos {
   column-count:         2;
   column-gap:           6vw;
   }
 }
-@media (max-width: 600px) {
+@media (max-width: 480px) {
   #photos {
   column-count:         2;
   line-height:          7vw;
@@ -1852,24 +1852,24 @@ label {
 
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1280px) {
   #photos-shop {
   column-count:         2;
   }
 }
-@media (max-width: 1000px) {
+@media (max-width: 1024px) {
   #photos-shop {
   column-count:         2;
   column-gap:           5vw;
   }
 }
-@media (max-width: 800px) {
+@media (max-width: 736px) {
   #photos-shop {
   column-count:         1;
   column-gap:           6vw;
   }
 }
-@media (max-width: 600px) {
+@media (max-width: 480px) {
   #photos-shop {
   column-count:         1;
   line-height:          7vw;
@@ -1878,14 +1878,17 @@ label {
 }
 
 /*simple-lightbox*/
-#myViewport {
+#myViewport5-6 {
 	cursor:				grab;
 	display:			flex;
     align-items:		center;
     justify-content: 	center;
 	width:				auto;
-	height:				75vh;
+	height:				calc(100vw * 0.45);
 	overflow:			hidden;
+	box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
+	background: linear-gradient(#e7e7e7, transparent),
+				radial-gradient(ellipse at bottom, #c0c0c0, #d0d0d0);
 	}
 	
 #myImage {
@@ -1894,26 +1897,28 @@ label {
 	margin: 0;
     }
 
-@media (max-width: 1200px) {
-  #myViewport {
-  height:				75vh;
+@media (max-width: 1280px) {
+  #myViewport5-6 {
+  height:calc(100vw * 0.45);
+  }
+@media (max-width: 1024px) {
+  #myViewport5-6 {
+  height:calc(100vw * 0.48);
   }
 }
-@media (max-width: 1000px) {
-  #myViewport {
-  height:				75vh;
+@media (max-width: 736px) {
+  #myViewport5-6 {
+  height:calc(100vw * 1.05);
   }
 }
-@media (max-width: 800px) {
-  #myViewport {
-  height:				50vh;
+@media (max-width: 640px) {
+  #myViewport5-6 {
+  height:calc(100vw * 1);
   }
-}
-@media (max-width: 600px) {
-  #myViewport {
-  height:				50vh;
+@media (max-width: 480px) {
+  #myViewport5-6 {
+  height:calc(100vw * 1.1);
   }
-}
 
 body {
   margin: 0;
