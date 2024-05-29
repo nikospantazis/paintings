@@ -18,6 +18,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<!--<meta name="google-site-verification" content="D0-1J7kqygZ1LMUTVCdwGhUP5wwKsnFnhg8f_2l-5fI" />-->
 		<link rel="stylesheet" href="../assets/css/home-shop.css" />
+		<link rel="stylesheet" href="../assets/css/zoom5-4.css" />
         <!--<link rel="alternate" hreflang="el" href="https://nikospantazis.com/index.html" />
         <link rel="alternate" hreflang="en" href="https://nikospantazis.com/index-en.html" />-->
 	</head>
@@ -30,9 +31,9 @@
                 <div class="container">
                     <section id="photos-shop">
                         <div>
-                            <div id="myViewport5-6">
+                            <div id="myViewport">
                                 <div id="myContent">
-                                    <img id="myImage" src="../images/group1/big/DSC_1034b.jpg" alt="image" />
+                                    <img id="myImage" src="../images/group3/big/DSC_1045b.jpg" alt="image" />
                                 </div>
                             </div>
                             <h6><br></h6>
@@ -84,10 +85,10 @@
                 width: imageElement.naturalWidth,
                 height: imageElement.naturalHeight,
                 onGrab: function () {
-                    document.getElementById('myViewport5-6').style.cursor = 'grabbing';
+                    document.getElementById('myViewport').style.cursor = 'grabbing';
                 },
                 onDrop: function () {
-                    document.getElementById('myViewport5-6').style.cursor = 'grab';
+                    document.getElementById('myViewport').style.cursor = 'grab';
                 },
                 prepare: function (instance) {
                     rangeElement.defaultValue = 0;
