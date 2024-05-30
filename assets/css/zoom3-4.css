@@ -1,0 +1,45 @@
+/*vanilla-js-wheel-zoom*/
+
+/*viewport 3 by 4*/
+
+#myViewport {
+	cursor:				grab;
+	display:			flex;
+    align-items:		center;
+    justify-content: 	center;
+	width:				auto;
+	height:				calc(100vw * 0.505);
+	overflow:			hidden;
+	box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
+	background: linear-gradient(#e7e7e7, transparent),
+				radial-gradient(ellipse at bottom, #c0c0c0, #d0d0d0);
+	}
+	
+#myImage {
+	width: auto;
+	height: auto;
+	margin: 0;
+    }
+
+@media (max-width: 1280px) {
+  #myViewport {
+  height:calc(100vw * 0.505);
+  }
+@media (max-width: 1024px) {
+  #myViewport {
+  height:calc(100vw * 1.18);
+  }
+}
+@media (max-width: 736px) {
+  #myViewport {
+  height:calc(100vw * 1.15);
+  }
+}
+@media (max-width: 640px) {
+  #myViewport {
+  height:calc(100vw * 1.12);
+  }
+@media (max-width: 480px) {
+  #myViewport {
+  height:calc(100vw * 1.21);
+  }

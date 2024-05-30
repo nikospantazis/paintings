@@ -132,8 +132,6 @@ label {
 	body {
 		background: #ededed;
 	}
-	
-/* Removed for vanilla-js-wheel-zoom to have smooth animation*/
 
 		body.is-preload *, body.is-preload *:before, body.is-preload *:after {
             -moz-animation: none !important;
@@ -1353,8 +1351,30 @@ label {
 	#titleBar {
 		display: none;
 	}
-
+	
 	@media screen and (max-width: 1024px) {
+
+	h2 {
+		font-size: 2.4em;
+	}
+
+	h3 {
+		font-size: 1.6em;
+	}
+
+	h4 {
+		font-size: 1.1em;
+		transform: translateY(-0.075em);
+	}
+
+	h5 {
+		font-size: 1em;
+	}
+
+	h6 {
+		font-size: 0.9em;
+	}
+
 
 		/* Basic */
 
@@ -1380,8 +1400,7 @@ label {
 			}
 
 			h4 {
-				font-size: 1em;
-				transform: translateY(-0.2em);
+
 			}
 
 			h5 {
@@ -1837,7 +1856,7 @@ label {
   }
 }
 
-/* Photos-shop */
+/* Photos-shop product page */
 
 #photos-shop {
   line-height:          5vw;
@@ -1859,7 +1878,7 @@ label {
 }
 @media (max-width: 1024px) {
   #photos-shop {
-  column-count:         2;
+  column-count:         1;
   column-gap:           5vw;
   }
 }
