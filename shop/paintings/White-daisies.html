@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<!--
+    https://github.com/nikospantazis/paintings
+    
+	Read Only by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+	
+	Lightbox2 by Lokesh Dhakar https://lokeshdhakar.com/ (https://raw.githubusercontent.com/lokesh/lightbox2/master/LICENSE)
+
+	vanilla-js-wheel-zoom (https://github.com/worka/vanilla-js-wheel-zoom/blob/master/LICENSE)
+	-->
+<html>
+	<head>
+		<title>Νίκος Πανταζής - Άσπρες μαργαρίτες</title>
+		<meta name=”robots” content=”noindex”>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<!--<meta name="google-site-verification" content="D0-1J7kqygZ1LMUTVCdwGhUP5wwKsnFnhg8f_2l-5fI" />-->
+		<link rel="stylesheet" href="../../assets/css/home-shop.css" />
+		<link rel="stylesheet" href="../../assets/css/zoom6-5.css" />
+        <!--<link rel="alternate" hreflang="el" href="https://nikospantazis.com/index.html" />
+        <link rel="alternate" hreflang="en" href="https://nikospantazis.com/index-en.html" />-->
+	</head>
+    <body>
+        <div class=topright>
+            <a href="index-en.html" rel="external" />En</a>
+        </div>
+            <h6><br></h6>
+                <h3 class="align-left">&nbsp;&nbsp;&nbsp;Νίκος Πανταζής</h3>
+                <div class="container">
+                    <section id="photos-shop">
+                        <div>
+                            <div id="myViewport">
+                                <div id="myContent">
+                                    <img id="myImage" src="../../images/group1/big/DSC0003b.jpg" alt="image" />
+                                </div>
+                            </div>
+                            <h6><br></h6>
+                        </div>
+                        <div>
+                            <h2 class="align-left">Άσπρες μαργαρίτες</h2>
+                            <h2 class="align-left">160 €</h2>
+                            <h3 class="align-left">Λάδι σε καμβά 60 x 50 εκ</h3>
+                            <h3 class="align-left">Άνοιξη 2022</h3>
+                            <h3 class="align-left"><i>Ένα χωράφι γεμάτο λευκές μαργαρίτες, ανοιξιάτικο μεσημέρι. Εφαρμόζεται τεχνική Impasto.</i></h3>
+                            <h3 class="align-left"></h3>
+                            <h4 class="align-left"><br><p>Δωρεάν αποστολη σε όλη την Ελλάδα
+                            <p>Χρόνος παράδοσης: 
+                            <br>Συνήθως 5-7 εργάσιμες ημέρες για αποστολές εσωτερικού, 10-14 εργάσιμες ημέρες για αποστολές εξωτερικού.
+                            <p>Συσκευασία: 
+                            <br>Με προσοχή και ασφάλεια σε κουτί.
+                            <p>Επιστροφές: 
+                            <br>Πολιτική επιστροφών 14 ημερών.
+                            </h4>  
+                        </div>
+                    </section>
+
+            </div>
+                <div class="sticky">
+                    <h6>
+                        <a href='about-me.html' rel="external" class="button">
+                        Όροι παραγγελιών και παροχής υπηρεσιών</a>
+                    </h6>
+                </div>
+            <div data-zoom-down class="btn btn-info"></div>
+            <div data-zoom-range type="range" class="flex-fill mx-3"/></div>
+            <div data-zoom-up class="btn btn-info ml-auto"></div>
+
+<script src="../../assets/js/wheel-zoom.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        var imageElement = document.getElementById('myContent').querySelector('img');
+
+        if (imageElement.complete) {
+            init();
+        } else {
+            imageElement.onload = init;
+        }
+
+        function init() {
+            var rangeElement = document.querySelector('[data-zoom-range]');
+
+            var wzoom = WZoom.create('#myContent', {
+                type: 'html',
+                width: imageElement.naturalWidth,
+                height: imageElement.naturalHeight,
+                onGrab: function () {
+                    document.getElementById('myViewport').style.cursor = 'grabbing';
+                },
+                onDrop: function () {
+                    document.getElementById('myViewport').style.cursor = 'grab';
+                },
+                prepare: function (instance) {
+                    rangeElement.defaultValue = 0;
+                    rangeElement.max = Math.round(Math.log(instance.content.maxScale / instance.content.minScale) / Math.log(instance.options.speed));
+                },
+                rescale: function (instance) {
+                    rangeElement.value = Math.round(Math.log(instance.content.currentScale / instance.content.minScale) / Math.log(instance.options.speed));
+                }
+            });
+
+            document.querySelector('[data-zoom-up]').addEventListener('click', function () {
+                wzoom.zoomUp();
+            });
+
+            document.querySelector('[data-zoom-down]').addEventListener('click', function () {
+                wzoom.zoomDown();
+            });
+
+            window.addEventListener('resize', function () {
+                wzoom.prepare();
+            });
+
+            rangeElement.addEventListener('input', function () {
+                var newZoom = Number(rangeElement.value);
+
+                if (newZoom === 0) {
+                    wzoom.maxZoomDown();
+                } else if (newZoom === rangeElement.max) {
+                    wzoom.maxZoomUp();
+                } else {
+                    var oldZoom = Math.round(Math.log(wzoom.content.currentScale / wzoom.content.minScale) / Math.log(wzoom.options.speed));
+
+                    if (newZoom > oldZoom) {
+                        wzoom.zoomUp();
+                    } else {
+                        wzoom.zoomDown();
+                    }
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>
