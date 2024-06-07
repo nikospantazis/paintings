@@ -356,7 +356,7 @@ label {
 /*sticky */
 .sticky {
     position: sticky;
-	bottom: env(safe-area-inset-bottom, 0px);
+    bottom: 0px;
     text-align: center;
     margin: 0 auto;
     background-color: #ededed;
