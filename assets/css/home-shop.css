@@ -296,7 +296,7 @@ label {
 /* topright */
 
 .topright {
-    position: fixed;
+    position: absolute;
     z-index: 9;
     top: 8px;
     right: 18px;
