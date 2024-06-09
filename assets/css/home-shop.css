@@ -130,7 +130,7 @@ label {
 	}
 
 	body {
-		background: #ededed;
+		background: #f6f6f6;
 	}
 
 		body.is-preload *, body.is-preload *:before, body.is-preload *:after {
@@ -301,7 +301,7 @@ label {
     top: 8px;
     right: 18px;
     font-size: 22px;
-    background-color: #e0e0e0;
+    background-color: #ededed;
     border-radius: 24px;
     border-style: none;
             box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .1) 0 6px 10px 0,rgba(0, 0, 0, .08) 0 1px 18px 0;
@@ -314,7 +314,7 @@ label {
 }
 
 .topright:hover {
- background: #dadada;
+ background: #e0e0e0;
  color: #141414;
 }
 
@@ -330,7 +330,7 @@ label {
     top: 8px;
     right: 70px;
     font-size: 22px;
-    background-color: #e0e0e0;
+    background-color: #ededed;
     border-radius: 24px;
     border-style: none;
             box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .1) 0 6px 10px 0,rgba(0, 0, 0, .08) 0 1px 18px 0;
@@ -343,7 +343,7 @@ label {
 }
 
 .topright2:hover {
- background: #dadada;
+ background: #e0e0e0;
  color: #141414;
 }
 
@@ -359,8 +359,8 @@ label {
     bottom: 0px;
     text-align: center;
     margin: 0 auto;
-    background-color: #ededed;
-	box-shadow: rgba(237, 237, 237, 1) 0 2px 7px 4px;
+    background-color: #f6f6f6;
+	box-shadow: rgba(246, 246, 246, 1) 0 2px 7px 4px;
             
     
 }
@@ -951,7 +951,7 @@ label {
 
 .button {
     width: fit-content;
-    background-color: #e0e0e0;
+    background-color: #ededed;
     border-radius: 24px;
 	line-height: 2.5em;
     border-style: none;
@@ -965,7 +965,7 @@ label {
 }
 
 .button:hover {
-    background: #dadada;
+    background: #e0e0e0;
     color: black;
 }
 
@@ -976,7 +976,7 @@ label {
 
 .button2 {
     width: fit-content;
-    background-color: #e0e0e0;
+    background-color: #ededed;
     border-radius: 24px;
 	line-height: 2.5em;
     border-style: none;
@@ -990,7 +990,7 @@ label {
 }
 
 .button2:hover {
-    background: #dadada;
+    background: #e0e0e0;
     color: black;
 }
 
