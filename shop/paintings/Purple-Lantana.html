@@ -39,10 +39,10 @@
                                     <img id="myImage" src="../../images/group1/big/DSC0320b.jpg" alt="image" />
                                 </div>
                             </div>
-                            <div class="button2" data-zoom-down class="btn btn-info">
+                            <div class="button2" data-max-zoom-down class="btn btn-info mb-3">
                                 <div class="icon solid fa-search-minus"></div>
                             </div>
-                            <div class="button2" data-zoom-up class="btn btn-info ml-auto">
+                            <div class="button2" data-max-zoom-up class="btn btn-info mb-3">
                                 <div class="icon solid fa-search-plus"></div>
                             </div>
                             <h6><br></h6>
@@ -92,7 +92,6 @@
 
             var wzoom = WZoom.create('#myContent', {
                 type: 'html',
-                speed: 2,
                 width: imageElement.naturalWidth,
                 height: imageElement.naturalHeight,
                 onGrab: function () {
@@ -108,6 +107,14 @@
                 rescale: function (instance) {
                     rangeElement.value = Math.round(Math.log(instance.content.currentScale / instance.content.minScale) / Math.log(instance.options.speed));
                 }
+            });
+
+            document.querySelector('[data-max-zoom-up]').addEventListener('click', function () {
+                wzoom.maxZoomUp();
+            });
+            
+            document.querySelector('[data-max-zoom-down]').addEventListener('click', function () {
+                wzoom.maxZoomDown();
             });
             
             document.querySelector('[data-zoom-up]').addEventListener('click', function () {

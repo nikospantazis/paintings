@@ -975,17 +975,19 @@ label {
 }
 
 .button2 {
+	float: right;
     width: fit-content;
     background-color: #ededed;
     border-radius: 24px;
-	line-height: 2.5em;
+	line-height: 2.2em;
     border-style: none;
-	box-shadow: rgba(0, 0, 0, .2) 0 0px 8px 1px,rgba(0, 0, 0, .1) 0 0px 16px 0,rgba(0, 0, 0, .08) 0 0px 1px 0;
+	box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
 	box-sizing: border-box;
     color: #141414;
     font-weight: 400;
-    padding: 6px 15px;
-    -webkit-transition: background box-shadow 280ms ease;
+    padding: 0px 10px;
+	margin-left: 5px;
+	margin-top: 2px;
     transition: background box-shadow 280ms ease;
 }
 
