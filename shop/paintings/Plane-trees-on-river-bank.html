@@ -39,6 +39,12 @@
                                     <img id="myImage" src="../../images/group4/big/DSC0114b.jpg" alt="image" />
                                 </div>
                             </div>
+                            <div class="button2" data-max-zoom-down class="btn btn-info mb-3">
+                                <div class="icon solid fa-search-minus"></div>
+                            </div>
+                            <div class="button2" data-max-zoom-up class="btn btn-info mb-3">
+                                <div class="icon solid fa-search-plus"></div>
+                            </div>
                             <h6><br></h6>
                         </div>
                         <div>
@@ -103,6 +109,14 @@
                 }
             });
 
+            document.querySelector('[data-max-zoom-up]').addEventListener('click', function () {
+                wzoom.maxZoomUp();
+            });
+            
+            document.querySelector('[data-max-zoom-down]').addEventListener('click', function () {
+                wzoom.maxZoomDown();
+            });
+            
             document.querySelector('[data-zoom-up]').addEventListener('click', function () {
                 wzoom.zoomUp();
             });
