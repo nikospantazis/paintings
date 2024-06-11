@@ -1002,7 +1002,7 @@ label {
 .buy-button {
 	position: absolute;
     width: fit-content;
-    background-color: #e0e0e0;
+    background-color: #ededed;
     border-radius: 24px;
     border-style: none;
 	box-shadow: rgba(0, 0, 0, .4) 0 3px 5px -1px,rgba(0, 0, 0, .28) 0 6px 10px 0,rgba(0, 0, 0, .24) 0 1px 18px 0;
@@ -1016,7 +1016,7 @@ label {
 }
 
 .buy-button:hover {
-    background: #cccccc;
+    background: #e0e0e0;
     color: black;
 }
 
