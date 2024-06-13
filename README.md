@@ -1,3 +1,11 @@
 # paintings
 The contents of https://nikospantazis.com
-A simple art porfolio website that uses https://html5up.net/read-only template, https://lokeshdhakar.com/projects/lightbox2/ and https://github.com/dkern/jquery.lazy scripts.
+
+A simple art porfolio website,
+and a static art e-shop that uses payment liks.
+
+Makes use of:
+https://html5up.net/read-only
+https://lokeshdhakar.com/projects/lightbox2/
+https://github.com/dkern/jquery.lazy
+https://github.com/worka/vanilla-js-wheel-zoom scripts
