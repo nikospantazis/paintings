@@ -8,7 +8,7 @@
     align-items:		center;
     justify-content: 	center;
 	width:				auto;
-	height:				calc(100vw * 0.29);
+	height:				calc(100vw * 0.309);
 	overflow:			hidden;
 	box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
 	background: linear-gradient(#e7e7e7, transparent),
@@ -23,7 +23,7 @@
 
 @media (max-width: 1280px) {
   #myViewport {
-  height:calc(100vw * 0.29);
+  height:calc(100vw * 0.309);
   }
 @media (max-width: 1024px) {
   #myViewport {
