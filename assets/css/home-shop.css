@@ -390,6 +390,7 @@ label {
 	}
         .container.avatar-text {
             text-align: center;
+			width: 85%;
         }
         
 		.container.xsmall {
@@ -416,7 +417,7 @@ label {
 			width: 100%;
 		}
 
-		@media screen and (max-width: 1024px) {
+		@media screen and (max-width: 1440px) {
 
 			.container {
 				width: 100% !important;
@@ -875,7 +876,7 @@ label {
 			}
             
 			.image.avatar img {
-				width: 25%;
+				width: 20%;
 			}
 			
             .button {
