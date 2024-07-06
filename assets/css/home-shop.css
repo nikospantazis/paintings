@@ -385,8 +385,8 @@ label {
 /*added from demo.css*/ position: relative;
         text-align: center;
 		margin: 0 auto;
-		max-width: calc(100% - 4.5em);
 		width: 90%;
+	
 	}
         .container.avatar-text {
             text-align: center;
@@ -420,7 +420,7 @@ label {
 		@media screen and (max-width: 1440px) {
 
 			.container {
-				width: 100% !important;
+				width: 90%;
 			}
 			.container.avatar-text {
 				width: 90% !important;
@@ -431,7 +431,7 @@ label {
 		@media screen and (max-width: 480px) {
 
 			.container {
-				max-width: calc(100% - 5vw);
+				width: calc(100% - 5vw);
 			}
 
 		}
