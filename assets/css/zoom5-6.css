@@ -27,7 +27,7 @@
   }
 @media (max-width: 1024px) {
   #myViewport {
-  height:calc(100vw * 1.07);
+  height:calc(100vw * 1.03);
   }
 }
 @media (max-width: 736px) {
