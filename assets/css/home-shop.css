@@ -190,16 +190,22 @@ label {
 			color: inherit;
 			text-decoration: none;
 		}
-
-	h2 {
+		
+	h1 {
 		font-size: 3em;
+		text-shadow: 0 3px 8px rgba(0, 0, 0, .15);
+		line-height: 1.5em;
+	}
+	
+	h2 {
+		font-size: 2.4em;
 		text-shadow: 0 3px 8px rgba(0, 0, 0, .15);
 		line-height: 1.5em;
 	}
 
 	h3 {
 		color: #404040;
-		font-size: 1.8em;
+		font-size: 1.6em;
 		text-shadow: 0 3px 8px rgba(0, 0, 0, .15);
 		line-height: 1.5em;
 	}
@@ -801,8 +807,8 @@ label {
     color: #141414;
     font-weight: 600;
     padding: 6px 15px;
-	left: 9em;
-	transform: translateY(1.2em);
+	left: 7.5em;
+	transform: translateY(0.9em);
     transition: background box-shadow 280ms ease;
 }
 
@@ -886,8 +892,8 @@ label {
                 font-size: 1em;
             }
             .buy-button {
-				left: 9em;
-				transform: translateY(1.2em);
+				left: 7.5em;
+				transform: translateY(0.9em);
                 font-size: 1em;
             }
             .buy-button2 {
@@ -934,12 +940,16 @@ label {
 	
 	@media screen and (max-width: 1024px) {
 
-	h2 {
+	h1 {
 		font-size: 2.4em;
+	}
+		
+	h2 {
+		font-size: 2em;
 	}
 
 	h3 {
-		font-size: 1.6em;
+		font-size: 1.5em;
 	}
 
 	h4 {
@@ -998,8 +1008,8 @@ label {
                 font-size: 1em;
             }
             .buy-button {
-				left: 7em;
-				transform: translateY(0.6em);
+				left: 6.5em;
+				transform: translateY(0.2em);
                 font-size: 1em;
             }
             .buy-button2 {
@@ -1040,12 +1050,16 @@ label {
 				display: none;
 			}
 */
-			h2 {
+			h1 {
 				font-size: 2em;
+			}
+			
+			h2 {
+				font-size: 1.6em;
 			}
 
 			h3 {
-				font-size: 1.4em;
+				font-size: 1.3em;
 			}
 
 			h4 {
@@ -1080,8 +1094,8 @@ label {
                 font-size: 1em;
             }
             .buy-button {
-				left: 7em;
-				transform: translateY(0.3em);
+				left: 6em;
+				transform: translateY(-0em);
                 font-size: 1em;
             }
             .buy-button2 {
@@ -1143,8 +1157,8 @@ label {
                 font-size: 1em;
             }
             .buy-button {
-				left: 7em;
-				transform: translateY(0.3em);
+				left: 5.5em;
+				transform: translateY(0em);
                 font-size: 1em;
             }
             .buy-button2 {
