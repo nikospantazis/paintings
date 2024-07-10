@@ -1009,12 +1009,12 @@ label {
             }
             .buy-button {
 				left: 6.5em;
-				transform: translateY(0.2em);
+				transform: translateY(0.3em);
                 font-size: 1em;
             }
             .buy-button2 {
 				left: 7.5em;
-				transform: translateY(0.2em);
+				transform: translateY(0.3em);
                 font-size: 1em;
             }
 
@@ -1158,12 +1158,12 @@ label {
             }
             .buy-button {
 				left: 5.5em;
-				transform: translateY(0em);
+				transform: translateY(0.1em);
                 font-size: 1em;
             }
             .buy-button2 {
 				left: 6.5em;
-				transform: translateY(0em);
+				transform: translateY(0.1em);
                 font-size: 1em;
             }
 	}
