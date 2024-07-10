@@ -833,8 +833,8 @@ label {
     color: #141414;
     font-weight: 600;
     padding: 6px 15px;
-	left: 10em;
-	transform: translateY(1.2em);
+	left: 8.5em;
+	transform: translateY(0.8em);
     transition: background box-shadow 280ms ease;
 }
 
@@ -893,12 +893,12 @@ label {
             }
             .buy-button {
 				left: 7.5em;
-				transform: translateY(0.9em);
+				transform: translateY(0.8em);
                 font-size: 1em;
             }
             .buy-button2 {
-				left: 10em;
-				transform: translateY(1.2em);
+				left: 8.5em;
+				transform: translateY(0.8em);
                 font-size: 1em;
             }
 
@@ -1013,8 +1013,8 @@ label {
                 font-size: 1em;
             }
             .buy-button2 {
-				left: 8em;
-				transform: translateY(0.6em);
+				left: 7.5em;
+				transform: translateY(0.2em);
                 font-size: 1em;
             }
 
@@ -1095,12 +1095,12 @@ label {
             }
             .buy-button {
 				left: 6em;
-				transform: translateY(-0em);
+				transform: translateY(0.1em);
                 font-size: 1em;
             }
             .buy-button2 {
-				left: 8em;
-				transform: translateY(0.3em);
+				left: 6.5em;
+				transform: translateY(0.1em);
                 font-size: 1em;
             }
 
@@ -1162,8 +1162,8 @@ label {
                 font-size: 1em;
             }
             .buy-button2 {
-				left: 8em;
-				transform: translateY(0.3em);
+				left: 6.5em;
+				transform: translateY(0em);
                 font-size: 1em;
             }
 	}
