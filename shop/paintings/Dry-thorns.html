@@ -35,11 +35,11 @@
                                     <img id="myImage" src="../../images/group1/big/DSC0120b.jpg" alt="" />
                                 </div>
                             </div>
-                            <div class="button2" data-max-zoom-down class="btn btn-info mb-3">
-                                <div class="icon solid fa-search-minus"></div>
+                            <div class="button2" onclick="fullscreen()">
+                                <div class="icon solid fa-expand"></div>
                             </div>
-                            <div class="button2" data-max-zoom-up class="btn btn-info mb-3">
-                                <div class="icon solid fa-search-plus"></div>
+                            <div class="button2" data-max-zoom-up >
+                                <div id=zoom class="icon solid fa-search-plus"></div>
                             </div>
                             <h6><br></h6>
                         </div>
@@ -88,6 +88,7 @@
             var rangeElement = document.querySelector('[data-zoom-range]');
 
             var wzoom = WZoom.create('#myContent', {
+                zoomOnClick: false,
                 type: 'html',
                 width: imageElement.naturalWidth,
                 height: imageElement.naturalHeight,
@@ -106,8 +107,19 @@
                 }
             });
 
+            /* swap plus to minus icon and max-zoom-up and down on the same button */
+            let count = 0;
             document.querySelector('[data-max-zoom-up]').addEventListener('click', function () {
+                if (count == 0) {
                 wzoom.maxZoomUp();
+                document.getElementById("zoom").className = "icon solid fa-search-minus";
+                count++;
+                }
+                else if (count == 1) {
+                wzoom.maxZoomDown();
+                document.getElementById("zoom").className = "icon solid fa-search-plus";
+                count--;
+                }
             });
             
             document.querySelector('[data-max-zoom-down]').addEventListener('click', function () {
@@ -145,6 +157,28 @@
             });
         }
     });
+</script>
+<script>
+    function fullscreen() { 
+        var el = document.getElementById('myImage'); el.requestFullscreen();
+        if (el.mozRequestFullScreen) {
+            el.mozRequestFullScreen();
+        } else if (el.webkitRequestFullscreen) {
+            el.webkitRequestFullscreen();
+        }
+    }
+    document.onclick = (event) => {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    } else {
+    }
+    };
+    document.body.ontouchstart = (event) => {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    } else {
+    }
+    };
 </script>
 <!-- 100% privacy-first analytics -->
 <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
