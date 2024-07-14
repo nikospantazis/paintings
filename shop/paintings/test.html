@@ -167,7 +167,13 @@
             el.webkitRequestFullscreen();
         }
     }
-    document.onMouseDown = (event) => {
+    document.onclick = (event) => {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    } else {
+    }
+    };
+    document.body.ontouchstart = (event) => {
     if (document.fullscreenElement) {
         document.exitFullscreen();
     } else {
