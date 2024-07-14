@@ -167,7 +167,7 @@
             el.webkitRequestFullscreen();
         }
     }
-    document.onclick = (event) => {
+    document.onMouseDown = (event) => {
     if (document.fullscreenElement) {
         document.exitFullscreen();
     } else {
