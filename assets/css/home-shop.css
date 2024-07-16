@@ -1211,44 +1211,110 @@ label {
   }
 }
 
-/* Photos-shop product page */
+/* flexbox product page */
 
-#photos-shop {
+.flexbox {
+	display: flex;
+	flex-direction: row;
+	margin-top:           2vw;
+	margin-left:          7vw;
+	margin-right:         5vw;
+	column-gap:           5vw;
+}
+
+	.flex1 {
+		width: 46%;
+	}
+
+	.flex2 {
+		width: 54%;
+	}
+
+/*#photos-shop {
   line-height:          5vw;
   margin:               2vw;
   column-count:         2;
   column-gap:           5vw;
-}
+}*/
 
-#photos-shop img {
+/*#photos-shop img {
   height: auto;
   width: auto;
 
-}
+}*/
 
-@media (max-width: 1280px) {
+/*@media (max-width: 1280px) {
   #photos-shop {
   column-count:         2;
   }
-}
+}*/
 @media (max-width: 1024px) {
-  #photos-shop {
+    .flexbox {
+	display:        flex;
+	flex-direction: column !important;
+	margin-top:     2vw !important;
+	margin-left:    7vw !important;
+	margin-right:   7vw !important;
+	}
+		.flex1 {
+		width:      100% !important;
+        }
+		.flex2 {
+		width:      100% !important;
+		margin-top: -1vw !important;
+		}
+		
+/*  #photos-shop {
   column-count:         1;
   column-gap:           5vw;
-  }
+  }*/
 }
 @media (max-width: 736px) {
-  #photos-shop {
+	.flexbox {
+	flex-direction: column !important;
+	margin-top:     -0.25vw !important;
+	}
+		.flex1 {
+		width:      100% !important;
+        }
+        .flex2 {
+		width:      100% !important;
+		margin-top: -1.5vw !important;
+        }
+
+  /*#photos-shop {
   column-count:         1;
   column-gap:           6vw;
-  }
+}*/
 }
 @media (max-width: 480px) {
-  #photos-shop {
+	.flexbox {
+	flex-direction:       column !important;
+	margin-top:   -0.25vw !important;
+	margin-left:  4.5vw !important;
+	margin-right: 4.5vw !important;
+	}
+		.flex1 {
+		width:      100% !important;
+        }
+        .flex2 {
+		width:      100% !important;
+		margin-top: -2.5vw !important;
+        }
+/*  #photos-shop {
   column-count:         1;
   line-height:          7vw;
   column-gap:           7vw;
-  }
+  }*/
+}
+
+
+/* vanilla-js-wheel-zoom */
+
+#myViewport {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 body {

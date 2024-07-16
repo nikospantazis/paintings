@@ -27,9 +27,8 @@
         </div>-->
             <h6><br></h6>
                 <h3 class="align-left"><a href="../index.html"/>&nbsp;&nbsp;&nbsp;Nikos Pantazis</a></h3>
-                <div class="container">
-                    <section id="photos-shop">
-                        <div>
+                    <div class="flexbox">
+                        <div class="flex1">
                             <div id="myViewport">
                                 <div id="myContent">
                                     <img id="myImage" src="../../../images/group1/big/DSC_1064b.jpg" alt="" />
@@ -43,7 +42,7 @@
                             </div>
                             <h6><br></h6>
                         </div>
-                        <div>
+                        <div class="flex2">
                             <h2 class="align-left">Crocuses 3</h2>
                             <h4><a href='https://buy.stripe.com/8wM16r1kUg6Ve6kbIP' target="_self" class="buy-button">Buy now</a></h4>
                             <h2 class="align-left" style="padding-bottom:0.14em">120 €</h2>
@@ -60,18 +59,14 @@
                             <br>14-day return policy.
                             </h4>  
                         </div>
-                    </section>
-
-            </div>
+                    </div>
                 <div class="sticky">
                     <h4>
                         <a href='../about-me.html' target="_self" class="button">About me</a>
                         &nbsp;&nbsp;&nbsp;<a href='../Terms-and-conditions.html' target="_self" class="button">Terms&nbsp;of&nbsp;orders</a>
                     </h4>
                 </div>
-            <div data-zoom-down class="btn btn-info"></div>
-            <div data-zoom-range type="range" class="flex-fill mx-3"/></div>
-            <div data-zoom-up class="btn btn-info ml-auto"></div>
+            
 
 <script src="../../../assets/js/wheel-zoom.min.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -88,25 +83,17 @@
             var rangeElement = document.querySelector('[data-zoom-range]');
 
             var wzoom = WZoom.create('#myContent', {
-                zoomOnClick: false,
-                type: 'html',
-                width: imageElement.naturalWidth,
-                height: imageElement.naturalHeight,
+                zoomOnDblClick: true,
+                type: 'img',
                 onGrab: function () {
                     document.getElementById('myViewport').style.cursor = 'grabbing';
                 },
-                onDrop: function () {
-                    document.getElementById('myViewport').style.cursor = 'grab';
-                },
-                prepare: function (instance) {
-                    rangeElement.defaultValue = 0;
-                    rangeElement.max = Math.round(Math.log(instance.content.maxScale / instance.content.minScale) / Math.log(instance.options.speed));
-                },
-                rescale: function (instance) {
-                    rangeElement.value = Math.round(Math.log(instance.content.currentScale / instance.content.minScale) / Math.log(instance.options.speed));
-                }
             });
 
+            window.addEventListener('resize', function () {
+                wzoom.prepare();
+            });
+            
             /* swap plus to minus icon and max-zoom-up and down on the same button */
             let count = 0;
             document.querySelector('[data-max-zoom-up]').addEventListener('click', function () {
@@ -122,39 +109,6 @@
                 }
             });
             
-            document.querySelector('[data-max-zoom-down]').addEventListener('click', function () {
-                wzoom.maxZoomDown();
-            });
-            
-            document.querySelector('[data-zoom-up]').addEventListener('click', function () {
-                wzoom.zoomUp();
-            });
-
-            document.querySelector('[data-zoom-down]').addEventListener('click', function () {
-                wzoom.zoomDown();
-            });
-
-            window.addEventListener('resize', function () {
-                wzoom.prepare();
-            });
-
-            rangeElement.addEventListener('input', function () {
-                var newZoom = Number(rangeElement.value);
-
-                if (newZoom === 0) {
-                    wzoom.maxZoomDown();
-                } else if (newZoom === rangeElement.max) {
-                    wzoom.maxZoomUp();
-                } else {
-                    var oldZoom = Math.round(Math.log(wzoom.content.currentScale / wzoom.content.minScale) / Math.log(wzoom.options.speed));
-
-                    if (newZoom > oldZoom) {
-                        wzoom.zoomUp();
-                    } else {
-                        wzoom.zoomDown();
-                    }
-                }
-            });
         }
     });
 </script>
