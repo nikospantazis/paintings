@@ -958,11 +958,11 @@ label {
 	}
 
 	h5 {
-		font-size: 1em;
+		font-size: 0.95em;
 	}
 
 	h6 {
-		font-size: 0.9em;
+		font-size: 0.95em;
 	}
 
 
@@ -977,28 +977,8 @@ label {
 				font-size: 12pt;
 			}
 
-/*			h1 br, h2 br, h3 br, h4 br, h5 br, h6 br {
-				display: none;
-			}
-*/
-			h2 {
-
-			}
-
-			h3 {
-
-			}
-
-			h4 {
-
-			}
-
-			h5 {
-				font-size: 0.95em;
-			}
-
-			h6 {
-				font-size: 0.95em;
+			.align-left.painting-title {
+				padding-right: 2.5em;
 			}
 
             .button {
