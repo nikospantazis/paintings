@@ -121,6 +121,13 @@ label {
 }
 /* Basic */
 
+	::backdrop
+	{
+		/*https://github.com/KDE/gwenview/blob/master/images/background.png*/
+		background: url(../images/background.png); 
+		background-repeat: repeat;
+	}
+
 	html {
 		box-sizing: border-box;
 	}
@@ -978,7 +985,7 @@ label {
 			}
 
 			.align-left.painting-title {
-				padding-right: 2.5em;
+				padding-right: 3em;
 			}
 
             .button {
@@ -1259,7 +1266,7 @@ label {
         }
         .flex2 {
 		width:      100% !important;
-		margin-top: -1.5vw !important;
+		margin-top: -2vw !important;
         }
 
   /*#photos-shop {
@@ -1279,7 +1286,7 @@ label {
         }
         .flex2 {
 		width:      100% !important;
-		margin-top: -2.5vw !important;
+		margin-top: -3vw !important;
         }
 /*  #photos-shop {
   column-count:         1;
