@@ -121,13 +121,6 @@ label {
 }
 /* Basic */
 
-	::backdrop
-	{
-		/*https://github.com/KDE/gwenview/blob/master/images/background.png*/
-		background: url(../images/background.png); 
-		background-repeat: repeat;
-	}
-
 	html {
 		box-sizing: border-box;
 	}
