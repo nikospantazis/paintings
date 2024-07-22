@@ -127,12 +127,20 @@
     } else {
     }
     };
-    document.body.ontouchstart = (event) => {
+    
+    let element = document.querySelector('.swipeable');element.addEventListener('swipe', (event) => {
     if (document.fullscreenElement) {
         document.exitFullscreen();
     } else {
     }
     };
+    
+    // document.body.ontouchstart = (event) => {
+    // if (document.fullscreenElement) {
+    //     document.exitFullscreen();
+    // } else {
+    // }
+    // };
 </script>
 <!-- 100% privacy-first analytics -->
 <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
