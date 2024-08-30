@@ -690,6 +690,7 @@ input, select, textarea {
 .button:hover {
     background: #404040;
     color: #a6a6a6;
+	img {opacity: 0.5;}
 }
 
 .button:active {
