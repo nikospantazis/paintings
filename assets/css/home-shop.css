@@ -193,26 +193,30 @@ label {
 		
 	h1 {
 		font-size: 3em;
-		text-shadow: 0 3px 8px rgba(0, 0, 0, .15);
+		text-shadow: 0 3px 8px rgba(0, 0, 0, .3),
+					 0 1px 0px white;
 		line-height: 1.5em;
 	}
 	
 	h2 {
 		font-size: 2.4em;
-		text-shadow: 0 3px 8px rgba(0, 0, 0, .15);
+		text-shadow: 0 3px 8px rgba(0, 0, 0, .3),
+					 0 1px 0px white;
 		line-height: 1.5em;
 	}
 
 	h3 {
 		color: #404040;
 		font-size: 1.6em;
-		text-shadow: 0 3px 8px rgba(0, 0, 0, .15);
+		text-shadow: 0 3px 8px rgba(0, 0, 0, .3),
+					 0 1px 0px white;
 		line-height: 1.5em;
 	}
 
 	h4 {
 		font-size: 1.1em;
-		text-shadow: 0 3px 8px rgba(0, 0, 0, .15);
+		text-shadow: 0 3px 8px rgba(0, 0, 0, .25),
+					 0 1px 0px white;
 		line-height: 1.5em;
         font-weight: 600;
 		transform: translateY(-0.3em);
@@ -221,14 +225,16 @@ label {
 	h5 {
 		color: #404040;
 		font-size: 1.0em;
-		text-shadow: 0 3px 8px rgba(0, 0, 0, .15);
+		text-shadow: 0 3px 8px rgba(0, 0, 0, .25),
+					 0 1px 0px white;
 		line-height: 1.2em;
         font-weight: 400;
 	}
 
 	h6 {
 		font-size: 1.0em;
-		text-shadow: 0 3px 8px rgba(0, 0, 0, .15);
+		text-shadow: 0 3px 8px rgba(0, 0, 0, .25),
+					 0 1px 0px white;
 		line-height: 1.2em;
         font-weight: 400;
 	}
@@ -313,6 +319,7 @@ label {
             box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .1) 0 6px 10px 0,rgba(0, 0, 0, .08) 0 1px 18px 0;
             box-sizing: border-box;
     color: #353535;
+	text-shadow: 0 1px 0px white;
     font-weight: 600;
     padding: 10px 10px;
     -webkit-transition: background box-shadow 280ms ease;
@@ -751,6 +758,7 @@ label {
 	line-height: 2.5em;
     border-style: none;
 	box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
+	text-shadow: 0 1px 0px white;
 	box-sizing: border-box;
     color: #141414;
     font-weight: 400;
@@ -777,6 +785,7 @@ label {
 	line-height: 2.2em;
     border-style: none;
 	box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
+	text-shadow: 0 1px 0px white;
 	box-sizing: border-box;
     color: #141414;
     font-weight: 400;
@@ -803,6 +812,7 @@ label {
     border-radius: 24px;
     border-style: none;
 	box-shadow: rgba(0, 0, 0, .4) 0 3px 5px -1px,rgba(0, 0, 0, .28) 0 6px 10px 0,rgba(0, 0, 0, .24) 0 1px 18px 0;
+	text-shadow: 0 1px 0px white;
 	box-sizing: border-box;
     color: #141414;
     font-weight: 600;
