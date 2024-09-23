@@ -193,14 +193,14 @@ label {
 		
 	h1 {
 		font-size: 3em;
-		text-shadow: 0 3px 8px rgba(0, 0, 0, .3),
+		text-shadow: 0 3px 8px rgba(0, 0, 0, .4),
 					 0 1px 0px white;
 		line-height: 1.5em;
 	}
 	
 	h2 {
 		font-size: 2.4em;
-		text-shadow: 0 3px 8px rgba(0, 0, 0, .3),
+		text-shadow: 0 3px 8px rgba(0, 0, 0, .35),
 					 0 1px 0px white;
 		line-height: 1.5em;
 	}
@@ -313,7 +313,7 @@ label {
     top: 8px;
     right: 18px;
     font-size: 22px;
-    background-color: #ededed;
+    background: linear-gradient(#ededed, #e0e0e0);
     border-radius: 24px;
     border-style: none;
             box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .1) 0 6px 10px 0,rgba(0, 0, 0, .08) 0 1px 18px 0;
@@ -343,7 +343,7 @@ label {
     top: 8px;
     right: 70px;
     font-size: 22px;
-    background-color: #ededed;
+    background: linear-gradient(#ededed, #e0e0e0);
     border-radius: 24px;
     border-style: none;
             box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .1) 0 6px 10px 0,rgba(0, 0, 0, .08) 0 1px 18px 0;
@@ -372,8 +372,11 @@ label {
     bottom: 0px;
     text-align: center;
     margin: 0 auto;
-    background-color: #f6f6f6;
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	background: linear-gradient(rgba(246, 246, 246, 1), rgba(246, 246, 246, 0.5));
 	box-shadow: rgba(246, 246, 246, 1) 0 2px 7px 4px;
+	
             
     
 }
@@ -713,7 +716,7 @@ label {
 			.image.avatar img {
                 margin: auto;
 				display: block;
-				box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 6px 1px, rgba(0, 0, 0, 0.2) 0px 20px 30px;
+				box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 6px 1px, rgba(0, 0, 0, 0.25) 0px 20px 30px;
 			}
 
 		.image.main {
@@ -753,7 +756,7 @@ label {
 
 .button {
     width: fit-content;
-    background-color: #ededed;
+    background: linear-gradient(#ededed, #e0e0e0);
     border-radius: 24px;
 	line-height: 2.5em;
     border-style: none;
@@ -780,7 +783,7 @@ label {
 .button2 {
 	float: right;
     width: fit-content;
-    background-color: #ededed;
+    background: linear-gradient(#ededed, #e0e0e0);
     border-radius: 24px;
 	line-height: 2.2em;
     border-style: none;
@@ -808,7 +811,7 @@ label {
 .buy-button {
 	position: absolute;
     width: fit-content;
-    background-color: #ededed;
+    background: linear-gradient(#ededed, #e0e0e0);
     border-radius: 24px;
     border-style: none;
 	box-shadow: rgba(0, 0, 0, .4) 0 3px 5px -1px,rgba(0, 0, 0, .28) 0 6px 10px 0,rgba(0, 0, 0, .24) 0 1px 18px 0;
@@ -1172,7 +1175,7 @@ label {
   /* Just in case there are inline attributes */
   width: 100% !important;
   height: auto !important;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 6px 1px, rgba(0, 0, 0, 0.2) 0px 20px 30px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 6px 1px, rgba(0, 0, 0, 0.25) 0px 20px 30px;
 
 }
 
