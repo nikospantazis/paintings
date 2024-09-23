@@ -372,9 +372,9 @@ label {
     bottom: 0px;
     text-align: center;
     margin: 0 auto;
-	backdrop-filter: blur(10px);
-	-webkit-backdrop-filter: blur(10px);
-	background: linear-gradient(rgba(246, 246, 246, 1), rgba(246, 246, 246, 0.5));
+/*	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);*/
+	background: rgb(246, 246, 246);
 	box-shadow: rgba(246, 246, 246, 1) 0 2px 7px 4px;
 	
             
