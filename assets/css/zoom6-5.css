@@ -11,7 +11,7 @@
 	height:				calc(100vw * 0.336);
 	overflow:			hidden;
 	box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
-	background: url('https://nikospantazis.com/assets/images/loading-old.gif'),
+	background: url('../images/loading2.apng'),
                 linear-gradient(#e7e7e7, transparent),
                 radial-gradient(ellipse at bottom, #c0c0c0, #d0d0d0);
     background-repeat: no-repeat;
