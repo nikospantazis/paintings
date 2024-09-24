@@ -133,17 +133,6 @@ label {
 		background: #f6f6f6;
 	}
 
-		body.is-preload *, body.is-preload *:before, body.is-preload *:after {
-            -moz-animation: none !important;
-			-webkit-animation: none !important;
-			-ms-animation: none !important;
-			animation: none !important;
-			-moz-transition: none !important;
-			-webkit-transition: none !important;
-			-ms-transition: none !important;
-			transition: none !important;
-		}
-
 	body, input, select, textarea {
 		color: #353535;
 		font-family: 'Open Sans', mono;
@@ -153,10 +142,6 @@ label {
 	}
 
 	a {
-		-moz-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-		-webkit-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-		-ms-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-		transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
         /* change for lightbox
 		border-bottom: solid 1px #e4e4e4;
         */
@@ -322,8 +307,6 @@ label {
 	text-shadow: 0 1px 0px white;
     font-weight: 600;
     padding: 10px 10px;
-    -webkit-transition: background box-shadow 280ms ease;
-    transition: background box-shadow 280ms ease;
 }
 
 .topright:hover {
@@ -351,8 +334,6 @@ label {
     color: #353535;
     font-weight: 600;
     padding: 10px 13px;
-    -webkit-transition: background box-shadow 280ms ease;
-    transition: background box-shadow 280ms ease;
 }
 
 .topright2:hover {
@@ -766,8 +747,6 @@ label {
     color: #141414;
     font-weight: 400;
     padding: 6px 15px;
-    -webkit-transition: background box-shadow 280ms ease;
-    transition: background box-shadow 280ms ease;
 }
 
 .button:hover {

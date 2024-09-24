@@ -117,17 +117,6 @@ input, select, textarea {
 		background: #404040;
 	}
 
-		body.is-preload *, body.is-preload *:before, body.is-preload *:after {
-            -moz-animation: none !important;
-			-webkit-animation: none !important;
-			-ms-animation: none !important;
-			animation: none !important;
-			-moz-transition: none !important;
-			-webkit-transition: none !important;
-			-ms-transition: none !important;
-			transition: none !important;
-		}
-
 	body, input, select, textarea {
 		color: #d8d8d8;
 		font-family: 'Open Sans', mono;
@@ -137,10 +126,6 @@ input, select, textarea {
 	}
 
 	a {
-		-moz-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-		-webkit-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-		-ms-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-		transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
         /* change for lightbox
 		border-bottom: solid 1px #e4e4e4;
         */
@@ -291,8 +276,6 @@ input, select, textarea {
     color: #e6e6e6;
     font-weight: 700;
     padding: 10px 10px;
-    -webkit-transition: background box-shadow 280ms ease;
-    transition: background box-shadow 280ms ease;
 }
 
 .topright:hover {
@@ -683,8 +666,6 @@ input, select, textarea {
     color: #e6e6e6;
     font-weight: 700;
     padding: 6px 15px;
-    -webkit-transition: background box-shadow 280ms ease;
-    transition: background box-shadow 280ms ease;
 }
 
 .button:hover {
