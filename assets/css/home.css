@@ -329,7 +329,7 @@ input, select, textarea {
 
 /*lazy*/
 	.lazy {
-		background-image: url('https://nikospantazis.com/assets/images/loading.gif');
+		background-image: url('../images/loading.apng');
 		background-repeat: no-repeat;
         background-position: 50% 50%;
 }

@@ -390,7 +390,7 @@ label {
 
 /*lazy*/
 	.lazy {
-		background-image: url('https://nikospantazis.com/assets/images/loading-old.gif');
+		background-image: url('../images/loading2.apng');
 		background-repeat: no-repeat;
         background-position: 50% 50%;
 }
