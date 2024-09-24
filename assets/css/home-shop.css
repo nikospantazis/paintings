@@ -774,7 +774,6 @@ label {
     padding: 0px 10px;
 	margin-left: 5px;
 	margin-top: 2px;
-    transition: background box-shadow 280ms ease;
 }
 
 .button2:hover {
@@ -801,7 +800,6 @@ label {
     padding: 6px 15px;
 	left: 7.5em;
 	transform: translateY(0.9em);
-    transition: background box-shadow 280ms ease;
 }
 
 .buy-button:hover {
@@ -827,7 +825,6 @@ label {
     padding: 6px 15px;
 	left: 8.5em;
 	transform: translateY(0.8em);
-    transition: background box-shadow 280ms ease;
 }
 
 .buy-button2:hover {
