@@ -1189,6 +1189,7 @@ label {
 	margin-left:          7vw;
 	margin-right:         5vw;
 	column-gap:           5vw;
+	padding-bottom:       4em;
 }
 
 	.flex1 {
@@ -1224,6 +1225,7 @@ label {
 	margin-top:     2vw !important;
 	margin-left:    7vw !important;
 	margin-right:   7vw !important;
+	padding-bottom: 0;
 	}
 		.flex1 {
 		width:      100% !important;
