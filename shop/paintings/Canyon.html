@@ -31,7 +31,7 @@
                         <div class="flex1">
                             <div id="myViewport">
                                 <div id="myContent">
-                                    <img id="myImage" src="../../images/group5/big/DSC1094b.jpg" alt="" />
+                                    <img id="myImage" style="opacity: 0;" src="../../images/group5/big/DSC1094b.jpg" alt="" />
                                 </div>
                             </div>
                             <div class="button2" onclick="fullscreen()">
@@ -69,71 +69,7 @@
             
 
 <script src="../../assets/js/wheel-zoom.min.js" type="text/javascript"></script>
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        var imageElement = document.getElementById('myContent').querySelector('img');
-
-        if (imageElement.complete) {
-            init();
-        } else {
-            imageElement.onload = init;
-        }
-
-        function init() {
-            var rangeElement = document.querySelector('[data-zoom-range]');
-
-            var wzoom = WZoom.create('#myContent', {
-                zoomOnDblClick: true,
-                type: 'img',
-                onGrab: function () {
-                    document.getElementById('myViewport').style.cursor = 'grabbing';
-                },
-            });
-
-            window.addEventListener('resize', function () {
-                wzoom.prepare();
-            });
-            
-            /* swap plus to minus icon and max-zoom-up and down on the same button */
-            let count = 0;
-            document.querySelector('[data-max-zoom-up]').addEventListener('click', function () {
-                if (count == 0) {
-                wzoom.maxZoomUp();
-                document.getElementById("zoom").className = "icon solid fa-search-minus";
-                count++;
-                }
-                else if (count == 1) {
-                wzoom.maxZoomDown();
-                document.getElementById("zoom").className = "icon solid fa-search-plus";
-                count--;
-                }
-            });
-            
-        }
-    });
-</script>
-<script>
-    function fullscreen() { 
-        var el = document.getElementById('myImage'); el.requestFullscreen();
-        if (el.mozRequestFullScreen) {
-            el.mozRequestFullScreen();
-        } else if (el.webkitRequestFullscreen) {
-            el.webkitRequestFullscreen();
-        }
-    }
-    document.onclick = (event) => {
-    if (document.fullscreenElement) {
-        document.exitFullscreen();
-    } else {
-    }
-    };
-    document.body.ontouchstart = (event) => {
-    if (document.fullscreenElement) {
-        document.exitFullscreen();
-    } else {
-    }
-    };
-</script>
+<script src="../../assets/js/custom.js" type="text/javascript"></script>
 <!-- 100% privacy-first analytics -->
 <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
 <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>
