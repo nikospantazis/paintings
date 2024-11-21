@@ -123,6 +123,7 @@ label {
 
 	html {
 		box-sizing: border-box;
+		background: linear-gradient(#dbdbdb 0%, #f6f6f6 11em, #f6f6f6 96%, #dbdbdb 100%);
 	}
 
 	*, *:before, *:after {
@@ -130,7 +131,7 @@ label {
 	}
 
 	body {
-		background: #f6f6f6;
+		background: transparent;
 	}
 
 	body, input, select, textarea {
@@ -298,7 +299,7 @@ label {
     top: 8px;
     right: 18px;
     font-size: 22px;
-    background: linear-gradient(#ededed, #e0e0e0);
+    background: linear-gradient(#ededed, #d6d6d6);
     border-radius: 24px;
     border-style: none;
             box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .1) 0 6px 10px 0,rgba(0, 0, 0, .08) 0 1px 18px 0;
@@ -310,7 +311,7 @@ label {
 }
 
 .topright:hover {
- background: #e0e0e0;
+ background: #d6d6d6;
  color: #141414;
 }
 
@@ -355,8 +356,11 @@ label {
     margin: 0 auto;
 /*	backdrop-filter: blur(10px);
 	-webkit-backdrop-filter: blur(10px);*/
-	background: rgb(246, 246, 246);
-	box-shadow: rgba(246, 246, 246, 1) 0 2px 7px 4px;
+	background: linear-gradient(rgb(246, 246, 246), #dbdbdb 30%, #dbdbdb 50%, #cccccc);
+	box-shadow: #cccccc 0 10px 0px 0px,
+				rgba(246, 246, 246, 1) 0 0px 7px 2px;
+				
+	border-radius: 20px 20px 0 0;
 	
             
     
@@ -737,7 +741,7 @@ label {
 
 .button {
     width: fit-content;
-    background: linear-gradient(#ededed, #e0e0e0);
+    background: linear-gradient(#ededed, #d6d6d6);
     border-radius: 24px;
 	line-height: 2.5em;
     border-style: none;
@@ -750,7 +754,7 @@ label {
 }
 
 .button:hover {
-    background: #e0e0e0;
+    background: #d6d6d6;
     color: black;
 }
 
@@ -789,7 +793,7 @@ label {
 .buy-button {
 	position: absolute;
     width: fit-content;
-    background: linear-gradient(#ededed, #e0e0e0);
+    background: linear-gradient(#ededed, #d6d6d6);
     border-radius: 24px;
     border-style: none;
 	box-shadow: rgba(0, 0, 0, .4) 0 3px 5px -1px,rgba(0, 0, 0, .28) 0 6px 10px 0,rgba(0, 0, 0, .24) 0 1px 18px 0;
@@ -803,7 +807,7 @@ label {
 }
 
 .buy-button:hover {
-    background: #e0e0e0;
+    background: #d6d6d6;
     color: black;
 }
 
@@ -815,7 +819,7 @@ label {
 .buy-button2 {
 	position: absolute;
     width: fit-content;
-    background-color: #ededed;
+    background: linear-gradient(#ededed, #d6d6d6);
     border-radius: 24px;
     border-style: none;
 	box-shadow: rgba(0, 0, 0, .4) 0 3px 5px -1px,rgba(0, 0, 0, .28) 0 6px 10px 0,rgba(0, 0, 0, .24) 0 1px 18px 0;
@@ -828,7 +832,7 @@ label {
 }
 
 .buy-button2:hover {
-    background: #e0e0e0;
+    background: #d6d6d6;
     color: black;
 }
 

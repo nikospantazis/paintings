@@ -12,7 +12,7 @@
 	overflow:			hidden;
 	box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
 	background: url('../images/loading2.apng'),
-                linear-gradient(#e7e7e7, transparent),
+                linear-gradient(#e0e0e0, transparent),
                 radial-gradient(ellipse at bottom, #c0c0c0, #d0d0d0);
     background-repeat: no-repeat;
     background-position: 50% 50%;
