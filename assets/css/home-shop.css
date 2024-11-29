@@ -356,8 +356,8 @@ label {
     margin: 0 auto;
 /*	backdrop-filter: blur(10px);
 	-webkit-backdrop-filter: blur(10px);*/
-	background: linear-gradient(rgb(246, 246, 246), #dbdbdb 30%, #dbdbdb 50%, #cccccc);
-	box-shadow: #cccccc 0 10px 0px 0px,
+	background: linear-gradient(rgb(246, 246, 246), #dbdbdb 30%, #cccccc 50%, #aaaaaa);
+	box-shadow: #aaaaaa 0 10px 0px 0px,
 				rgba(246, 246, 246, 1) 0 0px 7px 2px;
 				
 	border-radius: 20px 20px 0 0;
