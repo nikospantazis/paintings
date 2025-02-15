@@ -124,6 +124,7 @@ label {
 	html {
 		box-sizing: border-box;
 		background: linear-gradient(#dbdbdb 0%, #f6f6f6 11em, #f6f6f6 96%, #dbdbdb 100%);
+		
 	}
 
 	*, *:before, *:after {
@@ -349,8 +350,10 @@ label {
 }
 
 /*sticky */
+
 .sticky {
-    position: sticky;
+    position: fixed;
+	width:100%;
     bottom: 0px;
     text-align: center;
     margin: 0 auto;
@@ -359,11 +362,7 @@ label {
 	background: linear-gradient(#f6f6f6, #e6e6e6 30%, #dbdbdb 50%, #aaaaaa);
 	box-shadow: #aaaaaa 0 10px 0px 0px,
 				rgba(246, 246, 246, 1) 0 0px 7px 2px;
-				
 	border-radius: 20px 20px 0 0;
-	
-            
-    
 }
     .sticky img {
         position: relative;
@@ -387,7 +386,6 @@ label {
         text-align: center;
 		margin: 0 auto;
 		width: 90%;
-	
 	}
         .container.avatar-text {
             text-align: center;
@@ -1149,6 +1147,8 @@ label {
   margin:               2vw;
   column-count:         3;
   column-gap:           5vw;
+  margin-top:           2.6em;
+  padding-bottom:       5em;
 }
 
 #photos img {
@@ -1156,24 +1156,33 @@ label {
   width: 100% !important;
   height: auto !important;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 6px 1px, rgba(0, 0, 0, 0.25) 0px 20px 30px;
-
+  margin-top: 2.85em;
 }
 
 @media (max-width: 1280px) {
   #photos {
   column-count:         3;
+  margin-top: 1em;
   }
 }
 @media (max-width: 1024px) {
   #photos {
   column-count:         3;
   column-gap:           5vw;
+  margin-top: -0.2em;
+  }
+  #photos img {
+  margin-top: 2.6em;
   }
 }
 @media (max-width: 736px) {
   #photos {
   column-count:         2;
   column-gap:           6vw;
+  margin-top: -0.6em;
+  }
+  #photos img {
+  margin-top: 2.4em;
   }
 }
 @media (max-width: 480px) {
@@ -1181,6 +1190,10 @@ label {
   column-count:         2;
   line-height:          7vw;
   column-gap:           7vw;
+  margin-top: -0.8em;
+  }
+  #photos img {
+  margin-top: 2.4em;
   }
 }
 
@@ -1229,7 +1242,6 @@ label {
 	margin-top:     2vw !important;
 	margin-left:    7vw !important;
 	margin-right:   7vw !important;
-	padding-bottom: 0;
 	}
 		.flex1 {
 		width:      100% !important;
