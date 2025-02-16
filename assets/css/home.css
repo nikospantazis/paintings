@@ -107,6 +107,7 @@ input, select, textarea {
 
 	html {
 		box-sizing: border-box;
+		padding-bottom: 2em;
 	}
 
 	*, *:before, *:after {
@@ -897,16 +898,11 @@ input, select, textarea {
 /* Photos */
 
 #photos {
-
-    line-height:         5vw;
-    margin:              2vw;
-   -webkit-column-count: 3;
-   -webkit-column-gap:   0px;
-   -moz-column-count:    3;
-   -moz-column-gap:      0px;
-   column-count:         3;
-   column-gap:           2vw;
-
+   line-height:         0vw;
+   margin:              2vw;
+   margin-top:          -0.5vw;
+   column-count:        3;
+   column-gap:          2vw;
 }
 
 #photos img {
@@ -914,35 +910,31 @@ input, select, textarea {
   width: 100% !important;
   height: auto !important;
   box-shadow: 0px 0px 6px 1px #212121;
+  margin-top: 2vw;
 }
 
 @media (max-width: 1200px) {
   #photos {
-  -moz-column-count:    3;
-  -webkit-column-count: 3;
+	margin-top:         -1vw;
   column-count:         3;
   }
 }
 @media (max-width: 1000px) {
   #photos {
-  -moz-column-count:    3;
-  -webkit-column-count: 3;
+  margin-top:          -1.5vw;
   column-count:         3;
   }
 }
 @media (max-width: 800px) {
   #photos {
-  -moz-column-count:    2;
-  -webkit-column-count: 2;
   column-count:         2;
   }
 }
 @media (max-width: 600px) {
   #photos {
-  -moz-column-count:    2;
-  -webkit-column-count: 2;
+  margin-top:           -2vw;
   column-count:         2;
-  line-height:         7vw;
+
   }
 }
 
