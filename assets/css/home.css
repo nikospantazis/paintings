@@ -930,12 +930,22 @@ input, select, textarea {
   column-count:         2;
   }
 }
+@media (max-width: 800px) and (orientation:landscape) {
+  #photos {
+  column-count:         3;
+  }
+}
 @media (max-width: 600px) {
   #photos {
   margin-top:           -2vw;
   column-count:         2;
 
   }
+@media (max-width: 600px) and (orientation:landscape) {
+  #photos {
+  column-count:         3;
+  }
+}
 }
 
 body {
