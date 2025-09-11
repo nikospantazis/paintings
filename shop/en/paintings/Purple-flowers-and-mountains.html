@@ -41,7 +41,7 @@
                                 <div id=zoom class="icon solid fa-search-plus"></div>
                             </div>
                             <div class="image product">
-                                    <img src="../../../images/group5/big/DSC0039b.jpg" alt="" />
+                                    <img class="lazy" data-src="../../../images/group5/big/DSC0039b.jpg" alt="" />
                             </div>
                             <h6><br></h6>
                         </div>
@@ -71,10 +71,24 @@
                 </div>
             
 
-<script src="../../../assets/js/wheel-zoom.min.js" type="text/javascript"></script>
-<script src="../../../assets/js/custom.js" type="text/javascript"></script>
-<!-- 100% privacy-first analytics -->
-<script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
-<noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>
+<!-- Scripts -->
+            <script src="../../../assets/js/jquery-1.11.3.js"></script>
+            <script src="../../../assets/js/jquery.lazy.min.js"></script>
+            <script>
+            $(function() {
+                $('.lazy').lazy({
+                    threshold: 500,
+                    effect: "fadeIn",
+                    effectTime: 400,
+                    enableThrottle: true,
+                    throttle: 50,
+                });
+            });
+            </script>
+            <script src="../../../assets/js/wheel-zoom.min.js" type="text/javascript"></script>
+            <script src="../../../assets/js/custom.js" type="text/javascript"></script>
+            <!-- 100% privacy-first analytics -->
+            <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+            <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>
 </body>
 </html>
