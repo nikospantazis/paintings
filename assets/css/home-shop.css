@@ -702,6 +702,21 @@ label {
 				box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 6px 1px, rgba(0, 0, 0, 0.25) 0px 20px 30px;
 			}
 
+		.image.product {
+			overflow: visible;
+			width: 100%;
+			display: none;
+			padding-bottom: 0.5em;
+		}
+
+			.image.product img {
+				margin: auto;
+				width: 100%;
+				border-radius: 0px;
+				display: block;
+				box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 6px 1px, rgba(0, 0, 0, 0.25) 0px 20px 30px;
+			}
+
 		.image.main {
 			display: block;
 			height: 20em;
@@ -1004,6 +1019,15 @@ label {
 			.image.main {
 				height: 20em;
 			}
+			
+		/* show image and hide buttons on vertical layout (less than 1024)*/
+		.image.product {
+			display: block;
+		}
+		.button2 {
+			display: none;
+		}
+	
 	}
 
 /* Small */
