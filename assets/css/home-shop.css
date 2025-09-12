@@ -374,6 +374,7 @@ label {
 
 /*lazy*/
 	.lazy {
+		background-color: #fafafa;
 		background-image: url('../images/loading2.apng');
 		background-repeat: no-repeat;
         background-position: 50% 50%;
