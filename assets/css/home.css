@@ -313,6 +313,7 @@ input, select, textarea {
 
 /*lazy*/
 	.lazy {
+		background-color: #474747;
 		background-image: url('../images/loading.apng');
 		background-repeat: no-repeat;
         background-position: 50% 50%;
