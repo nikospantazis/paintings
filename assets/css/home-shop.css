@@ -608,7 +608,7 @@ label {
 		}
 
 		.image img {
-			border-radius: 5px;
+			border-radius: 0.5em;
 			display: block;
 		}
 
