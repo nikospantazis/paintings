@@ -173,6 +173,12 @@ body.lb-disable-scrolling {
   line-height: 1em;
 }
 
+@media screen and (min-width: 736px) {
+  .lb-data .lb-caption {
+    font-size: 12pt;
+  }
+}
+
 .lb-data .lb-caption a {
   color: #4ae;
 }
