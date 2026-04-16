@@ -186,12 +186,8 @@
                     </section>        
 <!-- Scripts -->
             <script src="../assets/js/jquery-1.11.3.js"></script>
-            <script src="../assets/js/jquery.mobile-1.4.5.min.js"></script>
             <script src="../assets/js/jquery.lazy.min.js"></script>
             <script src="../assets/js/lightbox-locked.js"></script> <!-- this is an edited file -->
-            <script>
-            $.mobile.loading().hide();
-            </script>
             <script>
             $(function() {
                 $('.lazy').lazy({
@@ -215,34 +211,28 @@
                 })
             </script>
             <script>
-            function leftTrigger(){
-                    setTimeout(function(){
-                        $('.lightbox').on('swipeleft', leftHandler);
+                $(document).ready(function() {
+                    var touchstartX = 0;
+                    var touchendX = 0;
 
-                        function leftHandler(){
-                        $('.lb-next').click();
+                    function checkDirection() {
+                        if (touchendX < touchstartX - 50) {
+                            $('.lb-next').click();
                         }
-                    }, 0);
-                }
-
-                
-
-                function rightTrigger(){
-                    setTimeout(function(){
-                        $('.lightbox').on('swiperight', leftHandler);
-
-                        function leftHandler(){
-                        $('.lb-prev').click();
+                        if (touchendX > touchstartX + 50) {
+                            $('.lb-prev').click();
                         }
-                    }, 0);
-                }
-            
-                $('[data-lightbox]').on('click', function(){
-                    leftTrigger();
-                    rightTrigger();
-                    $('[data-lightbox]').off('click')
+                    }
+
+                    $(document).on('touchstart', '.lightbox', function(e) {
+                        touchstartX = e.originalEvent.changedTouches[0].screenX;
+                    });
+
+                    $(document).on('touchend', '.lightbox', function(e) {
+                        touchendX = e.originalEvent.changedTouches[0].screenX;
+                        checkDirection();
+                    });
                 });
             </script>
-
     </body>
 </html>
