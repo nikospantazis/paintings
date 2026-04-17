@@ -313,20 +313,31 @@ input, select, textarea {
 
 /*lazy*/
 .lazy {
-	will-change: opacity;
-    background-color: #474747;
-    background-image: url('../images/loading.apng');
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
+    position: relative;
+    display: block;
 
     opacity: 0;
-    transition: opacity 0.6s ease-in-out;
+    transition: opacity 0.6s ease;
 }
 
-/* when loaded */
+/* spinner layer */
+.lazy::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #474747 url('../images/loading.apng') center no-repeat;
+    z-index: 1;
+    transition: opacity 0.3s ease;
+}
+
+/* image fades in */
 .lazy.loaded {
     opacity: 1;
-    background-image: none; /* remove spinner */
+}
+
+/* spinner fades out separately */
+.lazy.loaded::before {
+    opacity: 0;
 }
 
 
