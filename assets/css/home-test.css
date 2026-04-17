@@ -312,32 +312,29 @@ input, select, textarea {
 	}
 
 /*lazy*/
-.lazy {
+.lazy-wrapper {
     position: relative;
     display: block;
+    background: #474747 url('../images/loading.apng') center no-repeat;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
 
+/* image */
+.lazy {
+    display: block;
+    width: 100%;
+    height: auto;
     opacity: 0;
     transition: opacity 0.6s ease;
 }
 
-/* spinner layer */
-.lazy::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: #474747 url('../images/loading.apng') center no-repeat;
-    z-index: 1;
-    transition: opacity 0.3s ease;
-}
-
-/* image fades in */
 .lazy.loaded {
     opacity: 1;
 }
 
-/* spinner fades out separately */
-.lazy.loaded::before {
-    opacity: 0;
+/* remove spinner when loaded */
+.lazy-wrapper.loaded {
+    background-image: none;
 }
 
 
