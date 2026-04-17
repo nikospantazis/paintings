@@ -212,28 +212,39 @@
                 })
             </script>
             <script>
-                $(document).ready(function() {
-                    var touchstartX = 0;
-                    var touchendX = 0;
+    $(document).ready(function() {
+        var touchstartX = 0;
+        var touchendX = 0;
+        var isMultiTouch = false; 
 
-                    function checkDirection() {
-                        if (touchendX < touchstartX - 50) {
-                            $('.lb-next').click();
-                        }
-                        if (touchendX > touchstartX + 50) {
-                            $('.lb-prev').click();
-                        }
-                    }
+        function checkDirection() {
+            if (touchendX < touchstartX - 50) {
+                $('.lb-next').click();
+            }
+            if (touchendX > touchstartX + 50) {
+                $('.lb-prev').click();
+            }
+        }
 
-                    $(document).on('touchstart', '.lightbox', function(e) {
-                        touchstartX = e.originalEvent.changedTouches[0].screenX;
-                    });
+        $(document).on('touchstart', '.lightbox', function(e) {
+            if (e.originalEvent.touches.length > 1) {
+                isMultiTouch = true;
+                return;
+            }
+            
+            isMultiTouch = false;
+            touchstartX = e.originalEvent.changedTouches[0].screenX;
+        });
 
-                    $(document).on('touchend', '.lightbox', function(e) {
-                        touchendX = e.originalEvent.changedTouches[0].screenX;
-                        checkDirection();
-                    });
-                });
-            </script>
+        $(document).on('touchend', '.lightbox', function(e) {
+            if (isMultiTouch) {
+                return;
+            }
+            
+            touchendX = e.originalEvent.changedTouches[0].screenX;
+            checkDirection();
+        });
+    });
+</script>
 	</body>
 </html>
