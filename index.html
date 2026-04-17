@@ -215,8 +215,13 @@
                 $(document).ready(function() {
                     var touchstartX = 0;
                     var touchendX = 0;
+                    var isMultiTouch = false; 
 
                     function checkDirection() {
+                        if (window.visualViewport && window.visualViewport.scale > 1.05) {
+                            return;
+                        }
+
                         if (touchendX < touchstartX - 50) {
                             $('.lb-next').click();
                         }
@@ -226,10 +231,20 @@
                     }
 
                     $(document).on('touchstart', '.lightbox', function(e) {
+                        if (e.originalEvent.touches.length > 1) {
+                            isMultiTouch = true;
+                            return;
+                        }
+                        
+                        isMultiTouch = false;
                         touchstartX = e.originalEvent.changedTouches[0].screenX;
                     });
 
                     $(document).on('touchend', '.lightbox', function(e) {
+                        if (isMultiTouch) {
+                            return;
+                        }
+                        
                         touchendX = e.originalEvent.changedTouches[0].screenX;
                         checkDirection();
                     });

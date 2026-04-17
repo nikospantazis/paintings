@@ -67,29 +67,6 @@
                 'disableScrolling': true
                 })
             </script>
-            <script>
-                $(document).ready(function() {
-                    var touchstartX = 0;
-                    var touchendX = 0;
 
-                    function checkDirection() {
-                        if (touchendX < touchstartX - 50) {
-                            $('.lb-next').click();
-                        }
-                        if (touchendX > touchstartX + 50) {
-                            $('.lb-prev').click();
-                        }
-                    }
-
-                    $(document).on('touchstart', '.lightbox', function(e) {
-                        touchstartX = e.originalEvent.changedTouches[0].screenX;
-                    });
-
-                    $(document).on('touchend', '.lightbox', function(e) {
-                        touchendX = e.originalEvent.changedTouches[0].screenX;
-                        checkDirection();
-                    });
-                });
-            </script>
 </body>
 </html>
