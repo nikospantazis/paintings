@@ -315,17 +315,13 @@ input, select, textarea {
 .lazy-wrapper {
 		background-color: #474747;
 		background-image: none;
+		box-shadow:	none;
 		background-repeat: no-repeat;
         background-position: 50% 50%;
 }
 .lazy-wrapper.loading {
 		background-image: url('../images/loading.apng');
-		animation: showSpinner 0s linear 0.2s forwards;
-		opacity: 0;
-}
-
-@keyframes showSpinner {
-    to { opacity: 1; }
+		box-shadow: 0px 0px 6px 1px #212121;
 }
 
 /* Container */
@@ -919,7 +915,7 @@ input, select, textarea {
 #photos {
    line-height:         0vw;
    margin:              2vw;
-   margin-top:          -0.5vw;
+   margin-top:          2.3vw;
    column-count:        3;
    column-gap:          2vw;
 }
@@ -950,13 +946,13 @@ input, select, textarea {
 
 @media (max-width: 1200px) {
   #photos {
-	margin-top:         -1vw;
+	margin-top:         1.9vw;
   column-count:         3;
   }
 }
 @media (max-width: 1000px) {
   #photos {
-  margin-top:          -1.5vw;
+  margin-top:          1.8vw;
   column-count:         3;
   }
 }
@@ -972,7 +968,7 @@ input, select, textarea {
 }
 @media (max-width: 600px) {
   #photos {
-  margin-top:           -2vw;
+  margin-top:           2vw;
   column-count:         2;
 
   }
