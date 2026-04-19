@@ -939,9 +939,22 @@ input, select, textarea {
    opacity: 1;
 }
 
-#photos img.error {
-    opacity: 1;
-    min-height: 100px; /* Ensures the wrapper stays expanded so you see the spinner */
+#photos .lazy-wrapper.error {
+    position: relative;
+	box-shadow: 0px 0px 6px 1px #212121;
+    background-color: #474747;
+}
+
+#photos .lazy-wrapper.error::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url('../images/image_FontAwesome5Free-Solid.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 32px;
+    opacity: 0.5; 
+    z-index: 1;
 }
 
 @media (max-width: 1200px) {

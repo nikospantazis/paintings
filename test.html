@@ -482,6 +482,7 @@
                             <div class="lazy-wrapper">
                                 <img 
                                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAGCAQAAACh8pzAAAAADklEQVR42mNkgANG8pgAASkAB1mKT2kAAAAASUVORK5CYII=" class="lazy" data-src="images/group4/DSC0037b.jpg" alt="Πίνακας ζωγραφικής Κόκκινο ποτάμι" />
+                            </div>
                         </a>
                     </section>        
 <!-- Scripts -->
@@ -489,24 +490,44 @@
             <script src="assets/js/lightbox-locked.js"></script> <!-- this is an edited file -->
             <script src="assets/js/lazyload.min.js"></script>
             <script>
-            document.addEventListener("DOMContentLoaded", function() {
+            document.addEventListener("DOMContentLoaded", function () {
                 var lazyLoadInstance = new LazyLoad({
                     elements_selector: ".lazy",
+
                     class_loaded: "loaded",
                     class_loading: "loading",
                     class_error: "error",
-                    
-                    callback_loading: function(el) {
-                        el.parentElement.classList.add("loading");
+
+                    callback_enter: function (el) {
+                        if (!el.dataset.fallback) {
+                            el.dataset.fallback = el.src;
+                        }
                     },
-                    callback_loaded: function(el) {
-                        el.parentElement.classList.remove("loading");
-                        el.parentElement.classList.add("loaded");
+
+                    callback_loading: function (el) {
+                        if (el.parentElement) {
+                            el.parentElement.classList.add("loading");
+                        }
                     },
-                    callback_error: function(el) {
-                        el.parentElement.classList.remove("loading");
+
+                    callback_loaded: function (el) {
+                        if (el.parentElement) {
+                            el.parentElement.classList.remove("loading");
+                            el.parentElement.classList.add("loaded");
+                        }
+                    },
+
+                    callback_error: function (el) {
+                        if (el.dataset.fallback) {
+                            el.src = el.dataset.fallback;
+                        }
+
+                        if (el.parentElement) {
+                            el.parentElement.classList.remove("loading");
+                        }
+
+                        el.parentElement.classList.add("error");
                     }
-                    
                 });
             });
             </script>
