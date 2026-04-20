@@ -940,6 +940,8 @@ input, select, textarea {
 
 #photos .lazy-wrapper {
   box-shadow: 0px 0px 6px 1px #212121;
+  width: 100%;
+  height: auto;
 }
 
 #photos .lazy-wrapper.error {
