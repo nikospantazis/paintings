@@ -321,7 +321,6 @@ input, select, textarea {
 }
 .lazy-wrapper.loading {
 		background-image: url('../images/loading.apng');
-		box-shadow: 0px 0px 6px 1px #212121;
 }
 
 /* Container */
@@ -923,7 +922,7 @@ input, select, textarea {
 #photos img {
   display: block;
   width: 100% !important;
-  height: auto !important;
+  height: 100% !important;
   margin-bottom: 2vw;
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
@@ -940,8 +939,6 @@ input, select, textarea {
 
 #photos .lazy-wrapper {
   box-shadow: 0px 0px 6px 1px #212121;
-  width: 100%;
-  height: auto;
 }
 
 #photos .lazy-wrapper.error {
