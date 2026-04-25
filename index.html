@@ -249,6 +249,15 @@
                         checkDirection();
                     });
                 });
+
+                document.addEventListener('click', function(e) {
+                    if (window.visualViewport && window.visualViewport.scale > 1.05) {
+                        if (e.target.closest('.lb-next, .lb-prev, .lb-image')) {
+                            e.stopPropagation();
+                            e.preventDefault();
+                        }
+                    }
+                }, true);
             </script>
 	</body>
 </html>
