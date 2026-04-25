@@ -16,7 +16,6 @@
 		<meta name="google-site-verification" content="D0-1J7kqygZ1LMUTVCdwGhUP5wwKsnFnhg8f_2l-5fI" />
 		<link rel="stylesheet" href="assets/css/home.css" />
 		<link rel="stylesheet" href="assets/css/lightbox-locked.css" />
-		<link rel="preload" href="assets/images/loading.apng" as="image" />
         <link rel="alternate" hreflang="el" href="https://nikospantazis.com/index.html" />
         <link rel="alternate" hreflang="en" href="https://nikospantazis.com/en/index.html" />
         <script defer src="https://cloud.umami.is/script.js" data-website-id="5f24a2ce-130f-4860-911f-97866fadd0c9"></script>
@@ -213,6 +212,8 @@
                 })
             </script>
             <script>
+                new Image().src = 'assets/images/loading.apng';
+                
                 $(document).ready(function() {
                     var touchstartX = 0;
                     var touchendX = 0;
