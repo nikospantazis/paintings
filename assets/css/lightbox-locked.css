@@ -62,13 +62,16 @@ body.lb-disable-scrolling {
 }
 
 .lb-loader {
-  position: absolute;
-  top: 43%;
-  left: 0;
-  height: 25%;
-  width: 100%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10001;
+  height: auto;
+  width: auto;
   text-align: center;
   line-height: 0;
+  display: none;
 }
 
 .lb-cancel {
