@@ -567,6 +567,7 @@
     $(window).off('resize', this.sizeOverlay);
     this.$lightbox.fadeOut(this.options.fadeDuration);
     this.$overlay.fadeOut(this.options.fadeDuration);
+    this.$loader.hide();
 
     if (this.options.disableScrolling) {
       $('body').removeClass('lb-disable-scrolling');
