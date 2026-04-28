@@ -669,24 +669,7 @@
             }
         }
         swapToFullRes(src) {
-            // Cancel any spinner timer left over from a previous swap
-            if (this.spinnerTimer) {
-                clearTimeout(this.spinnerTimer);
-                this.spinnerTimer = null;
-            }
-            // Show a spinner if the full-res image takes longer than SPINNER_DELAY_MS
-            this.spinnerTimer = setTimeout(() => {
-                this.spinnerTimer = null;
-                if (this.overlay && this.state.currentSrc === src && !this.spinnerEl) {
-                    const spinner = document.createElement('div');
-                    spinner.className = 'lightbox3-spinner';
-                    this.overlay.appendChild(spinner);
-                    this.spinnerEl = spinner;
-                }
-            }, SPINNER_DELAY_MS);
             this.loadImage(src).then((size) => {
-                // Image loaded — cancel the pending spinner and remove any visible one
-                this.removeSpinner();
                 if (!this.imgEl || this.state.currentSrc !== src)
                     return;
                 // Full-res loaded after close started — don't reposition the image
@@ -998,14 +981,6 @@
             this.schedulePreloads();
             // Recycle DOM slots
             this.recycleSlots(direction);
-            // Reset slide image opacities — the strip offset reset above skips
-            // applyStripOffset(0), so we clear them explicitly here.
-            if (this.imgEl)
-                this.imgEl.style.opacity = '';
-            if (this.nextSlideImg)
-                this.nextSlideImg.style.opacity = '';
-            if (this.prevSlideImg)
-                this.prevSlideImg.style.opacity = '';
             // Set up new current image (zoom state, full-res swap)
             this.setupCurrentImage();
             // Wheel navigation: ready for new gesture now that the image has landed
@@ -1303,7 +1278,6 @@
                 this.stripEl.style.transform = offset ? `translateX(${offset}px)` : '';
             }
             this.updateChromeFade(offset);
-            this.updateSlideImageFade(offset);
         }
         /**
          * Cross-fade caption and counter as the strip slides between images.
@@ -1358,45 +1332,6 @@
                 this.chromeCaption.style.opacity = String(fadeOpacity);
             if (this.chromeCounter)
                 this.chromeCounter.style.opacity = String(fadeOpacity);
-        }
-        /**
-         * Cross-fade slide images during strip animation.
-         * First half of travel: exiting image fades from 1 → 0.
-         * Second half: incoming image fades from 0 → 1.
-         * The exiting image stays invisible once it has faded out.
-         */
-        updateSlideImageFade(offset) {
-            if (offset === 0) {
-                // Reset all slide image opacities to let the rest of the system control them
-                if (this.imgEl)
-                    this.imgEl.style.opacity = '';
-                if (this.nextSlideImg)
-                    this.nextSlideImg.style.opacity = '';
-                if (this.prevSlideImg)
-                    this.prevSlideImg.style.opacity = '';
-                return;
-            }
-            const direction = offset < 0 ? 1 : -1;
-            const destIndex = this.currentIndex + direction;
-            const hasDestination = destIndex >= 0 && destIndex < this.gallery.length;
-            if (!hasDestination)
-                return; // Edge bounce — don't fade
-            const slideWidth = window.innerWidth + SLIDE_GAP;
-            const progress = Math.min(1, Math.abs(offset) / slideWidth);
-            // How far into the strip travel (0–1) the exit/enter fades complete.
-            // Lower FADE_OUT_END → exiting image disappears faster.
-            // FADE_IN_START can stay at 0.5 so the new image appears at midpoint.
-            const FADE_OUT_END = 0.25;
-            const FADE_IN_START = 0.5;
-            // Exiting image: 1 → 0 over [0, FADE_OUT_END], then stays invisible
-            const exitOpacity = Math.max(0, 1 - progress / FADE_OUT_END);
-            // Incoming image: 0 → 1 over [FADE_IN_START, 1]
-            const enterOpacity = Math.max(0, (progress - FADE_IN_START) / (1 - FADE_IN_START));
-            const destImg = direction === 1 ? this.nextSlideImg : this.prevSlideImg;
-            if (this.imgEl)
-                this.imgEl.style.opacity = String(exitOpacity);
-            if (destImg)
-                destImg.style.opacity = String(enterOpacity);
         }
         /**
          * Rubber-band bounce at gallery edges. Kicks the strip with velocity in the
@@ -2943,16 +2878,6 @@
             }
             return this.opts.padding;
         }
-        /** Extra bottom padding to keep the chrome bar below the image.
-         *  Reads --lb-image-padding-bottom; falls back to the base padding. */
-        getTargetImagePaddingBottom() {
-            if (this.overlay) {
-                const value = getComputedStyle(this.overlay).getPropertyValue('--lb-image-padding-bottom');
-                if (value)
-                    return parseFloat(value) || 0;
-            }
-            return this.getTargetImagePadding();
-        }
         /** Read the visual border-radius from the thumbnail's trigger element. */
         getThumbBorderRadius(el) {
             // Check the trigger element first (wrapping anchor/div with overflow:hidden),
@@ -3068,13 +2993,10 @@
             const vw = window.innerWidth;
             const vh = window.innerHeight;
             const p = this.getTargetImagePadding();
-            const pb = this.getTargetImagePaddingBottom();
-            const availW = vw - p * 2;
-            const availH = vh - p - pb;
-            const scale = Math.min(availW / naturalWidth, availH / naturalHeight, 1);
+            const scale = Math.min((vw - p * 2) / naturalWidth, (vh - p * 2) / naturalHeight, 1);
             const w = naturalWidth * scale;
             const h = naturalHeight * scale;
-            return new DOMRect(p + (availW - w) / 2, p + (availH - h) / 2, w, h);
+            return new DOMRect((vw - w) / 2, (vh - h) / 2, w, h);
         }
         /** Like computeTargetRect but without the scale ≤ 1 cap. Used when full-res
          *  dimensions are unknown — fills the viewport based on aspect ratio alone. */
@@ -3082,13 +3004,10 @@
             const vw = window.innerWidth;
             const vh = window.innerHeight;
             const p = this.getTargetImagePadding();
-            const pb = this.getTargetImagePaddingBottom();
-            const availW = vw - p * 2;
-            const availH = vh - p - pb;
-            const scale = Math.min(availW / width, availH / height);
+            const scale = Math.min((vw - p * 2) / width, (vh - p * 2) / height);
             const w = width * scale;
             const h = height * scale;
-            return new DOMRect(p + (availW - w) / 2, p + (availH - h) / 2, w, h);
+            return new DOMRect((vw - w) / 2, (vh - h) / 2, w, h);
         }
         loadImage(src) {
             const cached = this.preloadCache.get(src);
