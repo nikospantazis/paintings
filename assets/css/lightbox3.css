@@ -1,7 +1,7 @@
 /* ===== Lightbox3 ===== */
 
 .lightbox3-overlay {
-  --lb-backdrop-color: rgba(0, 0, 0, 0.95);
+  --lb-backdrop-color: rgba(0, 0, 0, 0.9);
   --lb-chrome-bg: rgba(24, 24, 24, 0.8);
   --lb-chrome-text: rgba(255, 255, 255, 0.9);
   --lb-chrome-font-size: 15px;
