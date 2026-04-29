@@ -52,7 +52,7 @@
         debug: false,
     };
     // Spinner shown while loading an image triggered from a text link.
-    const SPINNER_DELAY_MS = 99999;
+    const SPINNER_DELAY_MS = 0;
     // For text-link triggers, the image stays fully opaque until the backdrop
     // drops below this threshold, then fades proportionally. Keeps the image
     // visible through ~80% of the close animation and fades quickly at the end.
