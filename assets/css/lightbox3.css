@@ -45,7 +45,7 @@
 
 .lightbox3-image {
   background-image: url('../images/loading.apng');
-  background-size: contain;
+  background-size: 32px;
   background-repeat: no-repeat;
   background-position: center;
   position: absolute;
