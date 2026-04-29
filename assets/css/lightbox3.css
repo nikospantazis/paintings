@@ -44,6 +44,10 @@
 }
 
 .lightbox3-image {
+  background-image: url('../images/loading.apng');
+  background-size: 32px;
+  background-repeat: no-repeat;
+  background-position: center;
   position: absolute;
   object-fit: cover;
   user-select: none;
@@ -55,7 +59,7 @@
 }
 
 .lightbox3-spinner {
-  position: absolute;
+  /*position: absolute;
   top: 50%;
   left: 50%;
   width: 32px;
@@ -64,7 +68,9 @@
   border: 3px solid rgba(255, 255, 255, 0.2);
   border-top-color: rgba(255, 255, 255, 0.8);
   border-radius: 50%;
-  animation: lightbox3-spin 0.7s linear infinite;
+  animation: lightbox3-spin 0.7s linear infinite;*/
+  border: none;
+  animation: none;
 }
 
 @keyframes lightbox3-spin {
