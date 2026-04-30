@@ -65,9 +65,7 @@
   width: 32px;
   height: 32px;
   margin: 25% 0 0 50%;
-  animation: lightbox3-spin 0.1s linear infinite;
-/*  border: none;
-  animation: none;*/
+  will-change: transform;
 }
 
 @keyframes lightbox3-spin {
