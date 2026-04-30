@@ -62,9 +62,7 @@
   background-image: url('../images/loading.apng');
   background-repeat: no-repeat;
   background-position: center;
-  background-size: contain;
-  width: 32px; 
-  height: 32px;
+  background-size: 32px 32px;
   will-change: transform;
 }
 
