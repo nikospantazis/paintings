@@ -1,15 +1,15 @@
 /* ===== Lightbox3 ===== */
 
 .lightbox3-overlay {
-  --lb-backdrop-color: rgba(0, 0, 0, 0.95);
+  --lb-backdrop-color: rgba(0, 0, 0, 0.9);
   --lb-chrome-bg: rgba(24, 24, 24, 0.8);
   --lb-chrome-text: rgba(255, 255, 255, 0.9);
   --lb-chrome-font-size: 15px;
   --lb-chrome-padding: 16px;
   --lb-chrome-border-radius: 48px;
   --lb-image-border-radius: 0px;
-  --lb-image-padding: 40px;
-  --lb-image-padding-bottom: 100px;
+  --lb-image-padding: 20px;
+  --lb-image-padding-bottom: 80px;
   --lb-z-index: 999999;
 
   position: fixed;
@@ -44,6 +44,10 @@
 }
 
 .lightbox3-image {
+/*  background-image: url('../images/loading.apng');
+  background-size: 32px;
+  background-repeat: no-repeat;
+  background-position: center;*/
   position: absolute;
   object-fit: cover;
   user-select: none;
@@ -51,22 +55,18 @@
   will-change: transform;
   transform-origin: center center;
   touch-action: none;
+  box-shadow: 0px 0px 12px 0px black;
 }
 
 .lightbox3-spinner {
-  position: absolute;
-  top: 0;
-  left: 0;
+  background-image: url('../images/loading.apng');
+  top: 50%;
+  left: 50%;
   width: 32px;
   height: 32px;
-  background-image: url('../images/loading.apng');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  border: none;
-  border-radius: 0;
+  margin-top: calc(50vh - 16px);
+  margin-left: calc(50vw - 16px);
   will-change: transform;
-  animation: none;
 }
 
 @keyframes lightbox3-spin {
@@ -111,6 +111,7 @@
   font-variant-numeric: tabular-nums;
   font-size: 14px;
   letter-spacing: 0.01em;
+  display: none;
 }
 
 .lightbox3-caption {
