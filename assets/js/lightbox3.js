@@ -680,6 +680,22 @@
                 if (this.overlay && this.state.currentSrc === src && !this.spinnerEl) {
                     const spinner = document.createElement('div');
                     spinner.className = 'lightbox3-spinner';
+                 
+                // Match the spinner's container to the exact bounds of the image
+                if (this.zoom && this.zoom.fitRect && this.zoom.fitRect.width > 0) {
+                    const rect = this.zoom.fitRect;
+                    spinner.style.position = 'absolute';
+                    spinner.style.left = `${rect.x}px`;
+                    spinner.style.top = `${rect.y}px`;
+                    spinner.style.width = `${rect.width}px`;
+                    spinner.style.height = `${rect.height}px`;
+                    spinner.style.display = 'flex';
+                    spinner.style.alignItems = 'center';
+                    spinner.style.justifyContent = 'center';
+                    spinner.style.pointerEvents = 'none'; 
+                }
+                
+                    
                     this.overlay.appendChild(spinner);
                     this.spinnerEl = spinner;
                 }
