@@ -60,17 +60,17 @@
 
 .lightbox3-spinner {
   background-image: url('../images/loading.apng');
-  top: 50%;
-  left: 50%;
+  background-size: 32px;
+  background-repeat: no-repeat;
+  background-position: center;
   width: 32px;
   height: 32px;
+  top: 50%;
+  left: 50%;
   margin: -16px 0 0 -16px;
-  border: 3px solid rgba(255, 255, 255, 0.2);
-  border-top-color: rgba(255, 255, 255, 0.8);
-  border-radius: 50%;
-  animation: lightbox3-spin 0.7s linear infinite;
-/*  border: none;
-  animation: none;*/
+  border: none;
+  border-radius: 0;
+  animation: none;
 }
 
 @keyframes lightbox3-spin {
