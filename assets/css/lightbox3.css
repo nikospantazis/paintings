@@ -60,17 +60,11 @@
 
 .lightbox3-spinner {
   background-image: url('../images/loading.apng');
-  background-size: 32px;
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 32px;
-  height: 32px;
   top: 50%;
   left: 50%;
+  width: 32px;
+  height: 32px;
   margin: -16px 0 0 -16px;
-  border: none;
-  border-radius: 0;
-  animation: none;
 }
 
 @keyframes lightbox3-spin {
