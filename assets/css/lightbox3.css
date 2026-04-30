@@ -60,6 +60,7 @@
 
 .lightbox3-spinner {
   background-image: url('../images/loading.apng');
+  background-position: center
   top: 50%;
   left: 50%;
   width: 32px;
