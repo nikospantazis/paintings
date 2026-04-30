@@ -65,6 +65,11 @@
   width: 32px;
   height: 32px;
   margin: -16px 0 0 -16px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+/*  border: none;
+  animation: none;*/
 }
 
 @keyframes lightbox3-spin {
