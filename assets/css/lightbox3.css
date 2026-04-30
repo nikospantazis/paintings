@@ -64,7 +64,8 @@
   left: 50%;
   width: 32px;
   height: 32px;
-  margin: 25% 0 0 50%;
+  margin-top: 50vh;
+  margin-left: 50hw;
   will-change: transform;
 }
 
