@@ -68,6 +68,7 @@
   border: 3px solid rgba(255, 255, 255, 0.2);
   border-top-color: rgba(255, 255, 255, 0.8);
   border-radius: 50%;
+  animation: lightbox3-spin 0.7s linear infinite;
 /*  border: none;
   animation: none;*/
 }
