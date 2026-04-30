@@ -544,6 +544,7 @@
             // Compute FLIP scale and crop insets (handles CSS cover + server-side crop)
             const { flipScale, hasCrop } = this.computeFlipCrop(thumbRect, targetRect, triggerEl, false);
             // Start full-res load immediately so it continues regardless of animation interrupts
+            console.log('[lb3] thumbSrc:', thumbSrc, '| src:', src, '| will swapToFullRes:', !!(thumbSrc && thumbSrc !== src));
             if (thumbSrc && thumbSrc !== src) {
                 this.swapToFullRes(src);
             }
@@ -669,22 +670,40 @@
             }
         }
         swapToFullRes(src) {
+            console.log('[lb3] swapToFullRes called, src:', src);
             // Cancel any spinner timer left over from a previous swap
             if (this.spinnerTimer) {
                 clearTimeout(this.spinnerTimer);
                 this.spinnerTimer = null;
             }
+            let loaded = false;
             // Show a spinner if the full-res image takes longer than SPINNER_DELAY_MS
             this.spinnerTimer = setTimeout(() => {
                 this.spinnerTimer = null;
+                console.log('[lb3] spinner timer fired, loaded:', loaded);
+                // If image already resolved (preload cache hit), don't show spinner
+                if (loaded)
+                    return;
+                console.log('[lb3] creating spinner el');
                 if (this.overlay && this.state.currentSrc === src && !this.spinnerEl) {
                     const spinner = document.createElement('div');
                     spinner.className = 'lightbox3-spinner';
+                    // Center on the actual image rect, not the viewport
+                    const rect = this.zoom.fitRect;
+                    if (rect) {
+                        spinner.style.marginTop = `${rect.y + rect.height / 2 - 16}px`;
+                        spinner.style.marginLeft = `${rect.x + rect.width / 2 - 16}px`;
+                    }
                     this.overlay.appendChild(spinner);
                     this.spinnerEl = spinner;
+                    console.log('[lb3] spinner appended to overlay');
+                } else {
+                    console.log('[lb3] spinner NOT created — overlay:', !!this.overlay, 'currentSrc match:', this.state.currentSrc === src, 'spinnerEl exists:', !!this.spinnerEl);
                 }
             }, SPINNER_DELAY_MS);
             this.loadImage(src).then((size) => {
+                loaded = true;
+                console.log('[lb3] loadImage resolved, removing spinner');
                 // Image loaded — cancel the pending spinner and remove any visible one
                 this.removeSpinner();
                 if (!this.imgEl || this.state.currentSrc !== src)
