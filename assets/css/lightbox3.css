@@ -64,8 +64,8 @@
   left: 50%;
   width: 32px;
   height: 32px;
-  margin-top: calc (50vh - 16px);
-  margin-left: calc (50vw - 16px);
+  margin-top: calc(50vh - 16px);
+  margin-left: calc(50vw - 16px);
   will-change: transform;
 }
 
