@@ -64,8 +64,8 @@
   left: 50%;
   width: 32px;
   height: 32px;
-  margin: 50% 0 0 50%;
-  animation: lightbox3-spin 0.7s linear infinite;
+  margin: 25% 0 0 50%;
+  animation: lightbox3-spin 0s linear infinite;
 /*  border: none;
   animation: none;*/
 }
