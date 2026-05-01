@@ -735,15 +735,20 @@
                 if (!this.zoom.zoomed) {
                     const targetRect = this.computeTargetRect(size.width, size.height);
                     const currentRect = this.zoom.fitRect;
-                    // If size/position changed meaningfully, spring-animate the transition
                     const dx = Math.abs(targetRect.x - currentRect.x);
                     const dy = Math.abs(targetRect.y - currentRect.y);
                     const dw = Math.abs(targetRect.width - currentRect.width);
                     const dh = Math.abs(targetRect.height - currentRect.height);
-                    if (dx > 1 || dy > 1 || dw > 1 || dh > 1) {
+                    const rectChanged = dx > 1 || dy > 1 || dw > 1 || dh > 1;
+                    if (rectChanged && !calledDuringNavigation && !this.reducedMotion) {
+                        // Image is at opacity 0 — snap rect instantly so the spring
+                        // zoom doesn't play on top of the fade.
+                        this.zoom.fitRect = targetRect;
+                        this.positionImage(targetRect);
+                        this.updateChromeVisuals();
+                    } else if (rectChanged) {
                         this.animateFitTransition(currentRect, targetRect);
-                    }
-                    else {
+                    } else {
                         this.zoom.fitRect = targetRect;
                         this.positionImage(targetRect);
                     }
