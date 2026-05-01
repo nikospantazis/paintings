@@ -146,6 +146,9 @@
             this.chromeDriftProgress = 0;
             this.chromeDriftVectors = { bar: { x: 0, y: 0 }, prev: { x: 0, y: 0 }, next: { x: 0, y: 0 } };
             this.chromeFadeSwapped = false;
+            // Interpolated fitRect used during strip swipe so bar tracks the destination image.
+            // Null when not navigating — falls back to zoom.fitRect.
+            this.chromeBarFitRect = null;
             // Spring-driven button press (scale down on press, bounce back on release)
             this.pressSprings = new Map();
             this.pressRafId = null;
@@ -515,15 +518,19 @@
             // triggerEl is guaranteed here — the isTextLink guard above returns early without one
             const thumbRect = this.getThumbRect(triggerEl);
             this.thumbBorderRadius = this.getThumbBorderRadius(triggerEl);
-            this.createOverlay(thumbSrc || src);
-            this.createChrome();
-            this.computeChromeDrift(thumbRect.x + thumbRect.width / 2, thumbRect.y + thumbRect.height / 2);
-            document.addEventListener('keydown', this.handleKeydown);
-            this.setThumbVisibility(false);
             const thumbNatW = thumbImg.naturalWidth || thumbRect.width;
             const thumbNatH = thumbImg.naturalHeight || thumbRect.height;
             const cached = this.preloadCache.get(src);
             const fullResReady = cached?.complete && cached.naturalWidth > 0;
+            // Only pass a src to the overlay image when the full-res is already cached.
+            // If a separate full-res will be loaded via swapToFullRes, start with an
+            // empty src so no low-res thumbnail flashes while waiting for the big image.
+            const overlaySrc = fullResReady ? src : (thumbSrc === src ? src : '');
+            this.createOverlay(overlaySrc);
+            this.createChrome();
+            this.computeChromeDrift(thumbRect.x + thumbRect.width / 2, thumbRect.y + thumbRect.height / 2);
+            document.addEventListener('keydown', this.handleKeydown);
+            this.setThumbVisibility(false);
             const natW = fullResReady ? cached.naturalWidth : thumbNatW;
             const natH = fullResReady ? cached.naturalHeight : thumbNatH;
             // When full-res dimensions are unknown, use thumbnail aspect ratio to fill
@@ -669,6 +676,9 @@
             }
         }
         swapToFullRes(src) {
+            // Capture whether this swap was triggered during a navigation.
+            // If so, suppress the fade-in — the strip animation already handles the visual transition.
+            const calledDuringNavigation = this.stripRafId !== null;
             // Cancel any spinner timer left over from a previous swap
             if (this.spinnerTimer) {
                 clearTimeout(this.spinnerTimer);
@@ -708,6 +718,17 @@
                 // Full-res loaded after close started — don't reposition the image
                 if (this.state.isClosing || !this.state.isOpen)
                     return;
+                // Fade in on full-res swap — only when the swap was not triggered by a
+                // navigation. During navigation the strip animation handles the transition.
+                const el = this.imgEl;
+                if (!calledDuringNavigation && !this.reducedMotion) {
+                    el.style.transition = 'none';
+                    el.style.opacity = '0';
+                }
+                // Restore box-shadow (was hidden while thumb was showing).
+                // At this point opacity is 0, so the shadow is invisible and will
+                // fade in naturally with the image opacity transition.
+                el.style.boxShadow = '';
                 this.imgEl.src = src;
                 this.zoom.naturalWidth = size.width;
                 this.zoom.naturalHeight = size.height;
@@ -728,6 +749,19 @@
                     }
                 }
                 this.updateCursorState();
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    if (!el || el !== this.imgEl) return;
+                    if (this.reducedMotion) return;
+                    if (calledDuringNavigation) return;
+                    el.style.transition = 'opacity 0.4s ease';
+                    el.style.opacity = '1';
+                    el.addEventListener('transitionend', () => {
+                        if (el === this.imgEl) {
+                            el.style.transition = '';
+                            el.style.opacity = '';
+                        }
+                    }, { once: true });
+                }));
             });
         }
         /** Spring-animate the image from one fit rect to another (aspect ratio change). */
@@ -1024,6 +1058,12 @@
                 this.prevSlideImg.style.opacity = '';
             // Set up new current image (zoom state, full-res swap)
             this.setupCurrentImage();
+            // Navigation complete — clear the interpolated override so updateChromeVisuals
+            // uses the fresh zoom.fitRect from setupCurrentImage going forward.
+            this.chromeBarFitRect = null;
+            // Reposition chrome bar immediately using the new fitRect so the caption
+            // doesn't lag behind waiting for the next pointer/spring event.
+            this.updateChromeVisuals();
             // Wheel navigation: ready for new gesture now that the image has landed
             this.wheelNavCommitted = false;
             this.wheelNavTotalDelta = 0;
@@ -1335,6 +1375,7 @@
                 if (this.chromeCounter)
                     this.chromeCounter.style.opacity = '';
                 this.chromeFadeSwapped = false;
+                this.chromeBarFitRect = null;
                 return;
             }
             const direction = offset < 0 ? 1 : -1;
@@ -1345,7 +1386,7 @@
             const slideWidth = window.innerWidth + SLIDE_GAP;
             const progress = Math.min(1, Math.abs(offset) / slideWidth);
             const fadeOpacity = Math.abs(1 - progress * 2);
-            // Swap text at midpoint
+            // Swap text and snap bar position at midpoint (opacity is zero — jump is invisible)
             if (progress > 0.5 && !this.chromeFadeSwapped) {
                 this.chromeFadeSwapped = true;
                 const item = this.gallery[destIndex];
@@ -1356,6 +1397,17 @@
                     const cap = item?.caption || '';
                     this.chromeCaption.innerHTML = cap;
                     this.chromeCaption.style.display = cap ? '' : 'none';
+                }
+                // Snap bar to destination image position while opacity is zero
+                const destImg = direction === 1 ? this.nextSlideImg : this.prevSlideImg;
+                if (destImg) {
+                    this.chromeBarFitRect = new DOMRect(
+                        parseFloat(destImg.style.left) || 0,
+                        parseFloat(destImg.style.top) || 0,
+                        parseFloat(destImg.style.width) || 0,
+                        parseFloat(destImg.style.height) || 0
+                    );
+                    this.updateChromeVisuals();
                 }
             }
             else if (progress <= 0.5 && this.chromeFadeSwapped) {
@@ -1369,6 +1421,9 @@
                     this.chromeCaption.innerHTML = cap;
                     this.chromeCaption.style.display = cap ? '' : 'none';
                 }
+                // Revert bar to current image position if user swipes back past midpoint
+                this.chromeBarFitRect = null;
+                this.updateChromeVisuals();
             }
             if (this.chromeCaption)
                 this.chromeCaption.style.opacity = String(fadeOpacity);
@@ -2554,6 +2609,10 @@
             bar.appendChild(close);
             this.chromeClose = close;
             this.bindPressSpring(close);
+            // Remove close from bar — it lives directly on the overlay so it can be
+            // positioned independently at the top-right corner of the image.
+            bar.removeChild(close);
+            this.overlay.appendChild(close);
             // Stop clicks on the chrome bar (e.g. caption links) from reaching the
             // backdrop, which would close the lightbox.
             bar.addEventListener('click', (e) => {
@@ -2640,7 +2699,11 @@
             const vw = window.innerWidth;
             const vh = window.innerHeight;
             // Approximate resting positions of each chrome element
-            const barPos = { x: vw / 2, y: vh - 16 };
+            // Bar now rests at the bottom-left of the image; use a rough estimate
+            const fitRect = this.zoom && this.zoom.fitRect && this.zoom.fitRect.width > 0 ? this.zoom.fitRect : null;
+            const barPos = fitRect
+                ? { x: fitRect.x, y: fitRect.y + fitRect.height + 8 }
+                : { x: vw * 0.1, y: vh * 0.75 };
             const prevPos = { x: 36, y: vh / 2 };
             const nextPos = { x: vw - 36, y: vh / 2 };
             this.chromeDriftVectors = {
@@ -2699,7 +2762,13 @@
             const d = this.chromeDriftVectors;
             if (this.chromeBar) {
                 this.chromeBar.style.opacity = String(opacity);
-                this.chromeBar.style.transform = `translateX(calc(-50% + ${d.bar.x * p}px)) translateY(${barY + d.bar.y * p}px)`;
+                const fitRect = this.chromeBarFitRect || this.zoom.fitRect;
+                const imgLeft = fitRect ? fitRect.x : 0;
+                const imgBottom = fitRect ? fitRect.y + fitRect.height : window.innerHeight;
+                const imgWidth = fitRect ? fitRect.width : window.innerWidth;
+                const chromePadding = 8;
+                this.chromeBar.style.width = `${imgWidth}px`;
+                this.chromeBar.style.transform = `translate(${imgLeft + d.bar.x * p}px, ${imgBottom + chromePadding + barY + d.bar.y * p}px)`;
                 this.chromeBar.style.pointerEvents = interactive ? '' : 'none';
             }
             if (this.chromePrev) {
@@ -2715,8 +2784,18 @@
                 this.chromeNext.style.pointerEvents = interactive ? '' : 'none';
             }
             if (this.chromeClose) {
+                const closeSize = 40;
+                const closeMargin = 8;
+                const closeMarginRight = 0;
+                const fitRect = this.chromeBarFitRect || this.zoom.fitRect;
+                const imgLeft = fitRect ? fitRect.x : 0;
+                const imgWidth = fitRect ? fitRect.width : window.innerWidth;
+                const imgBottom = fitRect ? fitRect.y + fitRect.height : window.innerHeight;
+                const closeX = imgLeft + imgWidth - closeSize - closeMarginRight;
+                const closeY = imgBottom + closeMargin;
                 const closeScale = this.getPressScale(this.chromeClose);
-                this.chromeClose.style.transform = `scale(${closeScale})`;
+                this.chromeClose.style.opacity = String(opacity);
+                this.chromeClose.style.transform = `translate(${closeX + d.bar.x * p}px, ${closeY + barY + d.bar.y * p}px) scale(${closeScale})`;
                 this.chromeClose.style.pointerEvents = interactive ? '' : 'none';
             }
         }
@@ -2816,7 +2895,7 @@
             img.className = 'lightbox3-image';
             if (src)
                 img.src = src;
-            img.alt = alt;
+            img.alt = '';
             img.draggable = false;
             img.addEventListener('click', (e) => this.handleImageClick(e));
             img.addEventListener('pointerdown', this.handleImagePointerDown);
@@ -2866,6 +2945,8 @@
                 const natH = thumbImg?.naturalHeight || 300;
                 const rect = this.computeTargetRectFromAspectRatio(natW, natH);
                 this.positionImageEl(img, rect);
+                // Hide shadow while showing thumb — restored in swapToFullRes when full-res loads.
+                img.style.boxShadow = 'none';
                 // If preload is in progress, upgrade this slide as soon as it completes
                 if (cached && !cached.complete) {
                     const onLoad = () => {
@@ -2968,6 +3049,19 @@
                     return parseFloat(value) || 0;
             }
             return this.getTargetImagePadding();
+        }
+        /** Horizontal padding that keeps the image clear of the prev/next arrow buttons.
+         *  On desktop with a gallery the arrows are visible, so we reserve their footprint.
+         *  On mobile (<= 600px) arrows are hidden so we fall back to the base padding. */
+        getTargetImagePaddingSide() {
+            if (window.innerWidth <= 600 || this.gallery.length <= 1 || window.innerHeight > window.innerWidth)
+                return this.getTargetImagePadding();
+            // Arrow button: 48px wide, anchored at --lb-chrome-padding (16px) from edge.
+            // Add an 8px gap between the arrow and the image edge.
+            const chromePadding = parseFloat(getComputedStyle(this.overlay).getPropertyValue('--lb-chrome-padding')) || 16;
+            const arrowWidth = 48;
+            const gap = 8;
+            return chromePadding + arrowWidth + gap;
         }
         /** Read the visual border-radius from the thumbnail's trigger element. */
         getThumbBorderRadius(el) {
@@ -3084,13 +3178,14 @@
             const vw = window.innerWidth;
             const vh = window.innerHeight;
             const p = this.getTargetImagePadding();
+            const ps = this.getTargetImagePaddingSide();
             const pb = this.getTargetImagePaddingBottom();
-            const availW = vw - p * 2;
+            const availW = vw - ps * 2;
             const availH = vh - p - pb;
             const scale = Math.min(availW / naturalWidth, availH / naturalHeight, 1);
             const w = naturalWidth * scale;
             const h = naturalHeight * scale;
-            return new DOMRect(p + (availW - w) / 2, p + (availH - h) / 2, w, h);
+            return new DOMRect(ps + (availW - w) / 2, p + (availH - h) / 2, w, h);
         }
         /** Like computeTargetRect but without the scale ≤ 1 cap. Used when full-res
          *  dimensions are unknown — fills the viewport based on aspect ratio alone. */
@@ -3098,13 +3193,14 @@
             const vw = window.innerWidth;
             const vh = window.innerHeight;
             const p = this.getTargetImagePadding();
+            const ps = this.getTargetImagePaddingSide();
             const pb = this.getTargetImagePaddingBottom();
-            const availW = vw - p * 2;
+            const availW = vw - ps * 2;
             const availH = vh - p - pb;
             const scale = Math.min(availW / width, availH / height);
             const w = width * scale;
             const h = height * scale;
-            return new DOMRect(p + (availW - w) / 2, p + (availH - h) / 2, w, h);
+            return new DOMRect(ps + (availW - w) / 2, p + (availH - h) / 2, w, h);
         }
         loadImage(src) {
             const cached = this.preloadCache.get(src);
