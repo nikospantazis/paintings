@@ -3214,53 +3214,11 @@
             }
             return new Promise((resolve) => {
                 const img = cached || new Image();
-                // Use addEventListener instead of onload= so we don't overwrite the
-                // processPreloadQueue handler that may already be set on the cached image.
-                const onLoad = () => {
-                    // Fast path: naturalWidth already populated (most desktop browsers).
-                    if (img.naturalWidth > 0) {
-                        resolve({ width: img.naturalWidth, height: img.naturalHeight });
-                        return;
-                    }
-                    // Slow path: 'load' fired before the browser committed dimensions.
-                    // Happens in older Chrome/Blink (<=120 on slow hardware) and all
-                    // WebKit-based engines (Safari, Epiphany/WebKitGTK).
-                    // img.decode() usually bridges the gap, but WebKitGTK has a bug
-                    // where decode() resolves while naturalWidth is still 0. The rAF
-                    // poll below catches that last case.
-                    const tryDecode = typeof img.decode === 'function'
-                        ? img.decode().catch(() => {})
-                        : Promise.resolve();
-                    tryDecode.then(() => {
-                        if (img.naturalWidth > 0) {
-                            resolve({ width: img.naturalWidth, height: img.naturalHeight });
-                            return;
-                        }
-                        // decode() resolved but naturalWidth is still 0 (WebKitGTK bug).
-                        // Poll via rAF until the engine surfaces the dimensions, or give
-                        // up after ~1 s (60 frames) and fall back to a safe default.
-                        let attempts = 0;
-                        const poll = () => {
-                            if (img.naturalWidth > 0) {
-                                resolve({ width: img.naturalWidth, height: img.naturalHeight });
-                            } else if (++attempts < 60) {
-                                requestAnimationFrame(poll);
-                            } else {
-                                resolve({ width: 800, height: 600 });
-                            }
-                        };
-                        requestAnimationFrame(poll);
-                    });
-                };
-                img.addEventListener('load',  onLoad,                                     { once: true });
-                img.addEventListener('error', () => resolve({ width: 800, height: 600 }), { once: true });
+                img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+                img.onerror = () => resolve({ width: 800, height: 600 });
                 if (!cached) {
                     img.src = src;
                     this.preloadCache.set(src, img);
-                } else if (img.complete) {
-                    // The preloaded image finished loading between the naturalWidth check
-                    // above and the listener being registered — onload won't fire again.
-                    onLoad();
                 }
             });
         }
