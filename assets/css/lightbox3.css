@@ -51,7 +51,7 @@
   object-fit: cover;
   user-select: none;
   -webkit-user-drag: none;
-  will-change: transform;
+  /* will-change: transform;  removed to fix a bug on webtikgtk not displaying the full ress image because of rasterization of the gpu*/
   transform-origin: center center;
   touch-action: none;
   box-shadow: 0px 0px 12px 0px black;
