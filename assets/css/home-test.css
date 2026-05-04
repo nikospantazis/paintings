@@ -915,7 +915,7 @@ input, select, textarea {
 #photos {
    line-height:         0vw;
    margin:              2vw;
-   margin-top:          2.3vw;
+   margin-top:          3.5vw;
    column-count:        3;
    column-gap:          2vw;
 }
@@ -929,8 +929,10 @@ input, select, textarea {
 }
 
 #photos a {
-   display: block;
+   display: inline-block;
    break-inside: avoid;
+   width: 100%; 
+   margin-top: 2vw;
 }
 
 #photos img.loaded {
@@ -939,7 +941,6 @@ input, select, textarea {
 
 #photos .lazy-wrapper {
   box-shadow: 0px 0px 6px 1px #212121;
-  margin-bottom: 2vw;
 }
 
 #photos .lazy-wrapper.error {
@@ -962,13 +963,13 @@ input, select, textarea {
 
 @media (max-width: 1200px) {
   #photos {
-	margin-top:         1.9vw;
+	margin-top:         4vw;
   column-count:         3;
   }
 }
 @media (max-width: 1000px) {
   #photos {
-  margin-top:          1.8vw;
+  margin-top:          5vw;
   column-count:         3;
   }
 }
@@ -984,7 +985,7 @@ input, select, textarea {
 }
 @media (max-width: 600px) {
   #photos {
-  margin-top:           2vw;
+  margin-top:           7vw;
   column-count:         2;
 
   }
