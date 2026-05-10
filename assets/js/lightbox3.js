@@ -2807,7 +2807,7 @@
                 const closeX = imgLeft + imgWidth - closeSize - closeMarginRight;
                 const closeY = imgBottom + closeMargin;
                 const closeScale = this.getPressScale(this.chromeClose);
-                this.chromeClose.style.opacity = String(opacity);
+                this.chromeClose.style.opacity = String(opacity * (1 - zoom));
                 this.chromeClose.style.transform = `translate(${closeX + d.bar.x * p}px, ${closeY + barY + d.bar.y * p}px) scale(${closeScale})`;
                 this.chromeClose.style.pointerEvents = interactive ? '' : 'none';
             }
