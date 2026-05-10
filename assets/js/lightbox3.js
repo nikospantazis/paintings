@@ -1736,6 +1736,10 @@
             // Don't intercept clicks on chrome UI (caption links, buttons, etc.)
             if (this.chromeBar && this.chromeBar.contains(e.target))
                 return;
+            // Close button lives outside chromeBar (appended directly to overlay),
+            // so guard it explicitly to prevent the backdrop handler swallowing its events.
+            if (this.chromeClose && (e.target === this.chromeClose || this.chromeClose.contains(e.target)))
+                return;
             // Only for dismiss at fit scale, not during open animation.
             // Allow during zoom-out: snap to fit and start dismiss tracking.
             const atFitScale = !this.zoom.zoomed || this.zoom.zoomingOut;
