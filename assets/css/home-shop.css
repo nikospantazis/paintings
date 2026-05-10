@@ -380,6 +380,26 @@ label {
         background-position: 50% 50%;
 }
 
+.lazy.loaded {
+    opacity: 1;
+}
+
+.lazy-wrapper {
+  display: block;
+  overflow: hidden;
+  width: 100% !important;
+  height: auto !important;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 6px 1px, rgba(0, 0, 0, 0.25) 0px 20px 30px;
+}
+
+.lazy-wrapper.loading {
+  background-image: url('../images/loading.apng');
+  background-color: #fafafa;
+}
+
 /* Container */
 
 	.container {
@@ -713,20 +733,37 @@ label {
 		}
 
 		.image.product {
+			background-color: #fafafa;
+			background-image: url('../images/loading2.apng');
+			background-repeat: no-repeat;
+			background-position: 50% 50%;
 			overflow: visible;
 			width: 100%;
-			display: none;
+			display: block;
 			padding-bottom: 0.5em;
+			box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 6px 1px, rgba(0, 0, 0, 0.25) 0px 20px 30px;
+			opacity: 0;
+			animation: placeholderFadeIn 0.5s ease-in-out forwards;
 		}
+		
+			@keyframes placeholderFadeIn {
+				to { opacity: 1; }
+			}
 
 			.image.product img {
+				position: absolute;
 				margin: auto;
 				width: 100%;
 				border-radius: 0px;
 				display: block;
-				box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 6px 1px, rgba(0, 0, 0, 0.25) 0px 20px 30px;
+				opacity: 0;
+				transition: opacity 0.5s ease-in-out;
 			}
 
+			.image.product img.loaded {
+				opacity: 1;
+				}
+				
 		.image.main {
 			display: block;
 			height: 20em;
@@ -1171,46 +1208,69 @@ label {
 /* Photos */
 
 #photos {
-  line-height:          5vw;
+  line-height:          0;
   margin:               2vw;
   column-count:         3;
   column-gap:           5vw;
-  margin-top:           2.6em;
+  margin-top:           4em;
   padding-bottom:       5em;
 }
 
+#photos a {
+  display: inline-block;
+  width: 100%;
+  vertical-align: top;
+  margin-top: 1em;
+  margin-bottom: 2em;
+}
+
+#photos .lazy-wrapper + h4 {
+  margin-top: 1.25em;
+}
+
 #photos img {
-  /* Just in case there are inline attributes */
   width: 100% !important;
   height: auto !important;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 6px 1px, rgba(0, 0, 0, 0.25) 0px 20px 30px;
-  margin-top: 2.85em;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+#photos img.loaded {
+  opacity: 1;
 }
 
 @media (max-width: 1280px) {
   #photos {
   column-count:         3;
-  margin-top: 1em;
+  margin-top: 			3em;
   }
 }
 @media (max-width: 1024px) {
   #photos {
   column-count:         3;
   column-gap:           5vw;
-  margin-top: -0.2em;
+  margin-top: 			2em;
   }
-  #photos img {
-  margin-top: 2.6em;
+  #photos a {
+   margin-top: 1em;
+   margin-bottom: 1em;
+  }
+  #photos .lazy-wrapper + h4 {
+  margin-top: 1.1em;
   }
 }
 @media (max-width: 736px) {
   #photos {
   column-count:         2;
   column-gap:           6vw;
-  margin-top: -0.6em;
+  margin-top: 			0em;
   }
-  #photos img {
-  margin-top: 2.4em;
+  #photos a {
+   margin-top: 1.5em;
+   margin-bottom: 0.5em;
+  }
+  #photos .lazy-wrapper + h4 {
+  margin-top: 0.7em;
   }
 }
 @media (max-width: 480px) {
@@ -1218,10 +1278,14 @@ label {
   column-count:         2;
   line-height:          7vw;
   column-gap:           7vw;
-  margin-top: -0.8em;
+  margin-top: 0em;
   }
-  #photos img {
-  margin-top: 2.4em;
+  #photos a {
+   margin-top: 1.5em;
+   margin-bottom: 1em;
+  }
+  #photos .lazy-wrapper + h4 {
+  margin-top: 0.7em;
   }
 }
 

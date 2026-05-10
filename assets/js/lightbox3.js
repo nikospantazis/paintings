@@ -1379,6 +1379,8 @@
                     this.chromeCaption.style.opacity = '';
                 if (this.chromeCounter)
                     this.chromeCounter.style.opacity = '';
+                if (this.chromeClose)
+                    this.chromeClose.style.opacity = '';
                 this.chromeFadeSwapped = false;
                 this.chromeBarFitRect = null;
                 return;
@@ -1434,6 +1436,8 @@
                 this.chromeCaption.style.opacity = String(fadeOpacity);
             if (this.chromeCounter)
                 this.chromeCounter.style.opacity = String(fadeOpacity);
+            if (this.chromeClose)
+                this.chromeClose.style.opacity = String(fadeOpacity);
         }
         /**
          * Cross-fade slide images during strip animation.
@@ -1463,7 +1467,7 @@
             // Lower FADE_OUT_END → exiting image disappears faster.
             // FADE_IN_START can stay at 0.5 so the new image appears at midpoint.
             const FADE_OUT_END = 0.25;
-            const FADE_IN_START = 0.5;
+            const FADE_IN_START = 0.05;
             // Exiting image: 1 → 0 over [0, FADE_OUT_END], then stays invisible
             const exitOpacity = Math.max(0, 1 - progress / FADE_OUT_END);
             // Incoming image: 0 → 1 over [FADE_IN_START, 1]

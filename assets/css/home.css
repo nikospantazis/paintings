@@ -312,11 +312,16 @@ input, select, textarea {
 	}
 
 /*lazy*/
-	.lazy {
+.lazy-wrapper {
 		background-color: #474747;
-		background-image: url('../images/loading.apng');
+		background-image: none;
+		box-shadow:	none;
 		background-repeat: no-repeat;
         background-position: 50% 50%;
+}
+.lazy-wrapper.loading {
+		background-image: url('../images/loading.apng');
+		box-shadow: 0px 0px 6px 1px #212121;
 }
 
 /* Container */
@@ -910,28 +915,61 @@ input, select, textarea {
 #photos {
    line-height:         0vw;
    margin:              2vw;
-   margin-top:          -0.5vw;
+   margin-top:          3.5vw;
    column-count:        3;
    column-gap:          2vw;
 }
 
 #photos img {
-  /* Just in case there are inline attributes */
+  display: block;
   width: 100% !important;
-  height: auto !important;
+  height: 100% !important;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+#photos a {
+   display: inline-block;
+   break-inside: avoid;
+   width: 100%; 
+   margin-top: 2vw;
+}
+
+#photos img.loaded {
+   opacity: 1;
+}
+
+#photos .lazy-wrapper {
   box-shadow: 0px 0px 6px 1px #212121;
-  margin-top: 2vw;
+}
+
+#photos .lazy-wrapper.error {
+    position: relative;
+	box-shadow: 0px 0px 6px 1px #212121;
+    background-color: #474747;
+}
+
+#photos .lazy-wrapper.error::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url('../images/image_FontAwesome5Free-Solid.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 32px;
+    opacity: 0.5; 
+    z-index: 1;
 }
 
 @media (max-width: 1200px) {
   #photos {
-	margin-top:         -1vw;
+	margin-top:         4vw;
   column-count:         3;
   }
 }
 @media (max-width: 1000px) {
   #photos {
-  margin-top:          -1.5vw;
+  margin-top:          5vw;
   column-count:         3;
   }
 }
@@ -947,7 +985,7 @@ input, select, textarea {
 }
 @media (max-width: 600px) {
   #photos {
-  margin-top:           -2vw;
+  margin-top:           7vw;
   column-count:         2;
 
   }
