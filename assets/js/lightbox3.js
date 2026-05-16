@@ -193,6 +193,7 @@
             this.handlePointerUp = this.handlePointerUp.bind(this);
             this.handleWheel = this.handleWheel.bind(this);
             this.close = this.close.bind(this);
+            this.handleResize = this.handleResize.bind(this);
             this.attach();
         }
         static init(opts) {
@@ -232,12 +233,14 @@
             document.addEventListener('click', this.handleClick);
             document.addEventListener('pointerenter', this.handlePointerEnter, true);
             document.addEventListener('pointerleave', this.handlePointerLeave, true);
+            window.addEventListener('resize', this.handleResize);
         }
         destroy() {
             this.stopDebugPanel();
             document.removeEventListener('click', this.handleClick);
             document.removeEventListener('pointerenter', this.handlePointerEnter, true);
             document.removeEventListener('pointerleave', this.handlePointerLeave, true);
+            window.removeEventListener('resize', this.handleResize);
             this.cancelPreload();
             this.stopSpring();
             this.stopStripSpring();
@@ -3186,6 +3189,37 @@
             if (!el)
                 return;
             el.style.visibility = visible ? '' : 'hidden';
+        }
+        handleResize() {
+            if (!this.state.isOpen || this.state.isClosing || this.state.isDismissClosing)
+                return;
+            if (this.state.isAnimating)
+                return;
+            const { naturalWidth, naturalHeight } = this.zoom;
+            if (!naturalWidth || !naturalHeight)
+                return;
+            // Reposition current image
+            const newRect = this.computeTargetRect(naturalWidth, naturalHeight);
+            this.zoom.fitRect = newRect;
+            this.positionImage(newRect);
+            // Reposition existing adjacent slides — do NOT call populateAdjacentSlides()
+            // as that always appends new elements, causing duplicates on every resize.
+            if (this.gallery.length > 1) {
+                const slideWidth = window.innerWidth + SLIDE_GAP;
+                if (this.prevSlideEl && this.prevSlideImg) {
+                    this.prevSlideEl.style.left = `${-slideWidth}px`;
+                    const prevItem = this.gallery[this.currentIndex - 1];
+                    if (prevItem)
+                        this.setupSlideImage(this.prevSlideImg, prevItem);
+                }
+                if (this.nextSlideEl && this.nextSlideImg) {
+                    this.nextSlideEl.style.left = `${slideWidth}px`;
+                    const nextItem = this.gallery[this.currentIndex + 1];
+                    if (nextItem)
+                        this.setupSlideImage(this.nextSlideImg, nextItem);
+                }
+            }
+            this.updateChromeVisuals();
         }
         computeTargetRect(naturalWidth, naturalHeight) {
             const vw = window.innerWidth;
