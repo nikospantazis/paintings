@@ -197,10 +197,21 @@
             this.attach();
         }
         static init(opts) {
-            if (Lightbox.instance)
+            if (Lightbox.instance) {
+                // A singleton already exists (e.g. from auto-init on DOMContentLoaded).
+                // Apply any options passed here so an explicit init() call is not a no-op.
+                if (opts)
+                    Lightbox.instance.configure(opts);
                 return Lightbox.instance;
+            }
             Lightbox.instance = new Lightbox(opts);
             return Lightbox.instance;
+        }
+        /** Merge new options into the existing instance. Options are read lazily at
+         *  open time, so this reconfigures the lightbox for subsequent opens. */
+        configure(opts) {
+            this.opts = { ...this.opts, ...opts };
+            return this;
         }
         on(event, callback) {
             let set = this.listeners.get(event);
@@ -336,6 +347,7 @@
             if (this.preloadCache.has(src))
                 return;
             const img = new Image();
+            img.decoding = 'async';
             img.src = src;
             this.preloadCache.set(src, img);
         }
@@ -377,6 +389,7 @@
             }
             this.preloadingActive = true;
             const img = new Image();
+            img.decoding = 'async';
             img.onload = img.onerror = () => {
                 this.preloadingActive = false;
                 this.processPreloadQueue();
@@ -415,6 +428,10 @@
         handleClick(e) {
             const trigger = e.target.closest(this.opts.selector);
             if (!trigger)
+                return;
+            // Let the browser handle modifier and non-primary clicks (open in new
+            // tab/window, etc.) rather than hijacking them to open the lightbox.
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0)
                 return;
             e.preventDefault();
             const src = this.getSrcFromTrigger(trigger);
@@ -534,14 +551,29 @@
             this.computeChromeDrift(thumbRect.x + thumbRect.width / 2, thumbRect.y + thumbRect.height / 2);
             document.addEventListener('keydown', this.handleKeydown);
             this.setThumbVisibility(false);
-            const natW = fullResReady ? cached.naturalWidth : thumbNatW;
-            const natH = fullResReady ? cached.naturalHeight : thumbNatH;
-            // When full-res dimensions are unknown, use thumbnail aspect ratio to fill
-            // the viewport. Without this, the "never upscale" cap in computeTargetRect
-            // keeps the image at the thumbnail's small pixel size.
-            const targetRect = fullResReady
-                ? this.computeTargetRect(natW, natH)
-                : this.computeTargetRectFromAspectRatio(natW, natH);
+            const hint = this.getDimensionHint(triggerEl);
+            let natW, natH, targetRect;
+            if (fullResReady) {
+                natW = cached.naturalWidth;
+                natH = cached.naturalHeight;
+                targetRect = this.computeTargetRect(natW, natH);
+            }
+            else if (hint) {
+                // Author-declared true dimensions — use the capped rect (respects the
+                // "never upscale" rule) so the morph lands exactly where the loaded image
+                // will, with no reflow when full-res arrives.
+                natW = hint.w;
+                natH = hint.h;
+                targetRect = this.computeTargetRect(natW, natH);
+            }
+            else {
+                // Full-res dimensions unknown — use thumbnail aspect ratio to fill the
+                // viewport. Without this, the "never upscale" cap in computeTargetRect
+                // keeps the image at the thumbnail's small pixel size.
+                natW = thumbNatW;
+                natH = thumbNatH;
+                targetRect = this.computeTargetRectFromAspectRatio(natW, natH);
+            }
             // Place image at final size/position, then FLIP from thumbnail
             this.positionImage(targetRect);
             this.zoom = this.defaultZoomState();
@@ -640,6 +672,13 @@
             this.zoom.fitRect = targetRect;
             this.zoom.naturalWidth = natW;
             this.zoom.naturalHeight = natH;
+            // Preload neighbors and populate adjacent gallery slides so next/prev works
+            // immediately. Without this, the first navigation from a text-link trigger
+            // recycles a non-existent adjacent slot and lands on an empty image.
+            if (this.gallery.length > 1) {
+                this.schedulePreloads();
+            }
+            this.populateAdjacentSlides();
             // Build a FLIP origin rect centered on the text link but with the image's
             // aspect ratio, so the morph scales uniformly instead of stretching.
             const flipRect = this.textLinkFlipRect(thumbRect, natW, natH);
@@ -1153,12 +1192,20 @@
                 this.positionImage(this.zoom.fitRect);
             }
             else {
-                const thumbImg = item.triggerEl.querySelector('img');
-                const natW = thumbImg?.naturalWidth || 400;
-                const natH = thumbImg?.naturalHeight || 300;
-                this.zoom.naturalWidth = natW;
-                this.zoom.naturalHeight = natH;
-                this.zoom.fitRect = this.computeTargetRectFromAspectRatio(natW, natH);
+                const hint = this.getDimensionHint(item.triggerEl);
+                if (hint) {
+                    this.zoom.naturalWidth = hint.w;
+                    this.zoom.naturalHeight = hint.h;
+                    this.zoom.fitRect = this.computeTargetRect(hint.w, hint.h);
+                }
+                else {
+                    const thumbImg = item.triggerEl.querySelector('img');
+                    const natW = thumbImg?.naturalWidth || 400;
+                    const natH = thumbImg?.naturalHeight || 300;
+                    this.zoom.naturalWidth = natW;
+                    this.zoom.naturalHeight = natH;
+                    this.zoom.fitRect = this.computeTargetRectFromAspectRatio(natW, natH);
+                }
                 this.positionImage(this.zoom.fitRect);
                 this.swapToFullRes(item.src);
             }
@@ -2909,6 +2956,9 @@
             slide.className = 'lightbox3-slide';
             const img = document.createElement('img');
             img.className = 'lightbox3-image';
+            // Decode off the main thread so a large image swapping in doesn't block the
+            // frame and stutter the open/navigate spring animation.
+            img.decoding = 'async';
             if (src)
                 img.src = src;
             img.alt = '';
@@ -3078,6 +3128,17 @@
             const arrowWidth = 48;
             const gap = 8;
             return chromePadding + arrowWidth + gap;
+        }
+        /** Read author-provided full-res dimensions from `data-width`/`data-height`.
+         *  Returns null unless both parse to positive numbers. Lets the opening morph
+         *  target the correct rect before the full-res image has loaded, so there's no
+         *  reflow when it arrives (swapToFullRes reconciles any small mismatch). */
+        getDimensionHint(el) {
+            const w = parseFloat(el.getAttribute('data-width') || '');
+            const h = parseFloat(el.getAttribute('data-height') || '');
+            if (w > 0 && h > 0)
+                return { w, h };
+            return null;
         }
         /** Read the visual border-radius from the thumbnail's trigger element. */
         getThumbBorderRadius(el) {
@@ -3259,6 +3320,7 @@
                 img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
                 img.onerror = () => resolve({ width: 800, height: 600 });
                 if (!cached) {
+                    img.decoding = 'async';
                     img.src = src;
                     this.preloadCache.set(src, img);
                 }
