@@ -2961,7 +2961,7 @@
             img.decoding = 'async';
             if (src)
                 img.src = src;
-            img.alt = '';
+            img.alt = alt;
             img.draggable = false;
             img.addEventListener('click', (e) => this.handleImageClick(e));
             img.addEventListener('pointerdown', this.handleImagePointerDown);
@@ -3016,7 +3016,7 @@
                 // If preload is in progress, upgrade this slide as soon as it completes
                 if (cached && !cached.complete) {
                     const onLoad = () => {
-                        cached.removeEventListener('load', onLoad);
+                        cached.removeEventListener('error', onError);
                         if (this.state.isClosing || !this.state.isOpen)
                             return;
                         // Only upgrade if this img is still an adjacent slide (not yet current)
@@ -3027,7 +3027,9 @@
                             this.positionImageEl(img, fullRect);
                         }
                     };
-                    cached.addEventListener('load', onLoad);
+                    const onError = () => cached.removeEventListener('load', onLoad);
+                    cached.addEventListener('load', onLoad, { once: true });
+                    cached.addEventListener('error', onError, { once: true });
                 }
             }
         }
