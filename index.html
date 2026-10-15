@@ -508,9 +508,10 @@
 
 <!-- Scripts -->
         <script src="assets/js/lightbox3.js"></script>
+        <script src="assets/js/jxl.js"></script>
         <script src="assets/js/lazyload.min.js"></script>
         <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        jxlReady.then(function () {
             var lazyLoadInstance = new LazyLoad({
                 elements_selector: ".lazy",
 
