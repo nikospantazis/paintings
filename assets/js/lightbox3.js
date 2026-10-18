@@ -60,6 +60,10 @@
     // Default border-radius for lightbox images, read from --lb-image-border-radius.
     const DEFAULT_IMAGE_BORDER_RADIUS = 24;
     const PRELOAD_DELAY = 80;
+    // Low-priority preloading of the full-size images that are currently in the viewport.
+    const VIEWPORT_PRELOAD_IDLE_MS = 400; // scroll must be idle this long before starting
+    const VIEWPORT_PRELOAD_MAX = 6; // max images per round (nearest the viewport centre first)
+    const VIEWPORT_PRELOAD_MAX_RETRIES = 20; // waits for thumbnails to finish, then gives up
     const DRAG_THRESHOLD = 4;
     const AXIS_LOCK_THRESHOLD = 10;
     const RUBBER_BAND_FACTOR = 0.35;
@@ -113,8 +117,13 @@
             // Preload
             this.preloadCache = new Map();
             this.preloadTimer = null;
-            this.preloadQueue = [];
-            this.preloadingActive = false;
+            // Viewport preloading (low priority, one image at a time)
+            this.vpTimer = null;
+            this.vpIdleHandle = null;
+            this.vpIdleIsRic = false;
+            this.vpQueue = [];
+            this.vpCurrent = null;
+            this.vpRetries = 0;
             // Velocity tracking
             this.velocitySamples = [];
             // Pointer cache for multi-touch (pinch)
@@ -194,6 +203,7 @@
             this.handleWheel = this.handleWheel.bind(this);
             this.close = this.close.bind(this);
             this.handleResize = this.handleResize.bind(this);
+            this.handleViewportChange = this.handleViewportChange.bind(this);
             this.attach();
         }
         static init(opts) {
@@ -245,6 +255,14 @@
             document.addEventListener('pointerenter', this.handlePointerEnter, true);
             document.addEventListener('pointerleave', this.handlePointerLeave, true);
             window.addEventListener('resize', this.handleResize);
+            window.addEventListener('scroll', this.handleViewportChange, { passive: true });
+            window.addEventListener('resize', this.handleViewportChange);
+            if (document.readyState === 'complete') {
+                this.scheduleViewportPreload(1000);
+            }
+            else {
+                window.addEventListener('load', () => this.scheduleViewportPreload(1000), { once: true });
+            }
         }
         destroy() {
             this.stopDebugPanel();
@@ -252,6 +270,9 @@
             document.removeEventListener('pointerenter', this.handlePointerEnter, true);
             document.removeEventListener('pointerleave', this.handlePointerLeave, true);
             window.removeEventListener('resize', this.handleResize);
+            window.removeEventListener('scroll', this.handleViewportChange);
+            window.removeEventListener('resize', this.handleViewportChange);
+            this.cancelViewportPreload(true);
             this.cancelPreload();
             this.stopSpring();
             this.stopStripSpring();
@@ -350,52 +371,166 @@
             img.decoding = 'async';
             img.src = src;
             this.preloadCache.set(src, img);
+            this.decodeWhenLoaded(img);
+        }
+        /**
+         * A downloaded image still has to be decoded before it can paint. If that
+         * happens on first display, the opening morph plays with an empty box.
+         * Decoding as soon as the download finishes warms the browser's decode cache.
+         */
+        decodeWhenLoaded(img) {
+            const run = () => {
+                if (img.decode)
+                    img.decode().catch(() => { });
+            };
+            if (img.complete && img.naturalWidth > 0)
+                run();
+            else
+                img.addEventListener('load', run, { once: true });
         }
         // ─── Gallery preloading ─────────────────────────────────────
         schedulePreloads() {
-            // Tier 1: always preload immediate neighbors
+            // Only the immediate neighbours: on open, and again after every navigation.
             if (this.currentIndex > 0) {
                 this.preloadImage(this.gallery[this.currentIndex - 1].src);
             }
             if (this.currentIndex < this.gallery.length - 1) {
                 this.preloadImage(this.gallery[this.currentIndex + 1].src);
             }
-            // Tier 2+: after first navigation, preload remaining in travel direction
-            if (this.userHasNavigated) {
-                this.enqueueRemainingPreloads();
+        }
+        // ─── Viewport preloading (low priority) ─────────────────────
+        // Preloads the full-size images of thumbnails that are on screen, but only
+        // once scrolling has stopped and the visible thumbnails have finished loading,
+        // one image at a time, at low fetch priority. Scrolling aborts it again.
+        handleViewportChange() {
+            if (this.state.isOpen || this.state.isAnimating)
+                return;
+            this.cancelViewportPreload(true);
+            this.vpRetries = 0;
+            this.scheduleViewportPreload(VIEWPORT_PRELOAD_IDLE_MS);
+        }
+        scheduleViewportPreload(delay) {
+            if (this.vpTimer)
+                clearTimeout(this.vpTimer);
+            this.vpTimer = setTimeout(() => {
+                this.vpTimer = null;
+                this.runViewportPreload();
+            }, delay);
+        }
+        cancelViewportPreload(abortInFlight) {
+            if (this.vpTimer) {
+                clearTimeout(this.vpTimer);
+                this.vpTimer = null;
+            }
+            if (this.vpIdleHandle !== null) {
+                if (this.vpIdleIsRic)
+                    cancelIdleCallback(this.vpIdleHandle);
+                else
+                    clearTimeout(this.vpIdleHandle);
+                this.vpIdleHandle = null;
+            }
+            this.vpQueue = [];
+            if (abortInFlight && this.vpCurrent) {
+                const { img, src, cleanup } = this.vpCurrent;
+                this.vpCurrent = null;
+                cleanup();
+                if (this.preloadCache.get(src) === img && !(img.complete && img.naturalWidth > 0)) {
+                    // Abort the download so it can't compete with thumbnails
+                    this.preloadCache.delete(src);
+                    img.src = '';
+                }
             }
         }
-        enqueueRemainingPreloads() {
-            // Build queue outward from current position
-            const queue = [];
-            for (let offset = 2; offset < this.gallery.length; offset++) {
-                const fwd = this.currentIndex + offset;
-                const bwd = this.currentIndex - offset;
-                if (fwd < this.gallery.length)
-                    queue.push(this.gallery[fwd].src);
-                if (bwd >= 0)
-                    queue.push(this.gallery[bwd].src);
-            }
-            this.preloadQueue = queue.filter((src) => !this.preloadCache.has(src));
-            this.processPreloadQueue();
+        viewportPreloadAllowed() {
+            if (document.hidden)
+                return false;
+            const conn = navigator.connection;
+            if (conn && (conn.saveData || ['slow-2g', '2g', '3g'].includes(conn.effectiveType)))
+                return false;
+            return true;
         }
-        processPreloadQueue() {
-            if (this.preloadingActive || this.preloadQueue.length === 0)
+        runViewportPreload() {
+            if (this.state.isOpen || this.state.isAnimating || !this.viewportPreloadAllowed())
                 return;
-            const src = this.preloadQueue.shift();
-            if (this.preloadCache.has(src)) {
-                this.processPreloadQueue();
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const visible = [];
+            let thumbsPending = false;
+            document.querySelectorAll(this.opts.selector).forEach((trigger) => {
+                const r = trigger.getBoundingClientRect();
+                if (r.width === 0 || r.height === 0)
+                    return;
+                if (r.bottom <= 0 || r.top >= vh || r.right <= 0 || r.left >= vw)
+                    return;
+                const img = trigger.querySelector('img');
+                if (img && !img.classList.contains('error')) {
+                    const notLoaded = !(img.complete && img.naturalWidth > 0);
+                    const lazyPending = img.classList.contains('lazy') && !img.classList.contains('loaded');
+                    if (notLoaded || lazyPending)
+                        thumbsPending = true;
+                }
+                const src = this.getSrcFromTrigger(trigger);
+                if (!src || this.preloadCache.has(src))
+                    return;
+                const dist = Math.hypot(r.left + r.width / 2 - vw / 2, r.top + r.height / 2 - vh / 2);
+                visible.push({ src, dist });
+            });
+            // Thumbnails always come first: wait until every visible one has loaded.
+            if (thumbsPending) {
+                if (this.vpRetries++ < VIEWPORT_PRELOAD_MAX_RETRIES)
+                    this.scheduleViewportPreload(500);
                 return;
             }
-            this.preloadingActive = true;
-            const img = new Image();
-            img.decoding = 'async';
-            img.onload = img.onerror = () => {
-                this.preloadingActive = false;
-                this.processPreloadQueue();
+            visible.sort((a, b) => a.dist - b.dist);
+            this.vpQueue = visible.slice(0, VIEWPORT_PRELOAD_MAX).map((v) => v.src);
+            this.nextViewportPreload();
+        }
+        nextViewportPreload() {
+            if (this.vpCurrent || this.vpQueue.length === 0 || this.vpIdleHandle !== null)
+                return;
+            const start = () => {
+                this.vpIdleHandle = null;
+                if (this.state.isOpen || this.vpCurrent)
+                    return;
+                const src = this.vpQueue.shift();
+                if (!src)
+                    return;
+                if (this.preloadCache.has(src)) {
+                    this.nextViewportPreload();
+                    return;
+                }
+                const img = new Image();
+                img.decoding = 'async';
+                img.fetchPriority = 'low';
+                const onLoad = () => finish(false);
+                const onError = () => finish(true);
+                const cleanup = () => {
+                    img.removeEventListener('load', onLoad);
+                    img.removeEventListener('error', onError);
+                };
+                const finish = (failed) => {
+                    cleanup();
+                    if (failed && this.preloadCache.get(src) === img)
+                        this.preloadCache.delete(src);
+                    if (this.vpCurrent?.img === img)
+                        this.vpCurrent = null;
+                    this.nextViewportPreload();
+                };
+                img.addEventListener('load', onLoad);
+                img.addEventListener('error', onError);
+                this.vpCurrent = { img, src, cleanup };
+                img.src = src;
+                this.preloadCache.set(src, img);
+                this.decodeWhenLoaded(img);
             };
-            img.src = src;
-            this.preloadCache.set(src, img);
+            if ('requestIdleCallback' in window) {
+                this.vpIdleIsRic = true;
+                this.vpIdleHandle = requestIdleCallback(start, { timeout: 2000 });
+            }
+            else {
+                this.vpIdleIsRic = false;
+                this.vpIdleHandle = setTimeout(start, 100);
+            }
         }
         // ─── Gallery ────────────────────────────────────────────────
         buildGallery(triggerEl) {
@@ -513,6 +648,7 @@
         open(src, triggerEl) {
             if (this.state.isOpen || this.state.isAnimating)
                 return;
+            this.cancelViewportPreload(false);
             this.debugLog('open');
             // Cancel any in-progress trigger bounce from a previous close
             if (this.bounceRafId !== null) {
@@ -975,6 +1111,7 @@
             this.stopDebugPanel();
             this.fullResFading = false;
             this.removeSpinner();
+            this.scheduleViewportPreload(800);
             this.stopFitTransition();
             this.stopChromeSpring();
             this.chromeSpring = { position: 0, velocity: 0 };
@@ -1004,8 +1141,6 @@
             this.currentIndex = 0;
             this.userHasNavigated = false;
             this.stripOffset = 0;
-            this.preloadQueue = [];
-            this.preloadingActive = false;
             this.wheelDismissY = 0;
             this.wheelNavCommitted = false;
             this.wheelNavTotalDelta = 0;
