@@ -519,6 +519,7 @@
                 cancelAnimationFrame(this.bounceRafId);
                 this.bounceRafId = null;
             }
+            this.fullResFading = false;
             this.state.isOpen = true;
             this.state.isAnimating = true;
             this.state.triggerEl = triggerEl || null;
@@ -717,6 +718,25 @@
                 this.spinnerEl = null;
             }
         }
+        /**
+         * Resolves once the open spring has fully settled (or immediately during
+         * navigation / when closing). A fast-loading image would otherwise arrive
+         * mid-spring, where applyAnimState() keeps resetting img.style.opacity and
+         * the fade-in is lost. Waiting makes a fast load behave exactly like a slow one.
+         */
+        afterOpenSpring(skip) {
+            return new Promise((resolve) => {
+                const check = () => {
+                    if (skip || !this.state.isAnimating || !this.state.isOpen || this.state.isClosing) {
+                        resolve();
+                    }
+                    else {
+                        requestAnimationFrame(check);
+                    }
+                };
+                check();
+            });
+        }
         swapToFullRes(src) {
             // Capture whether this swap was triggered during a navigation.
             // If so, suppress the fade-in — the strip animation already handles the visual transition.
@@ -752,7 +772,7 @@
                     this.spinnerEl = spinner;
                 }
             }, SPINNER_DELAY_MS);
-            this.loadImage(src).then((size) => {
+            this.loadImage(src).then((size) => this.afterOpenSpring(calledDuringNavigation).then(() => size)).then((size) => {
                 // Image loaded — cancel the pending spinner and remove any visible one
                 this.removeSpinner();
                 if (!this.imgEl || this.state.currentSrc !== src)
@@ -763,15 +783,22 @@
                 // Fade in on full-res swap — only when the swap was not triggered by a
                 // navigation. During navigation the strip animation handles the transition.
                 const el = this.imgEl;
-                if (!calledDuringNavigation && !this.reducedMotion) {
+                // Cached open: the full-res is already on screen (src was set up front),
+                // so there is nothing to fade in.
+                const alreadyShowing = el.src === new URL(src, document.baseURI).href
+                    && el.complete && el.naturalWidth > 0;
+                const fadeIn = !calledDuringNavigation && !this.reducedMotion && !alreadyShowing;
+                if (fadeIn) {
                     el.style.transition = 'none';
                     el.style.opacity = '0';
+                    this.fullResFading = true;
                 }
                 // Restore box-shadow (was hidden while thumb was showing).
                 // At this point opacity is 0, so the shadow is invisible and will
                 // fade in naturally with the image opacity transition.
                 el.style.boxShadow = '';
-                this.imgEl.src = src;
+                if (!alreadyShowing)
+                    this.imgEl.src = src;
                 this.zoom.naturalWidth = size.width;
                 this.zoom.naturalHeight = size.height;
                 if (!this.zoom.zoomed) {
@@ -782,7 +809,7 @@
                     const dw = Math.abs(targetRect.width - currentRect.width);
                     const dh = Math.abs(targetRect.height - currentRect.height);
                     const rectChanged = dx > 1 || dy > 1 || dw > 1 || dh > 1;
-                    if (rectChanged && !calledDuringNavigation && !this.reducedMotion) {
+                    if (rectChanged && fadeIn) {
                         // Image is at opacity 0 — snap rect instantly so the spring
                         // zoom doesn't play on top of the fade.
                         this.zoom.fitRect = targetRect;
@@ -798,11 +825,11 @@
                 this.updateCursorState();
                 requestAnimationFrame(() => requestAnimationFrame(() => {
                     if (!el || el !== this.imgEl) return;
-                    if (this.reducedMotion) return;
-                    if (calledDuringNavigation) return;
+                    if (!fadeIn) return;
                     el.style.transition = 'opacity 0.4s ease';
                     el.style.opacity = '1';
                     el.addEventListener('transitionend', () => {
+                        this.fullResFading = false;
                         if (el === this.imgEl) {
                             el.style.transition = '';
                             el.style.opacity = '';
@@ -946,6 +973,7 @@
         finishClose() {
             this.debugLog('finishClose');
             this.stopDebugPanel();
+            this.fullResFading = false;
             this.removeSpinner();
             this.stopFitTransition();
             this.stopChromeSpring();
@@ -1341,7 +1369,7 @@
                     ? String(state.opacity / CLOSE_IMG_FADE)
                     : '';
             }
-            else {
+            else if (!this.fullResFading) {
                 img.style.opacity = '';
             }
             if (state.crop > 0.001) {
