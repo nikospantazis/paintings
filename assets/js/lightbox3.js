@@ -989,8 +989,10 @@
                 // wasn't preloaded yet). Fading from opacity 0 would make the thumbnail blink
                 // out before the full-res appears, so swap the decoded image in place instead.
                 // When the lightbox is opening, the image has no src yet, so it still fades in.
-                const showingThumb = !alreadyShowing && !!el.getAttribute('src');
-                const fadeIn = !calledDuringNavigation && !this.reducedMotion && !alreadyShowing && !showingThumb;
+                // The placeholder is never visible by design (transparent / loader), so there
+                // is nothing to blink out: always fade the full-res in, and snap the rect
+                // while the image is still at opacity 0 (no zoom/crop on arrival).
+                const fadeIn = !this.reducedMotion && !alreadyShowing;
                 if (fadeIn) {
                     el.style.transition = 'none';
                     el.style.opacity = '0';
@@ -1381,7 +1383,7 @@
             const imgHasFullRes = this.imgEl.src === item.src &&
                 this.imgEl.complete &&
                 this.imgEl.naturalWidth > 0;
-            if (fullResReady || imgHasFullRes) {
+            if (imgHasFullRes) {
                 const natW = fullResReady ? cached.naturalWidth : this.imgEl.naturalWidth;
                 const natH = fullResReady ? cached.naturalHeight : this.imgEl.naturalHeight;
                 this.zoom.naturalWidth = natW;
@@ -1394,7 +1396,11 @@
                 this.positionImage(this.zoom.fitRect);
             }
             else {
-                const hint = this.getDimensionHint(item.triggerEl);
+                // Prefer the real dimensions when the full-res is cached (swapToFullRes will
+                // then fade it in), otherwise the author-provided hint.
+                const hint = fullResReady
+                    ? { w: cached.naturalWidth, h: cached.naturalHeight }
+                    : this.getDimensionHint(item.triggerEl);
                 if (hint) {
                     this.zoom.naturalWidth = hint.w;
                     this.zoom.naturalHeight = hint.h;
@@ -3123,6 +3129,10 @@
                     const onLoad = () => {
                         cached.removeEventListener('error', onError);
                         if (this.state.isClosing || !this.state.isOpen)
+                            return;
+                        // Don't resize/swap a slide while the strip is travelling: setupCurrentImage
+                        // will fade the full-res in once navigation completes.
+                        if (this.stripRafId !== null || this.stripOffset !== 0)
                             return;
                         // Only upgrade if this img is still an adjacent slide (not yet current)
                         if ((img === this.prevSlideImg || img === this.nextSlideImg) &&
