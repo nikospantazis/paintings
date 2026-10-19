@@ -43,20 +43,33 @@
     // Presets — tuned for Motion.dev-style feel
     const SPRING_OPEN = { stiffness: 260, damping: 26, mass: 1 };
     const SPRING_CLOSE = { stiffness: 500, damping: 38, mass: 1 };
+    // Fade presets for the lightbox opening/closing. Independent from springOpen /
+    // springClose, which drive gallery navigation, zoom and the chrome slide.
+    // Higher stiffness = faster; damping at or above 2*sqrt(stiffness) = no overshoot.
+    const FADE_OPEN = { stiffness: 50, damping: 10, mass: 1 };
+    const FADE_CLOSE = { stiffness: 100, damping: 20, mass: 1 };
 
     const DEFAULTS = {
         selector: '[data-lightbox]',
         springOpen: SPRING_OPEN,
         springClose: SPRING_CLOSE,
+        fadeOpen: FADE_OPEN,
+        fadeClose: FADE_CLOSE,
+        // Max number of full-size images kept in the preload cache (0 = unlimited).
+        // The current image and its two gallery neighbours are never evicted.
+        preloadCacheMax: 40,
         padding: 40,
         debug: false,
     };
+    // When the image is already cached, the open fade waits (at most this long) for
+    // the browser to decode it, so the first frames of the fade already show pixels.
+    const OPEN_DECODE_MAX_WAIT_MS = 120;
     // Spinner shown while loading an image triggered from a text link.
     const SPINNER_DELAY_MS = 300;
-    // For text-link triggers, the image stays fully opaque until the backdrop
-    // drops below this threshold, then fades proportionally. Keeps the image
-    // visible through ~80% of the close animation and fades quickly at the end.
-    const TEXT_LINK_OPACITY_THRESHOLD = 0.2;
+    // During a swipe/pinch dismiss the image is not faded while dragging, so on
+    // release it stays fully opaque until the backdrop drops below this threshold,
+    // then fades proportionally. Avoids a visible jump when the gesture is released.
+    const DISMISS_FADE_THRESHOLD = 0.2;
     // Default border-radius for lightbox images, read from --lb-image-border-radius.
     const DEFAULT_IMAGE_BORDER_RADIUS = 24;
     const PRELOAD_DELAY = 80;
@@ -124,6 +137,9 @@
             this.vpQueue = [];
             this.vpCurrent = null;
             this.vpRetries = 0;
+            // Full-res fade-in (after the full-size image has loaded and decoded)
+            this.fullResFadeTimer = null;
+            this.fullResFading = false;
             // Velocity tracking
             this.velocitySamples = [];
             // Pointer cache for multi-touch (pinch)
@@ -132,14 +148,10 @@
             this.dismiss = this.defaultDismissState();
             // rAF animation handle (single loop for all spring animations)
             this.rafId = null;
-            // Separate rAF for trigger bounce (runs independently after close)
-            this.bounceRafId = null;
-            // Crop insets for object-fit:cover thumbnail animation (pixels in lightbox image space)
-            this.cropInsets = { top: 0, right: 0, bottom: 0, left: 0 };
-            // Border-radius of the thumbnail trigger (px), read on open for close morph
-            this.thumbBorderRadius = 0;
-            // Text-link trigger: no FLIP morph, load then fade in
-            this.isTextLink = false;
+            // True while the open fade-in spring is running
+            this.isOpening = false;
+            // Text-link trigger: image is still loading, keep it hidden
+            this.textLinkLoading = false;
             this.spinnerEl = null;
             this.spinnerTimer = null;
             // Chrome UI (caption bar, arrows, close button)
@@ -273,11 +285,13 @@
             window.removeEventListener('scroll', this.handleViewportChange);
             window.removeEventListener('resize', this.handleViewportChange);
             this.cancelViewportPreload(true);
+            this.stopFullResFade();
             this.cancelPreload();
             this.stopSpring();
             this.stopStripSpring();
             this.stopFitTransition();
             this.removeOverlay();
+            this.preloadCache.clear();
             this.listeners.clear();
             if (Lightbox.instance === this)
                 Lightbox.instance = null;
@@ -370,23 +384,43 @@
             const img = new Image();
             img.decoding = 'async';
             img.src = src;
-            this.preloadCache.set(src, img);
-            this.decodeWhenLoaded(img);
+            this.cachePreload(src, img);
         }
-        /**
-         * A downloaded image still has to be decoded before it can paint. If that
-         * happens on first display, the opening morph plays with an empty box.
-         * Decoding as soon as the download finishes warms the browser's decode cache.
-         */
-        decodeWhenLoaded(img) {
-            const run = () => {
-                if (img.decode)
-                    img.decode().catch(() => { });
-            };
-            if (img.complete && img.naturalWidth > 0)
-                run();
-            else
-                img.addEventListener('load', run, { once: true });
+        /** Store a preloaded image, evicting the oldest entries beyond `preloadCacheMax`. */
+        cachePreload(src, img) {
+            this.preloadCache.set(src, img);
+            this.trimPreloadCache();
+        }
+        trimPreloadCache() {
+            const max = this.opts.preloadCacheMax;
+            if (!(max > 0) || this.preloadCache.size <= max)
+                return;
+            // Never evict what is on screen, its gallery neighbours, or an in-flight preload
+            const keep = new Set();
+            if (this.state.currentSrc)
+                keep.add(this.state.currentSrc);
+            if (this.state.isOpen) {
+                for (const d of [-1, 1]) {
+                    const item = this.gallery[this.currentIndex + d];
+                    if (item)
+                        keep.add(item.src);
+                }
+            }
+            if (this.vpCurrent)
+                keep.add(this.vpCurrent.src);
+            // Maps iterate in insertion order, so the oldest entries go first.
+            for (const key of this.preloadCache.keys()) {
+                if (this.preloadCache.size <= max)
+                    break;
+                if (!keep.has(key))
+                    this.preloadCache.delete(key);
+            }
+        }
+        /** Drop every preloaded image (frees memory; they will be preloaded again on demand). */
+        clearPreloadCache() {
+            this.cancelViewportPreload(true);
+            this.preloadCache.clear();
+            return this;
         }
         // ─── Gallery preloading ─────────────────────────────────────
         schedulePreloads() {
@@ -520,8 +554,7 @@
                 img.addEventListener('error', onError);
                 this.vpCurrent = { img, src, cleanup };
                 img.src = src;
-                this.preloadCache.set(src, img);
-                this.decodeWhenLoaded(img);
+                this.cachePreload(src, img);
             };
             if ('requestIdleCallback' in window) {
                 this.vpIdleIsRic = true;
@@ -590,6 +623,9 @@
                 this.trapFocus(e);
                 return;
             }
+            // Exit fade in progress: nothing below may interrupt it
+            if (this.state.isClosing)
+                return;
             if (e.key === 'Escape') {
                 if (this.dismiss.active) {
                     // Dismiss gesture in progress — complete the close
@@ -650,12 +686,8 @@
                 return;
             this.cancelViewportPreload(false);
             this.debugLog('open');
-            // Cancel any in-progress trigger bounce from a previous close
-            if (this.bounceRafId !== null) {
-                cancelAnimationFrame(this.bounceRafId);
-                this.bounceRafId = null;
-            }
             this.fullResFading = false;
+            this.stopFullResFade();
             this.state.isOpen = true;
             this.state.isAnimating = true;
             this.state.triggerEl = triggerEl || null;
@@ -666,28 +698,23 @@
             this.emit('open');
             const thumbImg = triggerEl?.querySelector('img');
             const thumbSrc = thumbImg?.currentSrc || thumbImg?.src || '';
-            this.isTextLink = !thumbImg;
-            if (this.isTextLink) {
-                this.thumbBorderRadius = 0;
-                this.openTextLink(triggerEl || null, src);
+            if (!thumbImg) {
+                // Text-link trigger (no thumbnail)
+                this.openTextLink(src);
                 return;
             }
-            // triggerEl is guaranteed here — the isTextLink guard above returns early without one
-            const thumbRect = this.getThumbRect(triggerEl);
-            this.thumbBorderRadius = this.getThumbBorderRadius(triggerEl);
-            const thumbNatW = thumbImg.naturalWidth || thumbRect.width;
-            const thumbNatH = thumbImg.naturalHeight || thumbRect.height;
+            const thumbBox = thumbImg.getBoundingClientRect();
+            const thumbNatW = thumbImg.naturalWidth || thumbBox.width;
+            const thumbNatH = thumbImg.naturalHeight || thumbBox.height;
             const cached = this.preloadCache.get(src);
             const fullResReady = cached?.complete && cached.naturalWidth > 0;
-            // Only pass a src to the overlay image when the full-res is already cached.
-            // If a separate full-res will be loaded via swapToFullRes, start with an
-            // empty src so no low-res thumbnail flashes while waiting for the big image.
+            // Show the full-res straight away when it is already loaded. Otherwise open
+            // with an empty image (no low-res thumbnail flash) and fade the full-res in
+            // via swapToFullRes once it has been downloaded and decoded.
             const overlaySrc = fullResReady ? src : (thumbSrc === src ? src : '');
             this.createOverlay(overlaySrc);
             this.createChrome();
-            this.computeChromeDrift(thumbRect.x + thumbRect.width / 2, thumbRect.y + thumbRect.height / 2);
             document.addEventListener('keydown', this.handleKeydown);
-            this.setThumbVisibility(false);
             const hint = this.getDimensionHint(triggerEl);
             let natW, natH, targetRect;
             if (fullResReady) {
@@ -697,8 +724,8 @@
             }
             else if (hint) {
                 // Author-declared true dimensions — use the capped rect (respects the
-                // "never upscale" rule) so the morph lands exactly where the loaded image
-                // will, with no reflow when full-res arrives.
+                // "never upscale" rule) so the image lands exactly where the loaded
+                // image will, with no reflow when full-res arrives.
                 natW = hint.w;
                 natH = hint.h;
                 targetRect = this.computeTargetRect(natW, natH);
@@ -711,59 +738,96 @@
                 natH = thumbNatH;
                 targetRect = this.computeTargetRectFromAspectRatio(natW, natH);
             }
-            // Place image at final size/position, then FLIP from thumbnail
             this.positionImage(targetRect);
             this.zoom = this.defaultZoomState();
             this.zoom.fitRect = targetRect;
             this.zoom.naturalWidth = natW;
             this.zoom.naturalHeight = natH;
-            // Compute the FLIP transform: what transform makes the image look like it's at thumbRect?
-            const flipX = thumbRect.x + thumbRect.width / 2 - (targetRect.x + targetRect.width / 2);
-            const flipY = thumbRect.y + thumbRect.height / 2 - (targetRect.y + targetRect.height / 2);
-            // Compute FLIP scale and crop insets (handles CSS cover + server-side crop)
-            const { flipScale, hasCrop } = this.computeFlipCrop(thumbRect, targetRect, triggerEl, false);
             // Start full-res load immediately so it continues regardless of animation interrupts
-            if (thumbSrc && thumbSrc !== src) {
+            if (thumbSrc !== src) {
                 this.swapToFullRes(src);
             }
             // Preload neighbor images BEFORE populating adjacent slides — this ensures
             // the preload cache has Image objects that setupSlideImage can attach load
-            // listeners to. Without this, adjacent slides fall back to thumbnails because
-            // the cache entry doesn't exist yet when the slide is created.
+            // listeners to.
             if (this.gallery.length > 1) {
                 this.schedulePreloads();
             }
             // Populate adjacent gallery slides (off-screen, ready for swipe)
             this.populateAdjacentSlides();
-            // Start spring from FLIP position → identity.
-            // onEarlyComplete fires when visually done (opacity ≈ 1) — clears isAnimating
-            // so dismiss tracking isn't blocked, but the spring keeps bouncing visually.
-            const openVisuallyDone = (s) => s.opacity > 0.99;
-            this.animateSpring({ translateX: flipX, translateY: flipY, scale: flipScale, opacity: 0, crop: hasCrop ? 1 : 0, borderRadius: this.thumbBorderRadius }, { translateX: 0, translateY: 0, scale: 1, opacity: 1, crop: 0, borderRadius: this.getTargetBorderRadius() }, this.opts.springOpen, () => {
-                this.state.isAnimating = false;
-                this.updateCursorState();
-                this.emit('opened');
-            }, undefined, undefined, undefined, openVisuallyDone);
+            // Fade in: backdrop, image and chrome all follow the same opacity spring.
+            // If the full-res is already on screen, wait (briefly) for it to be decoded.
+            this.startOpenFade(overlaySrc ? this.imgEl : null);
         }
-        openTextLink(triggerEl, src) {
+        /**
+         * Fade the lightbox in. `decodeEl` is an <img> that is already showing its final
+         * image; the fade is held fully transparent until it is decoded (capped at
+         * OPEN_DECODE_MAX_WAIT_MS) so the fade doesn't start on an undecoded image.
+         * onEarlyComplete fires when visually done (opacity ≈ 1) — clears isAnimating
+         * so dismiss tracking isn't blocked while the spring settles.
+         */
+        startOpenFade(decodeEl) {
+            const imgEl = this.imgEl;
+            const targetBR = this.getTargetBorderRadius();
+            const from = { translateX: 0, translateY: 0, scale: 1, opacity: 0, crop: 0, borderRadius: targetBR };
+            const to = { translateX: 0, translateY: 0, scale: 1, opacity: 1, crop: 0, borderRadius: targetBR };
+            this.isOpening = true;
+            const run = () => {
+                // Closed, closed-and-reopened or interrupted while waiting for the decode
+                if (this.imgEl !== imgEl || !this.state.isOpen || this.state.isClosing)
+                    return;
+                this.animateSpring(from, to, this.opts.fadeOpen, () => {
+                    this.isOpening = false;
+                    this.state.isAnimating = false;
+                    this.updateCursorState();
+                    this.emit('opened');
+                }, undefined, undefined, undefined, (s) => s.opacity > 0.99);
+            };
+            if (decodeEl && !this.reducedMotion && typeof decodeEl.decode === 'function' && decodeEl.getAttribute('src')) {
+                // Hold everything fully transparent until the image is decoded
+                this.applyAnimState(imgEl, this.backdrop, from);
+                let started = false;
+                const go = () => {
+                    if (started)
+                        return;
+                    started = true;
+                    run();
+                };
+                decodeImage(decodeEl).then(go);
+                setTimeout(go, OPEN_DECODE_MAX_WAIT_MS);
+            }
+            else {
+                run();
+            }
+        }
+        stopFullResFade() {
+            if (this.fullResFadeTimer) {
+                clearTimeout(this.fullResFadeTimer);
+                this.fullResFadeTimer = null;
+            }
+        }
+        /** Abort an in-progress full-res fade-in (used when a close starts). */
+        cancelFullResFade() {
+            this.stopFullResFade();
+            if (this.fullResFading) {
+                this.fullResFading = false;
+                if (this.imgEl)
+                    this.imgEl.style.transition = '';
+            }
+        }
+        openTextLink(src) {
             const cached = this.preloadCache.get(src);
             const fullResReady = cached?.complete && cached.naturalWidth > 0;
             if (fullResReady) {
-                // Image already loaded — run the normal FLIP morph using image aspect ratio
-                this.openTextLinkWithImage(triggerEl, src, cached.naturalWidth, cached.naturalHeight);
+                // Image already loaded — fade straight in
+                this.openTextLinkWithImage(src, cached.naturalWidth, cached.naturalHeight);
                 return;
             }
-            // Image not ready — show overlay + spinner, load, then morph
+            // Image not ready — show overlay + spinner, load, then fade the image in
             this.createOverlay('');
             this.createChrome();
-            const cx = triggerEl
-                ? triggerEl.getBoundingClientRect().x + triggerEl.getBoundingClientRect().width / 2
-                : window.innerWidth / 2;
-            const cy = triggerEl
-                ? triggerEl.getBoundingClientRect().y + triggerEl.getBoundingClientRect().height / 2
-                : window.innerHeight / 2;
-            this.computeChromeDrift(cx, cy);
             document.addEventListener('keydown', this.handleKeydown);
+            this.textLinkLoading = true;
             if (this.imgEl)
                 this.imgEl.style.opacity = '0';
             // Show spinner after a short delay (skip if image loads fast)
@@ -777,33 +841,33 @@
             }, SPINNER_DELAY_MS);
             // Fade in backdrop
             const targetBR = this.getTargetBorderRadius();
-            this.animateSpring({ translateX: 0, translateY: 0, scale: 1, opacity: 0, crop: 0, borderRadius: targetBR }, { translateX: 0, translateY: 0, scale: 1, opacity: 1, crop: 0, borderRadius: targetBR }, this.opts.springOpen, () => { }, undefined);
-            // Load image, then run the FLIP morph
+            this.animateSpring({ translateX: 0, translateY: 0, scale: 1, opacity: 0, crop: 0, borderRadius: targetBR }, { translateX: 0, translateY: 0, scale: 1, opacity: 1, crop: 0, borderRadius: targetBR }, this.opts.fadeOpen, () => { }, undefined);
+            // Load image, then fade it in
             this.loadImage(src).then((size) => {
                 if (!this.imgEl || this.state.currentSrc !== src)
                     return;
                 if (this.state.isClosing || !this.state.isOpen)
                     return;
                 this.removeSpinner();
-                this.openTextLinkWithImage(triggerEl, src, size.width, size.height);
+                this.openTextLinkWithImage(src, size.width, size.height);
             });
         }
-        /** Run the FLIP morph for a text-link trigger once image dimensions are known. */
-        openTextLinkWithImage(triggerEl, src, natW, natH) {
-            const thumbRect = triggerEl
-                ? this.getThumbRect(triggerEl)
-                : new DOMRect(window.innerWidth / 2, window.innerHeight / 2, 0, 0);
+        /** Fade in a text-link trigger's image once its dimensions are known. */
+        openTextLinkWithImage(src, natW, natH) {
             const targetRect = this.computeTargetRect(natW, natH);
+            // If the overlay already exists we were waiting for the download (the backdrop
+            // is already fading in), so don't hold the fade for a decode in that case.
+            const wasPending = !!this.overlay;
             // If overlay wasn't created yet (preloaded path), create it now
             if (!this.overlay) {
                 this.createOverlay(src);
                 this.createChrome();
-                this.computeChromeDrift(thumbRect.x + thumbRect.width / 2, thumbRect.y + thumbRect.height / 2);
                 document.addEventListener('keydown', this.handleKeydown);
             }
             else {
                 this.imgEl.src = src;
             }
+            this.textLinkLoading = false;
             this.positionImage(targetRect);
             this.zoom = this.defaultZoomState();
             this.zoom.fitRect = targetRect;
@@ -816,33 +880,7 @@
                 this.schedulePreloads();
             }
             this.populateAdjacentSlides();
-            // Build a FLIP origin rect centered on the text link but with the image's
-            // aspect ratio, so the morph scales uniformly instead of stretching.
-            const flipRect = this.textLinkFlipRect(thumbRect, natW, natH);
-            const scaleX = flipRect.width / targetRect.width;
-            const scaleY = flipRect.height / targetRect.height;
-            const flipScale = Math.min(scaleX, scaleY);
-            const flipX = flipRect.x + flipRect.width / 2 - (targetRect.x + targetRect.width / 2);
-            const flipY = flipRect.y + flipRect.height / 2 - (targetRect.y + targetRect.height / 2);
-            const targetBR = this.getTargetBorderRadius();
-            const openVisuallyDone = (s) => s.opacity > 0.99;
-            this.animateSpring({ translateX: flipX, translateY: flipY, scale: flipScale, opacity: 0, crop: 0, borderRadius: 0 }, { translateX: 0, translateY: 0, scale: 1, opacity: 1, crop: 0, borderRadius: targetBR }, this.opts.springOpen, () => {
-                this.state.isAnimating = false;
-                this.updateCursorState();
-                this.emit('opened');
-            }, undefined, undefined, undefined, openVisuallyDone);
-        }
-        /**
-         * Build a rect centered on the text link with the image's aspect ratio.
-         * Sized so the shorter dimension matches the text link's height.
-         */
-        textLinkFlipRect(linkRect, natW, natH) {
-            const aspect = natW / natH;
-            const h = linkRect.height;
-            const w = h * aspect;
-            const cx = linkRect.x + linkRect.width / 2;
-            const cy = linkRect.y + linkRect.height / 2;
-            return new DOMRect(cx - w / 2, cy - h / 2, w, h);
+            this.startOpenFade(wasPending ? null : this.imgEl);
         }
         removeSpinner() {
             if (this.spinnerTimer) {
@@ -873,6 +911,19 @@
                 check();
             });
         }
+        /**
+         * When the current slide is showing a thumbnail (e.g. after navigating to an image
+         * that hadn't finished preloading), decode the full-size image before swapping it in,
+         * so the swap doesn't show a blank or half-painted frame.
+         */
+        decodeBeforeThumbSwap(src) {
+            const el = this.imgEl;
+            if (!el || this.state.currentSrc !== src || !el.getAttribute('src'))
+                return Promise.resolve();
+            if (el.src === new URL(src, document.baseURI).href)
+                return Promise.resolve();
+            return decodeImage(this.preloadCache.get(src));
+        }
         swapToFullRes(src) {
             // Capture whether this swap was triggered during a navigation.
             // If so, suppress the fade-in — the strip animation already handles the visual transition.
@@ -882,13 +933,21 @@
                 clearTimeout(this.spinnerTimer);
                 this.spinnerTimer = null;
             }
-            // Show a spinner if the full-res image takes longer than SPINNER_DELAY_MS
-            this.spinnerTimer = setTimeout(() => {
+            // Show a spinner if the full-res image takes longer than SPINNER_DELAY_MS to
+            // download. It is never shown while the lightbox is still fading in: with a
+            // slow open the 300 ms mark can arrive mid-fade, and the spinner would appear
+            // before the image. In that case the check is simply repeated until the fade
+            // has finished (the spinner is removed as soon as the download completes).
+            const showSpinner = () => {
                 this.spinnerTimer = null;
-                if (this.overlay && this.state.currentSrc === src && !this.spinnerEl) {
-                    const spinner = document.createElement('div');
-                    spinner.className = 'lightbox3-spinner';
-                 
+                if (!this.overlay || this.state.currentSrc !== src || this.spinnerEl || this.state.isClosing)
+                    return;
+                if (this.state.isAnimating) {
+                    this.spinnerTimer = setTimeout(showSpinner, 50);
+                    return;
+                }
+                const spinner = document.createElement('div');
+                spinner.className = 'lightbox3-spinner';
                 // Match the spinner's container to the exact bounds of the image
                 if (this.zoom && this.zoom.fitRect && this.zoom.fitRect.width > 0) {
                     const rect = this.zoom.fitRect;
@@ -900,15 +959,18 @@
                     spinner.style.display = 'flex';
                     spinner.style.alignItems = 'center';
                     spinner.style.justifyContent = 'center';
-                    spinner.style.pointerEvents = 'none'; 
+                    spinner.style.pointerEvents = 'none';
                 }
-                
-                    
-                    this.overlay.appendChild(spinner);
-                    this.spinnerEl = spinner;
-                }
-            }, SPINNER_DELAY_MS);
-            this.loadImage(src).then((size) => this.afterOpenSpring(calledDuringNavigation).then(() => size)).then((size) => {
+                this.overlay.appendChild(spinner);
+                this.spinnerEl = spinner;
+            };
+            this.spinnerTimer = setTimeout(showSpinner, SPINNER_DELAY_MS);
+            this.loadImage(src).then((size) => {
+                // Download finished: drop the spinner right away, even if the open fade
+                // is still running and the swap has to wait for it.
+                this.removeSpinner();
+                return this.afterOpenSpring(calledDuringNavigation).then(() => size);
+            }).then((size) => this.decodeBeforeThumbSwap(src).then(() => size)).then((size) => {
                 // Image loaded — cancel the pending spinner and remove any visible one
                 this.removeSpinner();
                 if (!this.imgEl || this.state.currentSrc !== src)
@@ -923,7 +985,12 @@
                 // so there is nothing to fade in.
                 const alreadyShowing = el.src === new URL(src, document.baseURI).href
                     && el.complete && el.naturalWidth > 0;
-                const fadeIn = !calledDuringNavigation && !this.reducedMotion && !alreadyShowing;
+                // The slide is showing a thumbnail (we got here by navigating to an image that
+                // wasn't preloaded yet). Fading from opacity 0 would make the thumbnail blink
+                // out before the full-res appears, so swap the decoded image in place instead.
+                // When the lightbox is opening, the image has no src yet, so it still fades in.
+                const showingThumb = !alreadyShowing && !!el.getAttribute('src');
+                const fadeIn = !calledDuringNavigation && !this.reducedMotion && !alreadyShowing && !showingThumb;
                 if (fadeIn) {
                     el.style.transition = 'none';
                     el.style.opacity = '0';
@@ -959,19 +1026,34 @@
                     }
                 }
                 this.updateCursorState();
-                requestAnimationFrame(() => requestAnimationFrame(() => {
-                    if (!el || el !== this.imgEl) return;
-                    if (!fadeIn) return;
+                // Decode before fading so the first fade frame already has pixels.
+                const decoded = fadeIn && el.decode ? el.decode().catch(() => { }) : Promise.resolve();
+                decoded.then(() => requestAnimationFrame(() => requestAnimationFrame(() => {
+                    if (!el || el !== this.imgEl || !this.state.isOpen || this.state.isClosing) {
+                        this.fullResFading = false;
+                        return;
+                    }
+                    if (!fadeIn) {
+                        this.stopFullResFade();
+                        return;
+                    }
                     el.style.transition = 'opacity 0.4s ease';
                     el.style.opacity = '1';
-                    el.addEventListener('transitionend', () => {
+                    const done = () => {
                         this.fullResFading = false;
                         if (el === this.imgEl) {
                             el.style.transition = '';
                             el.style.opacity = '';
                         }
-                    }, { once: true });
-                }));
+                        this.stopFullResFade();
+                    };
+                    el.addEventListener('transitionend', done, { once: true });
+                    // Safety net in case transitionend never fires
+                    this.fullResFadeTimer = setTimeout(() => {
+                        el.removeEventListener('transitionend', done);
+                        done();
+                    }, 700);
+                })));
             });
         }
         /** Spring-animate the image from one fit rect to another (aspect ratio change). */
@@ -1046,6 +1128,8 @@
                 this.stripEl.style.transform = '';
             this.swipeNav = this.defaultSwipeNavState();
             this.state.isClosing = true;
+            this.isOpening = false;
+            this.cancelFullResFade();
             this.emit('close');
             this.stopSpring();
             this.stopFitTransition();
@@ -1058,9 +1142,7 @@
             // dispatch after pointerup (which can arrive after rAF on mobile Safari).
             if (this.overlay) {
                 const ov = this.overlay;
-                setTimeout(() => {
-                    ov.style.pointerEvents = 'none';
-                }, 80);
+                setTimeout(() => this.makeOverlayInert(ov), 80);
             }
             // If zoomed (idle or mid-animation), reset zoom first then close
             if (this.zoom.zoomed || this.zoom.zoomingOut || this.zoom.scale !== 1) {
@@ -1072,44 +1154,33 @@
                 this.imgEl.style.transform = '';
             }
             this.state.isAnimating = true;
-            const thumbRect = this.state.triggerEl ? this.getThumbRect(this.state.triggerEl) : null;
-            if (thumbRect) {
-                this.computeChromeDrift(thumbRect.x + thumbRect.width / 2, thumbRect.y + thumbRect.height / 2);
-            }
-            const triggerEl = this.state.triggerEl;
-            let bounceFired = false;
-            const closeWhenInvisible = (s) => {
-                if (s.opacity < 0.01) {
-                    if (!bounceFired && triggerEl) {
-                        bounceFired = true;
-                        this.bounceTrigger(triggerEl);
-                    }
-                    return true;
-                }
-                return false;
-            };
+            // Fade out in place: backdrop, image and chrome follow the same opacity spring.
             const currentBR = this.getTargetBorderRadius();
-            if (!thumbRect || !this.isInViewport(thumbRect)) {
-                this.animateSpring({ translateX: 0, translateY: 0, scale: 1, opacity: 1, crop: 0, borderRadius: currentBR }, { translateX: 0, translateY: 0, scale: 1, opacity: 0, crop: 0, borderRadius: currentBR }, this.opts.springClose, () => this.finishClose(), closeWhenInvisible);
+            this.animateSpring({ translateX: 0, translateY: 0, scale: 1, opacity: 1, crop: 0, borderRadius: currentBR }, { translateX: 0, translateY: 0, scale: 1, opacity: 0, crop: 0, borderRadius: currentBR }, this.opts.fadeClose, () => this.finishClose(), (s) => s.opacity < 0.01);
+        }
+        /**
+         * Make a closing overlay completely click-through. Setting pointer-events:none
+         * on the overlay alone is not enough: the slides carry an explicit
+         * pointer-events:auto, which overrides the parent, so the fading image kept
+         * receiving clicks. A click on it during the exit fade reached zoomIn/zoomOut,
+         * which cancelled the close spring, so finishClose() never ran and the
+         * overlay stayed on screen, semi-transparent, with isClosing stuck at true.
+         */
+        makeOverlayInert(ov) {
+            if (!ov)
                 return;
-            }
-            const { fitRect } = this.zoom;
-            // For text links, build a target rect with the image's aspect ratio
-            // centered on the link, instead of morphing to the text's shape.
-            const morphRect = this.isTextLink
-                ? this.textLinkFlipRect(thumbRect, this.zoom.naturalWidth, this.zoom.naturalHeight)
-                : thumbRect;
-            const flipX = morphRect.x + morphRect.width / 2 - (fitRect.x + fitRect.width / 2);
-            const flipY = morphRect.y + morphRect.height / 2 - (fitRect.y + fitRect.height / 2);
-            // Recompute crop insets for close (thumb may have moved since open).
-            // Handles both CSS object-fit:cover and server-side aspect ratio mismatches.
-            const { flipScale, hasCrop } = this.computeFlipCrop(morphRect, fitRect, this.state.triggerEl, this.isTextLink);
-            this.animateSpring({ translateX: 0, translateY: 0, scale: 1, opacity: 1, crop: 0, borderRadius: currentBR }, { translateX: flipX, translateY: flipY, scale: flipScale, opacity: 0, crop: hasCrop ? 1 : 0, borderRadius: this.thumbBorderRadius }, this.opts.springClose, () => this.finishClose(), closeWhenInvisible);
+            ov.style.pointerEvents = 'none';
+            ov.querySelectorAll('*').forEach((el) => {
+                el.style.pointerEvents = 'none';
+            });
         }
         finishClose() {
             this.debugLog('finishClose');
             this.stopDebugPanel();
             this.fullResFading = false;
+            this.isOpening = false;
+            this.textLinkLoading = false;
+            this.stopFullResFade();
             this.removeSpinner();
             this.scheduleViewportPreload(800);
             this.stopFitTransition();
@@ -1117,7 +1188,6 @@
             this.chromeSpring = { position: 0, velocity: 0 };
             this.chromeBaseOpacity = 0;
             this.resetChromeDrift();
-            this.setThumbVisibility(true);
             this.removeOverlay();
             this.unlockBodyScroll();
             document.removeEventListener('keydown', this.handleKeydown);
@@ -1153,38 +1223,6 @@
                 this.wheelSnapBackTimer = null;
             }
         }
-        /**
-         * "Catch" bounce: the trigger element squishes down slightly then
-         * springs back to normal scale, as if catching the lightbox image.
-         * Runs on its own rAF loop so it doesn't interfere with the main spring.
-         */
-        bounceTrigger(el) {
-            if (this.reducedMotion)
-                return; // Skip decorative bounce
-            if (this.bounceRafId !== null) {
-                cancelAnimationFrame(this.bounceRafId);
-                this.bounceRafId = null;
-            }
-            const config = { stiffness: 900, damping: 80, mass: 1 };
-            const spring = { position: 0.98, velocity: 0 };
-            const target = 1;
-            let lastTime = performance.now();
-            el.style.transform = `scale(${spring.position})`;
-            const tick = (now) => {
-                const dt = Math.min((now - lastTime) / 1000, 0.064);
-                lastTime = now;
-                const result = springStep(config, spring, target, dt);
-                spring.position = result.position;
-                spring.velocity = result.velocity;
-                el.style.transform = result.settled ? '' : `scale(${result.position})`;
-                if (result.settled) {
-                    this.bounceRafId = null;
-                    return;
-                }
-                this.bounceRafId = requestAnimationFrame(tick);
-            };
-            this.bounceRafId = requestAnimationFrame(tick);
-        }
         // ─── Gallery navigation ────────────────────────────────────
         next() {
             if (this.gallery.length <= 1)
@@ -1214,6 +1252,9 @@
             this.debugLog(`navigateTo(${direction > 0 ? 'next' : 'prev'})`);
             this.userHasNavigated = true;
             this.pendingNavDirection = direction;
+            // The thumbnail layer belongs to the image that was opened
+            this.fullResFading = false;
+            this.stopFullResFade();
             // Enable pointer events on the destination slide so it can receive clicks
             // while animating into view, instead of falling through to the backdrop.
             const destSlide = direction === 1 ? this.nextSlideEl : this.prevSlideEl;
@@ -1226,16 +1267,11 @@
         completeNavigation(direction) {
             this.debugLog(`completeNavigation(${direction > 0 ? 'next' : 'prev'})`);
             this.pendingNavDirection = null;
-            // Show old thumbnail
-            this.setThumbVisibility(true);
             // Update index and trigger
             this.currentIndex += direction;
             const item = this.gallery[this.currentIndex];
             this.state.triggerEl = item.triggerEl;
             this.state.currentSrc = item.src;
-            this.thumbBorderRadius = this.getThumbBorderRadius(item.triggerEl);
-            // Hide new thumbnail
-            this.setThumbVisibility(false);
             this.emit('navigate');
             // Update chrome UI — cross-fade already swapped caption/counter text,
             // so just ensure it's correct for the new index and reset fade state.
@@ -1352,6 +1388,9 @@
                 this.zoom.naturalHeight = natH;
                 this.zoom.fitRect = this.computeTargetRect(natW, natH);
                 this.imgEl.src = item.src;
+                // Full-res is already loaded, so swapToFullRes won't run to restore
+                // the shadow that was hidden while this slide showed its thumbnail.
+                this.imgEl.style.boxShadow = '';
                 this.positionImage(this.zoom.fitRect);
             }
             else {
@@ -1493,44 +1532,34 @@
         applyAnimState(img, backdrop, state) {
             img.style.transform = `translate(${state.translateX}px, ${state.translateY}px) scale(${state.scale})`;
             backdrop.style.opacity = String(state.opacity);
-            if (this.isTextLink) {
-                img.style.opacity = String(Math.min(1, state.opacity / TEXT_LINK_OPACITY_THRESHOLD));
+            // Image opacity: fades together with the backdrop on open and close.
+            if (this.textLinkLoading) {
+                // Text link whose image has not loaded yet — keep it hidden
+                img.style.opacity = '0';
             }
-            else if (this.state.isClosing && !this.state.isDismissClosing && window.innerWidth <= 600) {
-                // Mobile: thumbnail stays visible during close, so fade the image in
-                // the final stretch to ease the handoff rather than snapping away.
-                const CLOSE_IMG_FADE = 0.02;
-                img.style.opacity = state.opacity < CLOSE_IMG_FADE
-                    ? String(state.opacity / CLOSE_IMG_FADE)
-                    : '';
+            else if (this.fullResFading) {
+                // The full-res fade-in owns the image opacity
             }
-            else if (!this.fullResFading) {
+            else if (this.state.isClosing && this.state.isDismissClosing) {
+                // Swipe/pinch dismiss: the image was fully opaque while dragging
+                img.style.opacity = String(Math.min(1, state.opacity / DISMISS_FADE_THRESHOLD));
+            }
+            else if (this.state.isClosing || this.isOpening) {
+                img.style.opacity = String(state.opacity);
+            }
+            else {
                 img.style.opacity = '';
             }
-            if (state.crop > 0.001) {
-                const { top, right, bottom, left } = this.cropInsets;
-                const br = state.borderRadius > 0.1 ? state.borderRadius / Math.max(state.scale, 0.01) : 0;
-                img.style.clipPath = `inset(${state.crop * top}px ${state.crop * right}px ${state.crop * bottom}px ${state.crop * left}px round ${br}px)`;
-            }
-            else {
-                img.style.clipPath = '';
-            }
-            // Border-radius: compensate for FLIP scale so visual radius matches the
-            // animated value. When clipPath is active it handles rounding via `round`.
-            if (state.crop <= 0.001) {
-                const br = state.borderRadius > 0.1 ? state.borderRadius / Math.max(state.scale, 0.01) : 0;
-                img.style.borderRadius = br > 0.1 ? `${br}px` : '';
-            }
-            else {
-                img.style.borderRadius = '';
-            }
+            // Border-radius: compensate for the dismiss scale so the visual radius
+            // matches the animated value.
+            const br = state.borderRadius > 0.1 ? state.borderRadius / Math.max(state.scale, 0.01) : 0;
+            img.style.borderRadius = br > 0.1 ? `${br}px` : '';
+            img.style.clipPath = '';
             // Chrome follows backdrop opacity during open/close.
-            // Accelerate fade-out on close so chrome disappears before the morph lands.
+            // Accelerate fade-out on close so chrome disappears before the image does.
             this.chromeBaseOpacity = this.state.isClosing
                 ? Math.pow(state.opacity, 2)
                 : state.opacity;
-            // Drift progress: 1 = fully offset toward origin, 0 = settled in place
-            this.chromeDriftProgress = 1 - state.opacity;
             this.updateChromeVisuals();
         }
         // ─── Strip spring (gallery slide animation) ─────────────────
@@ -1740,6 +1769,8 @@
             return Math.max(nativeScale, 2);
         }
         zoomIn(clickX, clickY) {
+            if (this.state.isClosing)
+                return;
             if (!this.imgEl || !this.isZoomable())
                 return;
             this.debugLog('zoomIn');
@@ -1816,6 +1847,8 @@
             this.rafId = requestAnimationFrame(tick);
         }
         zoomOut() {
+            if (this.state.isClosing)
+                return;
             if (!this.imgEl)
                 return;
             this.debugLog('zoomOut');
@@ -1890,6 +1923,9 @@
         // ─── Pan: drag + momentum via rAF spring ────────────────────
         handleImagePointerDown(e) {
             e.preventDefault();
+            // Exit fade in progress: don't start any gesture that could cancel it
+            if (this.state.isClosing)
+                return;
             // Add to pointer cache
             this.pointerCache.push(e);
             e.target.setPointerCapture(e.pointerId);
@@ -1943,6 +1979,8 @@
             this.updateCursorState();
         }
         handleOverlayPointerDown(e) {
+            if (this.state.isClosing)
+                return;
             // Only handle pointers that land outside the image (backdrop area)
             if (e.target === this.imgEl)
                 return;
@@ -2171,64 +2209,20 @@
             this.debugLog('dismissClose');
             this.state.isClosing = true;
             this.state.isDismissClosing = true;
+            this.isOpening = false;
+            this.cancelFullResFade();
             this.emit('close');
             this.state.isAnimating = true;
             this.stopFitTransition();
             if (this.overlay) {
                 const ov = this.overlay;
-                setTimeout(() => {
-                    ov.style.pointerEvents = 'none';
-                }, 80);
+                setTimeout(() => this.makeOverlayInert(ov), 80);
             }
             const { offsetX, offsetY, scale, opacity } = this.dismiss;
             this.dismiss = this.defaultDismissState();
-            const thumbRect = this.state.triggerEl ? this.getThumbRect(this.state.triggerEl) : null;
             const currentBR = this.getTargetBorderRadius();
-            // Off-screen thumbnails — fade out in place
-            if (!thumbRect || !this.isInViewport(thumbRect)) {
-                this.animateSpring({ translateX: offsetX, translateY: offsetY, scale, opacity, crop: 0, borderRadius: currentBR }, { translateX: offsetX, translateY: offsetY, scale, opacity: 0, crop: 0, borderRadius: currentBR }, this.opts.springClose, () => this.finishClose(), (s) => s.opacity < 0.01, { translateX: velocityX, translateY: velocityY });
-                return;
-            }
-            // FLIP morph back to thumbnail (or text-link rect with image aspect ratio)
-            const { fitRect } = this.zoom;
-            const morphRect = this.isTextLink
-                ? this.textLinkFlipRect(thumbRect, this.zoom.naturalWidth, this.zoom.naturalHeight)
-                : thumbRect;
-            const flipX = morphRect.x + morphRect.width / 2 - (fitRect.x + fitRect.width / 2);
-            const flipY = morphRect.y + morphRect.height / 2 - (fitRect.y + fitRect.height / 2);
-            const { flipScale, hasCrop } = this.computeFlipCrop(morphRect, fitRect, this.state.triggerEl, this.isTextLink);
-            // Clean up as soon as the image is visually at the thumbnail — the swap
-            // from animated image → real thumbnail is imperceptible at this point.
-            // Don't use opacity alone: it may already be near 0 from the drag.
-            // Tolerances are wide enough to survive spring overshoot from fast flicks
-            // (at thumbnail scale, 20px of position error is a few pixels on screen).
-            const triggerEl = this.state.triggerEl;
-            let bounceFired = false;
-            const atThumbnail = (s) => {
-                const atTarget = Math.abs(s.scale - flipScale) < 0.05 &&
-                    Math.abs(s.translateX - flipX) < 20 &&
-                    Math.abs(s.translateY - flipY) < 20;
-                if (atTarget && !bounceFired && triggerEl) {
-                    bounceFired = true;
-                    this.bounceTrigger(triggerEl);
-                }
-                return atTarget;
-            };
-            // Parabolic arc: the axis with more velocity gets a softer spring,
-            // so momentum carries it further while the cross-axis converges first.
-            // This produces a natural curved path toward the thumbnail.
-            const base = this.opts.springClose;
-            const absVx = Math.abs(velocityX);
-            const absVy = Math.abs(velocityY);
-            const vRatio = Math.max(absVx, absVy) / (Math.min(absVx, absVy) || 1);
-            let dismissConfigs;
-            if (vRatio > 1.5 && Math.max(absVx, absVy) > 100) {
-                const soft = { ...base, stiffness: base.stiffness * 0.55, damping: base.damping * 0.85 };
-                dismissConfigs = absVy > absVx
-                    ? { translateY: soft }
-                    : { translateX: soft };
-            }
-            this.animateSpring({ translateX: offsetX, translateY: offsetY, scale, opacity, crop: 0, borderRadius: currentBR }, { translateX: flipX, translateY: flipY, scale: flipScale, opacity: 0, crop: hasCrop ? 1 : 0, borderRadius: this.thumbBorderRadius }, this.opts.springClose, () => this.finishClose(), atThumbnail, { translateX: velocityX, translateY: velocityY }, dismissConfigs);
+            // Fade out from where the gesture was released, carrying its momentum.
+            this.animateSpring({ translateX: offsetX, translateY: offsetY, scale, opacity, crop: 0, borderRadius: currentBR }, { translateX: offsetX, translateY: offsetY, scale, opacity: 0, crop: 0, borderRadius: currentBR }, this.opts.fadeClose, () => this.finishClose(), (s) => s.opacity < 0.01, { translateX: velocityX, translateY: velocityY });
         }
         dismissSnapBack(velocityX, velocityY) {
             const { offsetX, offsetY, scale, opacity } = this.dismiss;
@@ -2560,6 +2554,8 @@
             this.debugLog('pinchClose');
             this.state.isClosing = true;
             this.state.isDismissClosing = true;
+            this.isOpening = false;
+            this.cancelFullResFade();
             this.emit('close');
             this.state.isAnimating = true;
             this.stopFitTransition();
@@ -2571,9 +2567,7 @@
             this.swipeNav = this.defaultSwipeNavState();
             if (this.overlay) {
                 const ov = this.overlay;
-                setTimeout(() => {
-                    ov.style.pointerEvents = 'none';
-                }, 80);
+                setTimeout(() => this.makeOverlayInert(ov), 80);
             }
             // Current pinch state becomes the starting point for the close animation.
             // panX/panY are in the same coordinate space as dismiss translateX/Y.
@@ -2585,34 +2579,9 @@
             this.zoom.panX = 0;
             this.zoom.panY = 0;
             this.zoom.zoomed = false;
-            const thumbRect = this.state.triggerEl ? this.getThumbRect(this.state.triggerEl) : null;
             const currentBR = this.getTargetBorderRadius();
-            // Off-screen or no thumbnail — fade out in place
-            if (!thumbRect || !this.isInViewport(thumbRect)) {
-                this.animateSpring({ translateX: panX, translateY: panY, scale, opacity, crop: 0, borderRadius: currentBR }, { translateX: panX, translateY: panY, scale, opacity: 0, crop: 0, borderRadius: currentBR }, this.opts.springClose, () => this.finishClose(), (s) => s.opacity < 0.01);
-                return;
-            }
-            // FLIP morph back to thumbnail
-            const { fitRect } = this.zoom;
-            const morphRect = this.isTextLink
-                ? this.textLinkFlipRect(thumbRect, this.zoom.naturalWidth, this.zoom.naturalHeight)
-                : thumbRect;
-            const flipX = morphRect.x + morphRect.width / 2 - (fitRect.x + fitRect.width / 2);
-            const flipY = morphRect.y + morphRect.height / 2 - (fitRect.y + fitRect.height / 2);
-            const { flipScale, hasCrop } = this.computeFlipCrop(morphRect, fitRect, this.state.triggerEl, this.isTextLink);
-            const triggerEl = this.state.triggerEl;
-            let bounceFired = false;
-            const atThumbnail = (s) => {
-                const atTarget = Math.abs(s.scale - flipScale) < 0.05 &&
-                    Math.abs(s.translateX - flipX) < 20 &&
-                    Math.abs(s.translateY - flipY) < 20;
-                if (atTarget && !bounceFired && triggerEl) {
-                    bounceFired = true;
-                    this.bounceTrigger(triggerEl);
-                }
-                return atTarget;
-            };
-            this.animateSpring({ translateX: panX, translateY: panY, scale, opacity, crop: 0, borderRadius: currentBR }, { translateX: flipX, translateY: flipY, scale: flipScale, opacity: 0, crop: hasCrop ? 1 : 0, borderRadius: this.thumbBorderRadius }, this.opts.springClose, () => this.finishClose(), atThumbnail);
+            // Fade out from the current pinch position
+            this.animateSpring({ translateX: panX, translateY: panY, scale, opacity, crop: 0, borderRadius: currentBR }, { translateX: panX, translateY: panY, scale, opacity: 0, crop: 0, borderRadius: currentBR }, this.opts.fadeClose, () => this.finishClose(), (s) => s.opacity < 0.01);
         }
         pinchSnapBack() {
             const { panX, panY, scale } = this.zoom;
@@ -2750,6 +2719,8 @@
         }
         // ─── Image click handler ─────────────────────────────────────
         handleImageClick(e) {
+            if (this.state.isClosing)
+                return;
             if (this.zoom.dragMoved) {
                 this.zoom.dragMoved = false;
                 return;
@@ -2913,39 +2884,6 @@
                 this.chromeNext.style.display =
                     this.currentIndex < this.gallery.length - 1 ? '' : 'none';
             }
-        }
-        /**
-         * Compute per-element drift vectors from a thumbnail origin point.
-         * Each vector points from the element's resting position back toward the origin,
-         * scaled by CHROME_DRIFT. During animation, these are multiplied by chromeDriftProgress
-         * so elements appear to launch from / return to the thumbnail location.
-         */
-        computeChromeDrift(originX, originY) {
-            const CHROME_DRIFT = 0.05;
-            const vw = window.innerWidth;
-            const vh = window.innerHeight;
-            // Approximate resting positions of each chrome element
-            // Bar now rests at the bottom-left of the image; use a rough estimate
-            const fitRect = this.zoom && this.zoom.fitRect && this.zoom.fitRect.width > 0 ? this.zoom.fitRect : null;
-            const barPos = fitRect
-                ? { x: fitRect.x, y: fitRect.y + fitRect.height + 8 }
-                : { x: vw * 0.1, y: vh * 0.75 };
-            const prevPos = { x: 36, y: vh / 2 };
-            const nextPos = { x: vw - 36, y: vh / 2 };
-            this.chromeDriftVectors = {
-                bar: {
-                    x: (originX - barPos.x) * CHROME_DRIFT,
-                    y: (originY - barPos.y) * CHROME_DRIFT,
-                },
-                prev: {
-                    x: (originX - prevPos.x) * CHROME_DRIFT,
-                    y: (originY - prevPos.y) * CHROME_DRIFT,
-                },
-                next: {
-                    x: (originX - nextPos.x) * CHROME_DRIFT,
-                    y: (originY - nextPos.y) * CHROME_DRIFT,
-                },
-            };
         }
         resetChromeDrift() {
             this.chromeDriftProgress = 0;
@@ -3164,8 +3102,12 @@
             const fullResReady = cached?.complete && cached.naturalWidth > 0;
             if (fullResReady) {
                 img.src = item.src;
+                // This element may have been showing a thumbnail earlier (shadow hidden)
+                img.style.boxShadow = '';
                 const rect = this.computeTargetRect(cached.naturalWidth, cached.naturalHeight);
                 this.positionImageEl(img, rect);
+                // Decode now (off the main thread) so it is ready when the slide slides in
+                decodeImage(img);
             }
             else {
                 img.src = item.thumbSrc || item.src;
@@ -3186,8 +3128,13 @@
                         if ((img === this.prevSlideImg || img === this.nextSlideImg) &&
                             cached.naturalWidth > 0) {
                             img.src = item.src;
+                            // Full-res is showing now, so bring the shadow back. Without this
+                            // it stays hidden once this slide becomes the current one, because
+                            // setupCurrentImage skips swapToFullRes for an already-loaded image.
+                            img.style.boxShadow = '';
                             const fullRect = this.computeTargetRect(cached.naturalWidth, cached.naturalHeight);
                             this.positionImageEl(img, fullRect);
+                            decodeImage(img);
                         }
                     };
                     const onError = () => cached.removeEventListener('load', onLoad);
@@ -3305,117 +3252,6 @@
                 return { w, h };
             return null;
         }
-        /** Read the visual border-radius from the thumbnail's trigger element. */
-        getThumbBorderRadius(el) {
-            // Check the trigger element first (wrapping anchor/div with overflow:hidden),
-            // then fall back to the image inside it.
-            const elRadius = parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0;
-            if (elRadius > 0)
-                return elRadius;
-            const img = el.querySelector('img');
-            return img ? parseFloat(getComputedStyle(img).borderTopLeftRadius) || 0 : 0;
-        }
-        getThumbRect(el) {
-            const img = el.querySelector('img');
-            if (!img)
-                return el.getBoundingClientRect();
-            const elRect = img.getBoundingClientRect();
-            const objectFit = getComputedStyle(img).objectFit;
-            if (objectFit !== 'cover' || !img.naturalWidth || !img.naturalHeight) {
-                return elRect;
-            }
-            // When object-fit: cover is used, the image is scaled up to fill the container
-            // and cropped. Compute the virtual rect of the full uncropped image so the FLIP
-            // animation origin has the correct aspect ratio (no jitter from crop mismatch).
-            const natRatio = img.naturalWidth / img.naturalHeight;
-            const elRatio = elRect.width / elRect.height;
-            let renderedW, renderedH;
-            if (natRatio > elRatio) {
-                // Image wider than container: height-matched, cropped horizontally
-                renderedH = elRect.height;
-                renderedW = elRect.height * natRatio;
-            }
-            else {
-                // Image taller than container: width-matched, cropped vertically
-                renderedW = elRect.width;
-                renderedH = elRect.width / natRatio;
-            }
-            // Parse object-position (default 50% 50%) to find crop offset
-            const pos = getComputedStyle(img).objectPosition || '50% 50%';
-            const parts = pos.split(/\s+/);
-            const px = parts[0]?.endsWith('%') ? parseFloat(parts[0]) / 100 : 0.5;
-            const py = parts[1]?.endsWith('%') ? parseFloat(parts[1]) / 100 : 0.5;
-            const offsetX = (elRect.width - renderedW) * px;
-            const offsetY = (elRect.height - renderedH) * py;
-            return new DOMRect(elRect.x + offsetX, elRect.y + offsetY, renderedW, renderedH);
-        }
-        computeCropInsets(el, virtualRect, targetRect) {
-            const zero = { top: 0, right: 0, bottom: 0, left: 0 };
-            const img = el.querySelector('img');
-            if (!img || getComputedStyle(img).objectFit !== 'cover')
-                return zero;
-            const elRect = img.getBoundingClientRect();
-            // Fraction of the virtual rect that is cropped on each side
-            const topFrac = Math.max(0, elRect.top - virtualRect.top) / virtualRect.height;
-            const leftFrac = Math.max(0, elRect.left - virtualRect.left) / virtualRect.width;
-            const bottomFrac = Math.max(0, virtualRect.bottom - elRect.bottom) / virtualRect.height;
-            const rightFrac = Math.max(0, virtualRect.right - elRect.right) / virtualRect.width;
-            // Convert to pixel insets in the lightbox image's coordinate space
-            return {
-                top: topFrac * targetRect.height,
-                right: rightFrac * targetRect.width,
-                bottom: bottomFrac * targetRect.height,
-                left: leftFrac * targetRect.width,
-            };
-        }
-        /**
-         * Compute FLIP scale and crop insets for morphing between the lightbox image
-         * and a thumbnail. Handles both CSS object-fit:cover cropping and server-side
-         * aspect ratio mismatches (e.g. Unsplash ?fit=crop).
-         */
-        computeFlipCrop(morphRect, fitRect, triggerEl, isTextLink) {
-            const scaleX = morphRect.width / fitRect.width;
-            const scaleY = morphRect.height / fitRect.height;
-            // Try CSS object-fit:cover crop detection first.
-            // Threshold filters out subpixel floating-point noise from getThumbRect.
-            if (!isTextLink && triggerEl) {
-                this.cropInsets = this.computeCropInsets(triggerEl, morphRect, fitRect);
-                const cssCrop = this.cropInsets.top + this.cropInsets.right + this.cropInsets.bottom + this.cropInsets.left;
-                if (cssCrop > 1) {
-                    return { flipScale: Math.min(scaleX, scaleY), hasCrop: true };
-                }
-            }
-            // Check for aspect ratio mismatch (e.g. server-side crop produces different
-            // aspect ratio than the full-res image). When present, use Math.max (fill)
-            // instead of Math.min (fit) and clip the excess via clip-path.
-            const morphRatio = morphRect.width / morphRect.height;
-            const fitRatio = fitRect.width / fitRect.height;
-            const relDiff = Math.abs(morphRatio - fitRatio) / Math.max(morphRatio, fitRatio);
-            if (!isTextLink && relDiff > 0.05) {
-                const flipScale = Math.max(scaleX, scaleY);
-                // What portion of the local (pre-transform) image is visible after scaling
-                const visibleLocalW = morphRect.width / flipScale;
-                const visibleLocalH = morphRect.height / flipScale;
-                // Symmetric (centered) crop — matches the common center-crop default
-                this.cropInsets = {
-                    top: Math.max(0, (fitRect.height - visibleLocalH) / 2),
-                    bottom: Math.max(0, (fitRect.height - visibleLocalH) / 2),
-                    left: Math.max(0, (fitRect.width - visibleLocalW) / 2),
-                    right: Math.max(0, (fitRect.width - visibleLocalW) / 2),
-                };
-                return { flipScale, hasCrop: true };
-            }
-            // No crop needed — aspect ratios match
-            return { flipScale: Math.min(scaleX, scaleY), hasCrop: false };
-        }
-        setThumbVisibility(visible) {
-            if (window.innerWidth <= 600)
-                return; // Mobile: thumbnails stay visible
-            const el = this.state.triggerEl;
-            if (!el)
-                return;
-            el.style.visibility = visible ? '' : 'hidden';
-        }
         handleResize() {
             if (!this.state.isOpen || this.state.isClosing || this.state.isDismissClosing)
                 return;
@@ -3487,15 +3323,9 @@
                 if (!cached) {
                     img.decoding = 'async';
                     img.src = src;
-                    this.preloadCache.set(src, img);
+                    this.cachePreload(src, img);
                 }
             });
-        }
-        isInViewport(rect) {
-            return (rect.bottom > 0 &&
-                rect.top < window.innerHeight &&
-                rect.right > 0 &&
-                rect.left < window.innerWidth);
         }
         startDebugPanel() {
             if (!this.opts.debug || this.debugEl)
@@ -3638,6 +3468,12 @@
     }
     Lightbox.instance = null;
     // ─── Utility functions ───────────────────────────────────────
+    /** Resolves when the browser has decoded the image (never rejects). */
+    function decodeImage(img) {
+        if (!img || typeof img.decode !== 'function')
+            return Promise.resolve();
+        return img.decode().catch(() => { });
+    }
     function clamp(value, min, max) {
         return Math.max(min, Math.min(max, value));
     }
