@@ -319,8 +319,12 @@ input, select, textarea {
         background-position: 50% 50%;
 }
 .lazy-wrapper.loading {
-		background-image: url('../images/loading.apng');
 		box-shadow: 0px 0px 6px 1px #212121;
+		animation: show-loader 0s 0.5s forwards;
+}
+
+@keyframes show-loader {
+		to { background-image: url('../images/loading.svg'); }
 }
 
 /* Container */
