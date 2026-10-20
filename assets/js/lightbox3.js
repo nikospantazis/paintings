@@ -2719,9 +2719,27 @@
             const vh = window.innerHeight;
             const scaledW = fitRect.width * scale;
             const scaledH = fitRect.height * scale;
-            const overflowX = Math.max(0, (scaledW - vw) / 2);
-            const overflowY = Math.max(0, (scaledH - vh) / 2);
-            return { minX: -overflowX, maxX: overflowX, minY: -overflowY, maxY: overflowY };
+            // Uniform margin kept between the panned image and every viewport edge
+            // (top, bottom, left, right). Reads --lb-image-padding.
+            const m = this.getTargetImagePadding();
+            // Actual image center. The fit rect is centered in the padded area
+            // (asymmetric top/bottom padding), not in the viewport, and the scale
+            // transform pivots around this point.
+            const cx = fitRect.x + fitRect.width / 2;
+            const cy = fitRect.y + fitRect.height / 2;
+            // Pan range that keeps the scaled image edges exactly `m` px from the
+            // viewport edges. If the scaled image fits inside the margins on an
+            // axis, don't pan it on that axis.
+            let minX = 0, maxX = 0, minY = 0, maxY = 0;
+            if (scaledW > vw - 2 * m) {
+                maxX = m + scaledW / 2 - cx; // left edge at x = m
+                minX = vw - m - scaledW / 2 - cx; // right edge at x = vw - m
+            }
+            if (scaledH > vh - 2 * m) {
+                maxY = m + scaledH / 2 - cy; // top edge at y = m
+                minY = vh - m - scaledH / 2 - cy; // bottom edge at y = vh - m
+            }
+            return { minX, maxX, minY, maxY };
         }
         // ─── Image click handler ─────────────────────────────────────
         handleImageClick(e) {
