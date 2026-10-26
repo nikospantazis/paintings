@@ -741,8 +741,6 @@ label {
 
 		.image.product {
 			background-color: #fafafa;
-			background-repeat: no-repeat;
-			background-position: 50% 50%;
 			overflow: visible;
 			width: 100%;
 			border-radius: 0px;
@@ -750,11 +748,25 @@ label {
 			padding-bottom: 0.5em;
 			box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 6px 1px, rgba(0, 0, 0, 0.25) 0px 20px 30px;
 			opacity: 0;
-			animation: 
-			  placeholderFadeIn 0.5s ease-in-out forwards,
-			  show-loader2 0s 0.5s forwards;
+			animation: placeholderFadeIn 0.5s ease-in-out forwards;  /* spinner animation removed */
 		}
-		
+
+		/* spinner only exists while loading, shown after a 0.5s delay (same as the index page) */
+		.image.product.loading::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background: url('../images/loading2.svg') no-repeat 50% 50%;
+			opacity: 0;
+			animation: placeholderFadeIn 0s 0.5s forwards;
+		}
+
+		/* the img itself must not carry its own spinner background */
+		.image.product img.lazy {
+			background: none;
+			animation: none;
+		}
+				
 			@keyframes placeholderFadeIn {
 				to { opacity: 1; }
 			}
