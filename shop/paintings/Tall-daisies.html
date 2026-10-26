@@ -80,7 +80,20 @@
                 elements_selector: ".lazy",
                 class_loaded: "loaded",
                 class_loading: "loading",
-                class_error: "error"
+                class_error: "error",
+
+                callback_loading: function (el) {
+                    var box = el.closest(".image.product");
+                    if (box) box.classList.add("loading");
+                },
+                callback_loaded: function (el) {
+                    var box = el.closest(".image.product");
+                    if (box) { box.classList.remove("loading"); box.classList.add("loaded"); }
+                },
+                callback_error: function (el) {
+                    var box = el.closest(".image.product");
+                    if (box) { box.classList.remove("loading"); box.classList.add("error"); }
+                }
             });
         });
         </script>
