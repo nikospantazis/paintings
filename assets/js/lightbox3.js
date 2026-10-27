@@ -985,14 +985,14 @@
                 // so there is nothing to fade in.
                 const alreadyShowing = el.src === new URL(src, document.baseURI).href
                     && el.complete && el.naturalWidth > 0;
-                // The slide is showing a thumbnail (we got here by navigating to an image that
-                // wasn't preloaded yet). Fading from opacity 0 would make the thumbnail blink
-                // out before the full-res appears, so swap the decoded image in place instead.
-                // When the lightbox is opening, the image has no src yet, so it still fades in.
-                // The placeholder is never visible by design (transparent / loader), so there
-                // is nothing to blink out: always fade the full-res in, and snap the rect
-                // while the image is still at opacity 0 (no zoom/crop on arrival).
-                const fadeIn = !this.reducedMotion && !alreadyShowing;
+                // The slide is already painting a real picture: a loaded thumbnail (we got here
+                // by swiping to an image whose full-res wasn't swapped in yet). Fading from
+                // opacity 0 would make that picture blink out and back in, so the decoded
+                // full-res is swapped in place instead. Only a slide that shows nothing visible
+                // (no src, or the transparent lazy-load placeholder) fades in; the rect is then
+                // snapped while the image is still at opacity 0 (no zoom/crop on arrival).
+                const showsPicture = showsRealPicture(el);
+                const fadeIn = !this.reducedMotion && !alreadyShowing && !showsPicture;
                 if (fadeIn) {
                     el.style.transition = 'none';
                     el.style.opacity = '0';
@@ -1043,8 +1043,11 @@
                     el.style.opacity = '1';
                     const done = () => {
                         this.fullResFading = false;
+                        // Always drop the transition, even if the user already swiped away from
+                        // this slide. A stale 0.4s opacity transition would otherwise make the
+                        // image fade in late the next time the strip animation drives its opacity.
+                        el.style.transition = '';
                         if (el === this.imgEl) {
-                            el.style.transition = '';
                             el.style.opacity = '';
                         }
                         this.stopFullResFade();
@@ -3140,8 +3143,10 @@
                 const natH = thumbImg?.naturalHeight || 300;
                 const rect = this.computeTargetRectFromAspectRatio(natW, natH);
                 this.positionImageEl(img, rect);
-                // Hide shadow while showing thumb — restored in swapToFullRes when full-res loads.
-                img.style.boxShadow = 'none';
+                // Only the transparent lazy-load placeholder needs its shadow hidden (an empty
+                // box would cast a ghost shadow). A real thumbnail keeps its shadow, so the later
+                // in-place swap to full-res doesn't make the shadow pop in.
+                img.style.boxShadow = isPlaceholderSrc(img.getAttribute('src')) ? 'none' : '';
                 // If preload is in progress, upgrade this slide as soon as it completes
                 if (cached && !cached.complete) {
                     const onLoad = () => {
@@ -3501,6 +3506,17 @@
         if (!img || typeof img.decode !== 'function')
             return Promise.resolve();
         return img.decode().catch(() => { });
+    }
+    /** True for no src at all, or the transparent data: URI used as the lazy-load placeholder. */
+    function isPlaceholderSrc(src) {
+        return !src || src.startsWith('data:');
+    }
+    /** True when the <img> is currently painting an actual picture (a loaded thumbnail or
+     *  full-res), as opposed to being empty or showing the lazy-load placeholder. */
+    function showsRealPicture(img) {
+        if (!img || isPlaceholderSrc(img.getAttribute('src')))
+            return false;
+        return img.complete && img.naturalWidth > 0;
     }
     function clamp(value, min, max) {
         return Math.max(min, Math.min(max, value));
