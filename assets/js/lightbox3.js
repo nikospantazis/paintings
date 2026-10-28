@@ -1009,10 +1009,13 @@
                     el.style.opacity = '0';
                     this.fullResFading = true;
                 }
-                // Restore box-shadow (was hidden while thumb was showing).
-                // At this point opacity is 0, so the shadow is invisible and will
-                // fade in naturally with the image opacity transition.
-                el.style.boxShadow = '';
+                // A blank slide gets its src now but has no pixels until it is decoded. The
+                // strip animation can make it visible at any moment (it drives the opacity
+                // while swiping), so keep the box-shadow off until then, instead of letting
+                // a shadow flash on its own. It is restored right after the decode below.
+                const absSrc = new URL(src, document.baseURI).href;
+                const blankUntilDecoded = !alreadyShowing && !showsPicture;
+                el.style.boxShadow = blankUntilDecoded ? 'none' : '';
                 if (!alreadyShowing)
                     this.imgEl.src = src;
                 this.zoom.naturalWidth = size.width;
@@ -1040,7 +1043,11 @@
                 }
                 this.updateCursorState();
                 // Decode before fading so the first fade frame already has pixels.
-                const decoded = fadeIn && el.decode ? el.decode().catch(() => { }) : Promise.resolve();
+                const decoded = ((fadeIn || blankUntilDecoded) && el.decode ? el.decode().catch(() => { }) : Promise.resolve())
+                    .then(() => {
+                    if (blankUntilDecoded && el.src === absSrc)
+                        el.style.boxShadow = '';
+                });
                 decoded.then(() => requestAnimationFrame(() => requestAnimationFrame(() => {
                     if (!el || el !== this.imgEl || !this.state.isOpen || this.state.isClosing) {
                         this.fullResFading = false;
@@ -3141,12 +3148,11 @@
             const cached = this.preloadCache.get(item.src);
             const fullResReady = cached?.complete && cached.naturalWidth > 0;
             if (fullResReady) {
-                img.src = item.src;
-                img.style.boxShadow = '';
+                // Decode now (off the main thread) so it is ready when the slide slides in.
+                // The shadow stays off until then, so it never shows without the picture.
+                setSrcWithShadow(img, item.src);
                 const rect = this.computeTargetRect(cached.naturalWidth, cached.naturalHeight);
                 this.positionImageEl(img, rect);
-                // Decode now (off the main thread) so it is ready when the slide slides in
-                decodeImage(img);
             }
             else {
                 // Thumbnails are never shown in the lightbox: until the full-size image is
@@ -3170,11 +3176,9 @@
                         // Only upgrade if this img is still an adjacent slide (not yet current)
                         if ((img === this.prevSlideImg || img === this.nextSlideImg) &&
                             cached.naturalWidth > 0) {
-                            img.src = item.src;
-                            img.style.boxShadow = '';
+                            setSrcWithShadow(img, item.src);
                             const fullRect = this.computeTargetRect(cached.naturalWidth, cached.naturalHeight);
                             this.positionImageEl(img, fullRect);
-                            decodeImage(img);
                         }
                     };
                     const onError = () => cached.removeEventListener('load', onLoad);
@@ -3515,6 +3519,21 @@
         if (!img || typeof img.decode !== 'function')
             return Promise.resolve();
         return img.decode().catch(() => { });
+    }
+    /** Assign `src` and keep the image's box-shadow off until its picture is decoded. A slide that
+     *  has a src but no pixels yet (e.g. when swiping fast) would otherwise show its shadow alone. */
+    function setSrcWithShadow(img, src) {
+        const abs = new URL(src, document.baseURI).href;
+        if (img.src === abs && img.complete && img.naturalWidth > 0) {
+            img.style.boxShadow = '';
+            return decodeImage(img);
+        }
+        img.style.boxShadow = 'none';
+        img.src = src;
+        return decodeImage(img).then(() => {
+            if (img.src === abs)
+                img.style.boxShadow = '';
+        });
     }
     /** Drop an image's request so the browser can discard its decoded pixels right away. */
     function releaseImage(img) {
