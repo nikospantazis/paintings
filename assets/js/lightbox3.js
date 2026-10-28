@@ -49,6 +49,12 @@
     const FADE_OPEN = { stiffness: 50, damping: 10, mass: 1 };
     const FADE_CLOSE = { stiffness: 100, damping: 20, mass: 1 };
 
+    // Phones/tablets (coarse primary pointer) are the memory- and CPU-constrained devices:
+    // a decoded full-size photo costs width x height x 4 bytes of RAM, so they get a much
+    // smaller image cache.
+    const IS_TOUCH = typeof window !== 'undefined' &&
+        typeof window.matchMedia === 'function' &&
+        window.matchMedia('(pointer: coarse)').matches;
     const DEFAULTS = {
         selector: '[data-lightbox]',
         springOpen: SPRING_OPEN,
@@ -57,7 +63,11 @@
         fadeClose: FADE_CLOSE,
         // Max number of full-size images kept in the preload cache (0 = unlimited).
         // The current image and its two gallery neighbours are never evicted.
-        preloadCacheMax: 40,
+        // Evicted images are released (src dropped) so the browser can free their memory.
+        preloadCacheMax: IS_TOUCH ? 6 : 40,
+        // Low-priority preloading of the full-size images of the thumbnails on screen
+        // (set to false to disable, e.g. to save mobile data).
+        viewportPreload: true,
         padding: 40,
         debug: false,
     };
@@ -409,11 +419,13 @@
             if (this.vpCurrent)
                 keep.add(this.vpCurrent.src);
             // Maps iterate in insertion order, so the oldest entries go first.
-            for (const key of this.preloadCache.keys()) {
+            for (const [key, img] of this.preloadCache) {
                 if (this.preloadCache.size <= max)
                     break;
-                if (!keep.has(key))
+                if (!keep.has(key)) {
                     this.preloadCache.delete(key);
+                    releaseImage(img);
+                }
             }
         }
         /** Drop every preloaded image (frees memory; they will be preloaded again on demand). */
@@ -437,6 +449,8 @@
         // once scrolling has stopped and the visible thumbnails have finished loading,
         // one image at a time, at low fetch priority. Scrolling aborts it again.
         handleViewportChange() {
+            if (!this.opts.viewportPreload)
+                return;
             if (this.state.isOpen || this.state.isAnimating)
                 return;
             this.cancelViewportPreload(true);
@@ -476,7 +490,7 @@
             }
         }
         viewportPreloadAllowed() {
-            if (document.hidden)
+            if (!this.opts.viewportPreload || document.hidden)
                 return false;
             const conn = navigator.connection;
             if (conn && (conn.saveData || ['slow-2g', '2g', '3g'].includes(conn.effectiveType)))
@@ -582,7 +596,6 @@
                 return {
                     triggerEl: htmlEl,
                     src: this.getSrcFromTrigger(htmlEl),
-                    thumbSrc: img?.currentSrc || img?.src || '',
                     caption: htmlEl.getAttribute('data-caption') || htmlEl.getAttribute('data-title') || '',
                     alt: htmlEl.getAttribute('data-alt') || img?.alt || '',
                 };
@@ -985,11 +998,9 @@
                 // so there is nothing to fade in.
                 const alreadyShowing = el.src === new URL(src, document.baseURI).href
                     && el.complete && el.naturalWidth > 0;
-                // The slide is already painting a real picture: a loaded thumbnail (we got here
-                // by swiping to an image whose full-res wasn't swapped in yet). Fading from
-                // opacity 0 would make that picture blink out and back in, so the decoded
-                // full-res is swapped in place instead. Only a slide that shows nothing visible
-                // (no src, or the transparent lazy-load placeholder) fades in; the rect is then
+                // The slide is already painting a real picture. Fading from opacity 0 would make
+                // it blink out and back in, so a decoded full-res is swapped in place instead.
+                // Only a slide that shows nothing visible (no src) fades in; the rect is then
                 // snapped while the image is still at opacity 0 (no zoom/crop on arrival).
                 const showsPicture = showsRealPicture(el);
                 const fadeIn = !this.reducedMotion && !alreadyShowing && !showsPicture;
@@ -1328,6 +1339,7 @@
             const slideWidth = window.innerWidth + SLIDE_GAP;
             if (direction === 1) {
                 // Forward: prev is removed, current→prev, next→current, create new next
+                releaseImage(this.prevSlideImg);
                 if (this.prevSlideEl)
                     this.prevSlideEl.remove();
                 this.prevSlideEl = this.currentSlideEl;
@@ -1350,6 +1362,7 @@
             }
             else {
                 // Backward: next is removed, current→next, prev→current, create new prev
+                releaseImage(this.nextSlideImg);
                 if (this.nextSlideEl)
                     this.nextSlideEl.remove();
                 this.nextSlideEl = this.currentSlideEl;
@@ -3093,9 +3106,9 @@
             img.draggable = false;
             img.addEventListener('click', (e) => this.handleImageClick(e));
             img.addEventListener('pointerdown', this.handleImagePointerDown);
-            img.addEventListener('pointermove', this.handlePointerMove);
-            img.addEventListener('pointerup', this.handlePointerUp);
-            img.addEventListener('pointercancel', this.handlePointerUp);
+            // pointermove/up/cancel are handled once, on the overlay: these events bubble
+            // from the (pointer-captured) image, so a second listener here ran every
+            // handler twice per event, doubling the per-move work while swiping.
             slide.appendChild(img);
             return { slide, img };
         }
@@ -3129,7 +3142,6 @@
             const fullResReady = cached?.complete && cached.naturalWidth > 0;
             if (fullResReady) {
                 img.src = item.src;
-                // This element may have been showing a thumbnail earlier (shadow hidden)
                 img.style.boxShadow = '';
                 const rect = this.computeTargetRect(cached.naturalWidth, cached.naturalHeight);
                 this.positionImageEl(img, rect);
@@ -3137,16 +3149,14 @@
                 decodeImage(img);
             }
             else {
-                img.src = item.thumbSrc || item.src;
+                // Thumbnails are never shown in the lightbox: until the full-size image is
+                // ready the slide has no src (hidden by CSS) and the image fades in once it
+                // has loaded. The thumbnail's aspect ratio is only used for the layout.
                 const thumbImg = item.triggerEl.querySelector('img');
                 const natW = thumbImg?.naturalWidth || 400;
                 const natH = thumbImg?.naturalHeight || 300;
                 const rect = this.computeTargetRectFromAspectRatio(natW, natH);
                 this.positionImageEl(img, rect);
-                // Only the transparent lazy-load placeholder needs its shadow hidden (an empty
-                // box would cast a ghost shadow). A real thumbnail keeps its shadow, so the later
-                // in-place swap to full-res doesn't make the shadow pop in.
-                img.style.boxShadow = isPlaceholderSrc(img.getAttribute('src')) ? 'none' : '';
                 // If preload is in progress, upgrade this slide as soon as it completes
                 if (cached && !cached.complete) {
                     const onLoad = () => {
@@ -3161,9 +3171,6 @@
                         if ((img === this.prevSlideImg || img === this.nextSlideImg) &&
                             cached.naturalWidth > 0) {
                             img.src = item.src;
-                            // Full-res is showing now, so bring the shadow back. Without this
-                            // it stays hidden once this slide becomes the current one, because
-                            // setupCurrentImage skips swapToFullRes for an already-loaded image.
                             img.style.boxShadow = '';
                             const fullRect = this.computeTargetRect(cached.naturalWidth, cached.naturalHeight);
                             this.positionImageEl(img, fullRect);
@@ -3199,6 +3206,8 @@
         }
         removeOverlay() {
             if (this.overlay) {
+                // Drop the full-size images now instead of waiting for garbage collection
+                this.overlay.querySelectorAll('img').forEach((i) => releaseImage(i));
                 this.overlay.remove();
                 this.overlay = null;
                 this.backdrop = null;
@@ -3506,6 +3515,13 @@
         if (!img || typeof img.decode !== 'function')
             return Promise.resolve();
         return img.decode().catch(() => { });
+    }
+    /** Drop an image's request so the browser can discard its decoded pixels right away. */
+    function releaseImage(img) {
+        if (!img)
+            return;
+        img.onload = img.onerror = null;
+        img.removeAttribute('src');
     }
     /** True for no src at all, or the transparent data: URI used as the lazy-load placeholder. */
     function isPlaceholderSrc(src) {
