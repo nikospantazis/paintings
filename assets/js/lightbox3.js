@@ -3582,4 +3582,3 @@
     exports.Lightbox = Lightbox;
 
 }));
-//# sourceMappingURL=lightbox3.umd.js.map
