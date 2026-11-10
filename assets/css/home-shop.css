@@ -616,12 +616,12 @@ label {
 		/* Basic */
 
 			body, input, select, textarea {
-				font-size: 13pt;
+				font-size: 14pt;
 			}
             
 		@media (orientation:landscape) {
 			.image.avatar img {
-				width: 28.5%;
+				width: 61vh;
 			}
 		}
             .button {
@@ -654,7 +654,7 @@ label {
 			
 		@media (orientation:landscape) {
 			.image.avatar img {
-				width: 42.7%;
+				width: 61vh;
 			}
 		}
 	}

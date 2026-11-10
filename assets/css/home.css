@@ -389,12 +389,13 @@ body {
 		/* Basic */
 
 			body, input, select, textarea {
-				font-size: 13pt;
+				font-size: 14pt;
 			}
 
 		@media (orientation:landscape) {
 			.image.avatar img {
-				height: 20vw;
+				width: 61vh;
+				height: auto;
 			}
 		}
             .button {
@@ -414,7 +415,8 @@ body {
 			
 		@media (orientation:landscape) {
 			.image.avatar img {
-				height: 30vw;
+				width: 61vh;
+				height: auto;
 			}
 		}
 	}
